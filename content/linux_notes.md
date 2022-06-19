@@ -28,6 +28,11 @@ less {excellent way to view a file, h for help, q to quit, g start, G end}
 to find recursively in folders...
 find . -name '*.xml'
 
+## BASH tips
+Ctrl-U clear line
+Ctrl-L clear screen
+Ctrl-R search command history
+
 # command line startup - either pfetch (v compact) or neofetch (bigger but prettier)
 wget https://github.com/dylanaraps/pfetch/raw/master/pfetch
 chmod +x pfetch
@@ -60,6 +65,10 @@ cp /etc/skel/.bashrc ~/
 
 nano .bashrc
 force_color_prompt=yes
+
+# Bash history
+https://www.digitalocean.com/community/tutorials/how-to-use-bash-history-commands-and-expansions-on-a-linux-vps
+space before command to stop it going into history
 
 # export PuTtY settings & sessions
 regedit /e "%userprofile%\desktop\putty-registry.reg" HKEY_CURRENT_USER\Software\Simontatham

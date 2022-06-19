@@ -19,8 +19,29 @@ Update software
 `sudo apt update && sudo apt upgrade`
 
 Switch on unattended upgrades
-`sudo apt install unattended-upgrades`
-`dpkg-reconfigure --priority=low unattended-upgrades`
+`sudo apt install unattended-upgrades -y`
+
+### Host setup
+Set timezone: `sudo timedatectl set-timezone Europe/London`
+Install ntp service: `sudo apt install systemd-timesyncd`
+Activate ntp: `sudo timedatectl set-ntp true`
+Check settings: `timedatectl`
+
+Set hostname `sudo hostnamectl set-hostname <hostname>`
+Add to hosts `sudo nano /etc/hosts` (and add a line with `IP` `FQDN` `hostname` - e.g. 1.2.3.4 server.domain.com server)
+
+
+### Bash config
+`sudo apt install neofetch -y`
+https://bashrcgenerator.com/ - excellent generator
+`nano ~/.bashrc` 
+- add `PROMPT_COMMAND="history -a; history -c; history -r; echo -n $(date +%H:%M:%S)\| "` to the penultimate line
+- add `neofetch` to the last line
+`neofetch`
+`nano ~/.config/neofetch/config.conf` uncomment and rename IP addresses
+
+`sudo apt install git -y`
+`curl -sS https://raw.githubusercontent.com/diogocavilha/fancy-git/master/install.sh | sh`
 
 ### SSH setup
 SSH setup - create public/private key pair
@@ -40,13 +61,14 @@ AllowUsers <username1> <username2>
 
 Restart SSH daemon
 `sudo systemctl restart sshd`
-Open new tab and check can still login OK!
+Open new tab and check can still login OK before closing this connection!
 
 ### Setup firewall
 `sudo apt-get install ufw`
 
 Enable at boot time and immediately start uncomplicated firewall service
-`systemctl enable ufw --now`
+```
+sudo systemctl enable ufw --now
 sudo ufw allow ssh
 sudo ufw allow 'WWW Full'
 sudo ufw default allow outgoing
@@ -55,24 +77,25 @@ sudo ufw show added [to confirm ssh added]
 sudo ufw enable
 sudo ufw status numbered
 sudo ufw logging on (see /var/log/ufw.log)
+```
 
 See list of ports listening for open connections
 sudo ss -atpu
 
 ### Setup fail2ban
-`sudo apt install fail2ban`
+`sudo apt install fail2ban -y`
 `cd /etc/fail2ban`
 `sudo cp fail2ban.conf fail2ban.local` (good practice although unlikely will need to edit)
 `sudo cp jail.conf jail.local`
 `sudo nano jail.local`
 uncomment `bantime.increment` (line 49)
 uncomment `ignoreip` (line 92) and add the main IPs you will connect from
-`sudo systemctl restart fail2ban`
 add `enabled = true` for jails you want to activate
+`sudo systemctl restart fail2ban`
 
-check active jails
+check active jails (specific jails can only be activated once relevant service installed - eg nginx)
 `sudo fail2ban-client status`
-`sudo cat /var/log/nginx/error.log`
+`sudo cat /var/log/fail2ban/error.log`
 
 ## NGINX install
 Install the prerequisites:
