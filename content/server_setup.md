@@ -20,6 +20,7 @@ Update software
 
 Switch on unattended upgrades
 `sudo apt install unattended-upgrades -y`
+`dpkg-reconfigure --priority=low unattended-upgrades`
 
 ### Host setup
 Set timezone: `sudo timedatectl set-timezone Europe/London`
@@ -41,7 +42,17 @@ https://bashrcgenerator.com/ - excellent generator
 `nano ~/.config/neofetch/config.conf` uncomment and rename IP addresses
 
 `sudo apt install git -y`
-`curl -sS https://raw.githubusercontent.com/diogocavilha/fancy-git/master/install.sh | sh`
+
+### Install oh-my-posh [https://ohmyposh.dev/]
+sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
+sudo chmod +x /usr/local/bin/oh-my-posh
+mkdir ~/.poshthemes
+wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -O ~/.poshthemes/themes.zip
+unzip ~/.poshthemes/themes.zip -d ~/.poshthemes
+chmod u+rw ~/.poshthemes/*.omp.*
+rm ~/.poshthemes/themes.zip
+Ensure a Nerd Font [https://www.nerdfonts.com/] such as Caskaydia Cove NF is installed and selected in the terminal program
+`eval "$(oh-my-posh init bash --config ~/.poshthemes/[theme_name].omp.json)"` to switch theme
 
 ### SSH setup
 SSH setup - create public/private key pair
@@ -172,6 +183,18 @@ to test cert renewal
 ```
 cd ~
 mkdir repositories
+cd .ssh
+copy private key for git syncing into this directory
+nano config
+```
+Host github.com
+  IdentityFile ~/.ssh/github_sync_private.key
+```
+git config --global user.name "<username>"
+git config --global user.email "<email>"
+ssh -T git@github.com
+(should then receive confirmation of success)
+
 git clone <enter SSH details for repository>
 ```
 

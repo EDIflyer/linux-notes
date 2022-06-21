@@ -32,6 +32,7 @@ find . -name '*.xml'
 Ctrl-U clear line
 Ctrl-L clear screen
 Ctrl-R search command history
+cd - to switch between directories
 
 # command line startup - either pfetch (v compact) or neofetch (bigger but prettier)
 wget https://github.com/dylanaraps/pfetch/raw/master/pfetch
@@ -87,6 +88,9 @@ then move id_rsa to PC
 For PuTTY use:
 use puttygen (Conversions > Import key > Save private key) to convert this non-.pub file to PuTTY private key format and point to this in Connection > SSH > Auth. Also add username to Connection > Data
 https://thepihut.com/blogs/raspberry-pi-tutorials/securely-logging-into-a-raspberry-pi-without-a-password
+
+SSHFS
+install sshfs and it allows remote directories to be mounted as local directories
 
 UPGRADING
 https://www.raspberrypi.org/documentation/raspbian/updating.md
