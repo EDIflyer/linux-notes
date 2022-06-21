@@ -20,7 +20,7 @@ Update software
 
 Switch on unattended upgrades
 `sudo apt install unattended-upgrades -y`
-`dpkg-reconfigure --priority=low unattended-upgrades`
+`sudo dpkg-reconfigure --priority=low unattended-upgrades`
 
 ### Host setup
 Set timezone: `sudo timedatectl set-timezone Europe/London`
@@ -31,28 +31,6 @@ Check settings: `timedatectl`
 Set hostname `sudo hostnamectl set-hostname <hostname>`
 Add to hosts `sudo nano /etc/hosts` (and add a line with `IP` `FQDN` `hostname` - e.g. 1.2.3.4 server.domain.com server)
 
-
-### Bash config
-`sudo apt install neofetch -y`
-https://bashrcgenerator.com/ - excellent generator
-`nano ~/.bashrc` 
-- add `PROMPT_COMMAND="history -a; history -c; history -r; echo -n $(date +%H:%M:%S)\| "` to the penultimate line
-- add `neofetch` to the last line
-`neofetch`
-`nano ~/.config/neofetch/config.conf` uncomment and rename IP addresses
-
-`sudo apt install git -y`
-
-### Install oh-my-posh [https://ohmyposh.dev/]
-sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
-sudo chmod +x /usr/local/bin/oh-my-posh
-mkdir ~/.poshthemes
-wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -O ~/.poshthemes/themes.zip
-unzip ~/.poshthemes/themes.zip -d ~/.poshthemes
-chmod u+rw ~/.poshthemes/*.omp.*
-rm ~/.poshthemes/themes.zip
-Ensure a Nerd Font [https://www.nerdfonts.com/] such as Caskaydia Cove NF is installed and selected in the terminal program
-`eval "$(oh-my-posh init bash --config ~/.poshthemes/[theme_name].omp.json)"` to switch theme
 
 ### SSH setup
 SSH setup - create public/private key pair
@@ -107,6 +85,46 @@ add `enabled = true` for jails you want to activate
 check active jails (specific jails can only be activated once relevant service installed - eg nginx)
 `sudo fail2ban-client status`
 `sudo cat /var/log/fail2ban/error.log`
+
+### Bash config
+`sudo apt install neofetch -y`
+https://bashrcgenerator.com/ - excellent generator
+`nano ~/.bashrc` 
+- add `PROMPT_COMMAND="history -a; history -c; history -r; echo -n $(date +%H:%M:%S)\| "` to the penultimate line
+- add `neofetch` to the last line
+`neofetch`
+`nano ~/.config/neofetch/config.conf` uncomment and rename IP addresses/add back in desired sections (copy template across from Dropbox)
+
+### Install git and connect to Github
+`sudo apt install git -y`
+```
+cd ~
+mkdir repositories
+cd .ssh
+copy private key for git syncing into this directory
+nano config
+```
+```
+Host github.com
+  IdentityFile ~/.ssh/github_sync_private.key
+```
+git config --global user.name "<username>"
+git config --global user.email "<email>"
+ssh -T git@github.com
+(should then receive confirmation of success)
+
+git clone <enter SSH details for repository>
+
+### Install oh-my-posh [https://ohmyposh.dev/]
+sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
+sudo chmod +x /usr/local/bin/oh-my-posh
+mkdir ~/.poshthemes
+wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -O ~/.poshthemes/themes.zip
+unzip ~/.poshthemes/themes.zip -d ~/.poshthemes
+chmod u+rw ~/.poshthemes/*.omp.*
+rm ~/.poshthemes/themes.zip
+Ensure a Nerd Font [https://www.nerdfonts.com/] such as Caskaydia Cove NF is installed and selected in the terminal program
+`eval "$(oh-my-posh init bash --config ~/.poshthemes/[theme_name].omp.json)"` to switch theme
 
 ## NGINX install
 Install the prerequisites:
@@ -178,25 +196,6 @@ sudo certbot --nginx
 to test cert renewal
 `sudo certbot renew --dry-run`
 (see https://certbot.eff.org/instructions?ws=nginx&os=debianbuster for explanation of terminology)
-
-## Git setup
-```
-cd ~
-mkdir repositories
-cd .ssh
-copy private key for git syncing into this directory
-nano config
-```
-Host github.com
-  IdentityFile ~/.ssh/github_sync_private.key
-```
-git config --global user.name "<username>"
-git config --global user.email "<email>"
-ssh -T git@github.com
-(should then receive confirmation of success)
-
-git clone <enter SSH details for repository>
-```
 
 ## Hugo installation
 Download latest Hugo version from `https://github.com/gohugoio/hugo/releases` and copy to `/usr/local/bin`
