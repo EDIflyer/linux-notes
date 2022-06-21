@@ -8,11 +8,8 @@ draft: false
 ## Initial server setup
 
 ### Users
-Add non-root user
-`useradd -m -s /bin/bash <username> && passwd <username>`
-
-Add them to sudo group
-`usermod -aG sudo <username>`
+Add non-root user & then add to sudo group
+`sudo adduser <username> && sudo usermod -aG sudo <username>`
 
 ### Software updates
 Update software
@@ -30,7 +27,6 @@ Check settings: `timedatectl`
 
 Set hostname `sudo hostnamectl set-hostname <hostname>`
 Add to hosts `sudo nano /etc/hosts` (and add a line with `IP` `FQDN` `hostname` - e.g. 1.2.3.4 server.domain.com server)
-
 
 ### SSH setup
 SSH setup - create public/private key pair
