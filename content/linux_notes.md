@@ -24,7 +24,7 @@ sudo nano /home/pi/.vnc/config
 sudo apt install guake (then F12 to show/hide console, Ctrl+Shift+T for new tab, Ctrl+PgUp/PgDwn to navigate) - https://github.com/Guake/guake/
 tar -xzf [filename.tar.gz]
 less {excellent way to view a file, h for help, q to quit, g start, G end}
-
+`env` to print environment variables 
 to find recursively in folders...
 find . -name '*.xml'
 
