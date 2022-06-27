@@ -67,6 +67,9 @@ sudo ufw logging on (see /var/log/ufw.log)
 See list of ports listening for open connections
 sudo ss -atpu
 
+Delete an existing rule
+sudo ufw delete allow 9443
+
 ### Setup fail2ban
 `sudo apt install fail2ban -y`
 `cd /etc/fail2ban`
@@ -122,14 +125,35 @@ rm ~/.poshthemes/themes.zip
 Ensure a Nerd Font [https://www.nerdfonts.com/] such as Caskaydia Cove NF is installed and selected in the terminal program
 `eval "$(oh-my-posh init bash --config ~/.poshthemes/[theme_name].omp.json)"` to switch theme
 
+## Docker/Portainer setup
+See https://docs.docker.com/engine/install/debian/
+`sudo curl -sSL https://get.docker.com/ | sh`
+To enable non-root access to the Docker daemon run `sudo usermod -aG docker <username>` - then logout and back in
+
+Create Portainer volume and then start Docker container, but for security bind port only to localhost, so that it cannot be access except when an SSH tunnel is active.
+```
+docker volume create portainer_data
+docker run -d -p 127.0.0.1:8000:8000 -p 127.0.0.1:9000:9000 \
+ --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock \
+ -v portainer_data:/data portainer/portainer-ce
+```
+
+SSH tunnel - example SSH connection string
+```
+ssh -L 9000:127.0.0.1:9000 <user>@<server FQDN> -i <PATH TO PRIVATE KEY>
+```
+Then connect using http://localhost:9000
+
 ## NGINX install
 Install the prerequisites:
 
 `sudo apt install curl gnupg2 ca-certificates lsb-release debian-archive-keyring`
 Import an official nginx signing key so apt could verify the packages authenticity. Fetch the key:
 
-`curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor \
-    | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null`
+```
+curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor \
+    | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+```
 Verify that the downloaded file contains the proper key:
 
 `gpg --dry-run --quiet --import --import-options import-show /usr/share/keyrings/nginx-archive-keyring.gpg`
