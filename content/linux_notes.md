@@ -27,6 +27,7 @@ less {excellent way to view a file, h for help, q to quit, g start, G end}
 `env` to print environment variables 
 to find recursively in folders...
 find . -name '*.xml'
+`ip a` (list ip addresses)
 
 ## BASH tips
 Ctrl-U clear line
@@ -53,6 +54,11 @@ tar -xjf [filename].tgz
 [Ctrl]-[z] to background
 `fg` on terminal to then run again
 `jobs` to list currently running background processes
+
+# ncdu
+shows usage by directory
+`sudo apt instal ncdu`
+`sudo ncdu -x /` (to only show files from root but on local filesystem)
 
 # glances
 pip3 install glances

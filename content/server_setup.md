@@ -135,14 +135,25 @@ Create Portainer volume and then start Docker container, but for security bind p
 docker volume create portainer_data
 docker run -d -p 127.0.0.1:8000:8000 -p 127.0.0.1:9000:9000 \
  --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock \
- -v portainer_data:/data portainer/portainer-ce
+ -v portainer_data:/data portainer/portainer-ce:latest
 ```
+Possible route to use Wireguard https://www.portainer.io/blog/how-to-run-portainer-behind-a-wireguard-vpn
+Switch external templates to `https://raw.githubusercontent.com/SelfhostedPro/selfhosted_templates/master/Template/portainer-v2.json`
 
 SSH tunnel - example SSH connection string
 ```
 ssh -L 9000:127.0.0.1:9000 <user>@<server FQDN> -i <PATH TO PRIVATE KEY>
 ```
 Then connect using http://localhost:9000
+
+## Watchtower setup - monitor and update Docker containers
+https://github.com/containrrr/watchtower
+```
+docker run --detach \
+    --name watchtower \
+    --volume /var/run/docker.sock:/var/run/docker.sock \
+    containrrr/watchtower
+```
 
 ## NGINX install
 Install the prerequisites:
