@@ -3,10 +3,6 @@ title: "Server setup"
 date: 2022-06-16T10:32:03+01:00
 draft: false
 ---
-# Hugo/NGINX setup
-
-## Initial server setup
-
 ### Users
 Add non-root user & then add to sudo group
 `sudo adduser <username> && sudo usermod -aG sudo <username>`
@@ -67,10 +63,13 @@ sudo ufw logging on (see /var/log/ufw.log)
 See list of ports listening for open connections
 sudo ss -atpu
 
+Issue with Docker overruling ufw settings for opening ports:
+https://stackoverflow.com/questions/30383845/what-is-the-best-practice-of-docker-ufw-under-ubuntu/51741599#51741599
+
 Delete an existing rule
 sudo ufw delete allow 9443
 
-### Setup fail2ban
+### Setup fail2ban **CHANGE FOR DOCKER**
 `sudo apt install fail2ban -y`
 `cd /etc/fail2ban`
 `sudo cp fail2ban.conf fail2ban.local` (good practice although unlikely will need to edit)
@@ -126,6 +125,7 @@ Ensure a Nerd Font [https://www.nerdfonts.com/] such as Caskaydia Cove NF is ins
 `eval "$(oh-my-posh init bash --config ~/.poshthemes/[theme_name].omp.json)"` to switch theme
 
 ## Docker/Portainer setup
+Aim for Alpine Linux-based containers to minimise size/bloat
 See https://docs.docker.com/engine/install/debian/
 `sudo curl -sSL https://get.docker.com/ | sh`
 To enable non-root access to the Docker daemon run `sudo usermod -aG docker <username>` - then logout and back in
@@ -138,13 +138,17 @@ docker run -d -p 127.0.0.1:8000:8000 -p 127.0.0.1:9000:9000 \
  -v portainer_data:/data portainer/portainer-ce:latest
 ```
 Possible route to use Wireguard https://www.portainer.io/blog/how-to-run-portainer-behind-a-wireguard-vpn
-Switch external templates to `https://raw.githubusercontent.com/SelfhostedPro/selfhosted_templates/master/Template/portainer-v2.json`
 
 SSH tunnel - example SSH connection string
 ```
 ssh -L 9000:127.0.0.1:9000 <user>@<server FQDN> -i <PATH TO PRIVATE KEY>
 ```
 Then connect using http://localhost:9000
+
+Go to Environments > local and add public IP to allow all the ports links to be clickable
+
+Aim to put volumes in /var/lib/docker/volums/[containername]
+Use bind for nginx live website so can easily be updated from script
 
 ## Watchtower setup - monitor and update Docker containers
 https://github.com/containrrr/watchtower
@@ -155,7 +159,147 @@ docker run --detach \
     containrrr/watchtower
 ```
 
+## NGINX Proxy Manager install
+Docker compose file from https://nginxproxymanager.com/setup/#running-the-app 
+```
+version: "3"
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81' # Admin Web Port
+      # Add any other Stream port you want to expose
+      # - '21:21' # FTP
+
+    # Uncomment the next line if you uncomment anything in the section
+    # environment:
+      # Uncomment this if you want to change the location of 
+      # the SQLite DB file within the container
+      # DB_SQLITE_FILE: "/data/database.sqlite"
+
+      # Uncomment this if IPv6 is not enabled on your host
+      # DISABLE_IPV6: 'true'
+
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+```
+Paste this as a new stack in Portainer
+
+## Authelia setup
+https://www.authelia.com/integration/prologue/get-started/
+https://www.authelia.com/integration/deployment/docker/#lite
+https://www.authelia.com/integration/proxies/nginx-proxy-manager/
+
+
+## Dozzle (log viewer) setup
+https://dozzle.dev/
+https://github.com/amir20/dozzle
+
+Docker compose:
+```
+version: "3"
+services:
+  dozzle:
+    cap_add:
+      - AUDIT_WRITE
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - FSETID
+      - KILL
+      - MKNOD
+      - NET_BIND_SERVICE
+      - NET_RAW
+      - SETFCAP
+      - SETGID
+      - SETPCAP
+      - SETUID
+      - SYS_CHROOT
+    cap_drop:
+      - AUDIT_CONTROL
+      - BLOCK_SUSPEND
+      - DAC_READ_SEARCH
+      - IPC_LOCK
+      - IPC_OWNER
+      - LEASE
+      - LINUX_IMMUTABLE
+      - MAC_ADMIN
+      - MAC_OVERRIDE
+      - NET_ADMIN
+      - NET_BROADCAST
+      - SYSLOG
+      - SYS_ADMIN
+      - SYS_BOOT
+      - SYS_MODULE
+      - SYS_NICE
+      - SYS_PACCT
+      - SYS_PTRACE
+      - SYS_RAWIO
+      - SYS_RESOURCE
+      - SYS_TIME
+      - SYS_TTY_CONFIG
+      - WAKE_ALARM
+    container_name: dozzle
+    entrypoint:
+      - /dozzle
+    environment:
+      - PATH=/bin
+    expose:
+      - 8080/tcp
+    hostname: d29ba597cdd0
+    image: docker.io/amir20/dozzle:latest
+    ipc: private
+    labels:
+      org.opencontainers.image.created: '2022-06-28T22:26:04.008Z'
+      org.opencontainers.image.description: Realtime log viewer for docker containers.
+      org.opencontainers.image.licenses: MIT
+      org.opencontainers.image.revision: 6be73692baaadf1ceb61459f143eeb92232bbe79
+      org.opencontainers.image.source: https://github.com/amir20/dozzle
+      org.opencontainers.image.title: dozzle
+      org.opencontainers.image.url: https://github.com/amir20/dozzle
+      org.opencontainers.image.version: v3.12.7
+    logging:
+      driver: json-file
+      options: {}
+    networks:
+      - nginx-proxy-manager_default
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default
+```
+Add to nginx proxy manager as usual
+
+## Export existing container(s) as Docker Compose file(s)
+From https://github.com/Red5d/docker-autocompose this will automatically generate docker compose files for specified containers:
+
+`docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/red5d/docker-autocompose <container-name-or-id> <additional-names-or-ids>`
+
+Or for all containers:
+`docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/red5d/docker-autocompose $(docker ps -aq)`
+
+## Setup webhooks
+Original project: https://github.com/adnanh/webhook
+Dockerised version: https://github.com/almir/docker-webhook
+Runs on port 9000 - can use NPM to reverse proxy as usual
+Ensure -verbose -hotreload tags used (for logging and ability to reload hooks without re-running container respectively)
+
 ## NGINX install
+When deploying container, **be sure to set network to nginx-proxy-manager_default**
+In NPM add proxy host - enter subdomain.domain.tld then redirect to docker container name on relevant port
+
+Set npm to proxy back onto itself then can remove 81 port mapping (need to leave 80 and 443 for dealing with incoming traffic).
+
+Can then setup access list - add name for rule, then un/pwd options, then need to add 'all' to allow list for access.
+
 Install the prerequisites:
 
 `sudo apt install curl gnupg2 ca-certificates lsb-release debian-archive-keyring`
