@@ -36,8 +36,8 @@ commit_id=$3
 
 # If something goes wrong, put the previous verison back in place
 function cleanup {
-    echo "A problem occurred. Reverting to backup."
     ERROR=$?
+    echo "A problem occurred. Reverting to backup."
     rsync -aqz --del $BACKUP_WWW/ $PUBLIC_WWW
     rm -rf $WORKING_DIRECTORY
     
@@ -67,7 +67,7 @@ rm -rf $PUBLIC_WWW/*
 # Have mkdocs-material generate the new static HTML directly into the public WWW folder
 # Save the output to send to Telegram
 mkdocs_response=$(docker run --rm -it -v $WORKING_DIRECTORY:/docs squidfunk/mkdocs-material build)
-cp $WORKING_DIRECTORY/site $PUBLIC_WWW
+cp $WORKING_DIRECTORY/site/* $PUBLIC_WWW
 # Send response to bot as a fenced code block to preserve formatting
 send_msg "<pre>$mkdocs_response</pre>"
 
