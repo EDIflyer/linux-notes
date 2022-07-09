@@ -307,14 +307,14 @@ webhooks needs a hook file (which tells it how to handle incoming requests), and
 
 generate a v4 UUID to have as a 'secret' - https://www.uuidgenerator.net/
 
-Create a webhooks directory in the home directory: `mkdir webhook`
-Then create a JSON file for the hooks: `nano hooks.json`...
+Create a webhooks directory in the home directory: `sudo mkdir /opt/webhook`
+Then create a JSON file for the hooks: `sudo nano /opt/webhook/hooks.json` and set relevant trigger rules (such as the branch being pushed to):
 ```
 [
     {
         "id": "redeploy",
-        "execute-command": "~/webhook/script.sh",
-        "command-working-directory": "~/webhook",
+        "execute-command": "/opt/webhook/triggerscript.sh",
+        "command-working-directory": "/opt/webhook",
         "pass-arguments-to-command":
         [
             {
@@ -363,10 +363,35 @@ Then create a JSON file for the hooks: `nano hooks.json`...
     }
 ]
 ```
-Now create a script: `nano webhook/script.sh` and then make it executable `chmod +x webhook/script.sh`
+Now create a script: `nano /opt/webhook/triggerscript.sh` and then make it executable `chmod +x /opt/webhook/triggerscript.sh`
 
-Add to crontab to run at boot
-`webhook -hooks webhook/hooks.json -verbose -hotreload -port 9001`
+Create a service with `sudo nano /opt/webhook/webhooks.service`
+```
+# NOTES
+# -----
+# Install to systemd folder:
+# sudo cp webhooks.service /etc/systemd/system/webhooks.service
+# sudo systemctl daemon-reload
+#
+# Can then use:
+# systemctl status webhooks
+# sudo systemctl start webhooks
+# sudo systemctl stop webhooks
+#
+[Unit]
+Description=Webhook receiver service
+ConditionPathExists=/usr/bin/webhook
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/webhook -hooks /opt/webhook/hooks.json -verbose -hotreload -port 9001
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+```
+
 
 ## NGINX install
 When deploying container, **be sure to set network to nginx-proxy-manager_default**
