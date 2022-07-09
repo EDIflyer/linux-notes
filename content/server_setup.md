@@ -374,8 +374,8 @@ Create a service with `sudo nano /opt/webhook/webhooks.service`
 # sudo systemctl daemon-reload
 #
 # Can then use:
-# systemctl status webhooks
-# sudo systemctl start webhooks
+# sudo systemctl enable webhooks --now
+# sudo systemctl status webhooks
 # sudo systemctl stop webhooks
 #
 [Unit]
