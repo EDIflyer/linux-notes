@@ -37,11 +37,12 @@ commit_id=$3
 # If something goes wrong, put the previous verison back in place
 function cleanup {
     echo "A problem occurred. Reverting to backup."
+    ERROR=$?
     rsync -aqz --del $BACKUP_WWW/ $PUBLIC_WWW
     rm -rf $WORKING_DIRECTORY
     
     # Use $? to get the error message that caused the failure
-    send_msg "<b>Deployment of $MY_DOMAIN failed:</b> $?"
+    send_msg "<b>Deployment of $MY_DOMAIN failed:</b> $ERROR"
 }
 
 # Call the cleanup function if this script exits abnormally. The -e flag
