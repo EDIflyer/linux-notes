@@ -29,6 +29,13 @@ to find recursively in folders...
 find . -name '*.xml'
 `ip a` (list ip addresses)
 
+## iperf
+`sudo apt install iperf`
+Run server:
+`iperf -s`
+Connect client:
+`iperf -c <ip_of_server>`
+
 ## BASH tips
 Ctrl-U clear line
 Ctrl-L clear screen

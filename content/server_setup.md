@@ -171,7 +171,7 @@ services:
       # These ports are in format <host-port>:<container-port>
       - '80:80' # Public HTTP Port
       - '443:443' # Public HTTPS Port
-      - '81:81' # Admin Web Port
+      - '81:81' # Admin Web Port [can comment this out later once reverse proxy setup]
       # Add any other Stream port you want to expose
       # - '21:21' # FTP
 
@@ -183,7 +183,8 @@ services:
 
       # Uncomment this if IPv6 is not enabled on your host
       # DISABLE_IPV6: 'true'
-
+    extra_hosts:  # doesn't currently work but preparation in case fixed in the future
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt
@@ -288,13 +289,84 @@ Or for all containers:
 
 ## Setup webhooks
 Original project: https://github.com/adnanh/webhook
-Dockerised version: https://github.com/almir/docker-webhook
-Runs on port 9000 - can use NPM to reverse proxy this, however need to add an appropriate firewall rule otherwise the nginx container won't be able to access that service on the host localhost (see https://superuser.com/questions/1709013/enable-access-to-host-service-with-ubuntu-firewall-from-docker-container)
+`sudo apt install webhook`
+
+>Dockerised version: https://github.com/almir/docker-webhook
+>Runs on port 9000 - can use NPM to reverse proxy this, however need to add an appropriate firewall rule otherwise the nginx container won't be able to access that service on the host localhost (see https://superuser.com/questions/1709013/enable-access-to-host-service-with-ubuntu-firewall-from-docker-container)
 Check the network range for the nginx-proxy-manager_default network and then run a rule based on this on the host, e.g.
 `sudo ufw allow from 172.19.0.0/16`
-Then setup reverse proxy to the IP of the bridge network gateway (can confirm IP by looking at `ip addr show docker0` on the host) - normally should be 172.17.0.1.  If the container has been started with a `--add-host host.docker.internal:host-gateway` flag then can use host.docker.internal instead. In Portainer go to advanced container settings > network and add `host.docker.internal:host-gateway` to the 'Hosts file entries'
+Then setup reverse proxy to the IP of the bridge network gateway (can confirm IP by looking at `ip addr show docker0` on the host) - normally should be 172.17.0.1.
 
-Ensure -verbose -hotreload tags used (for logging and ability to reload hooks without re-running container respectively)
+>In theory if the container has been started with a `--add-host host.docker.internal:host-gateway` flag then you should be able to n use host.docker.internal instead, **however at present this doesn't work with NPM**. In Portainer go to advanced container settings > network and add `host.docker.internal:host-gateway` to the 'Hosts file entries'
+>![](images/2022-07-09-18-50-16.png)
+> Ensure -verbose -hotreload tags used (for logging and ability to reload hooks without re-running container respectively)
+
+Good guide at https://ansonvandoren.com/posts/deploy-hugo-from-github/
+
+webhooks needs a hook file (which tells it how to handle incoming requests), and a script that it should run if it matches an incoming request
+
+generate a v4 UUID to have as a 'secret' - https://www.uuidgenerator.net/
+
+Create a webhooks directory in the home directory: `mkdir webhook`
+Then create a JSON file for the hooks: `nano hooks.json`...
+```
+[
+    {
+        "id": "redeploy",
+        "execute-command": "~/webhook/script.sh",
+        "command-working-directory": "~/webhook",
+        "pass-arguments-to-command":
+        [
+            {
+                "source": "payload",
+                "name": "head_commit.message"
+            },
+            {
+                "source": "payload",
+                "name": "pusher.name"
+            },
+            {
+                "source": "payload",
+                "name": "head_commit.id"
+            }
+        ],
+        "trigger-rule":
+        {
+            "and":
+            [
+                {
+                    "match":
+                    {
+                        "type": "payload-hash-sha1",
+                        "secret": "<insert_UUID_here>",
+                        "parameter":
+                        {
+                            "source": "header",
+                            "name": "X-Hub-Signature"
+                        }
+                    }
+                },
+                {
+                    "match":
+                    {
+                        "type": "value",
+                        "value": "refs/heads/master",
+                        "parameter":
+                        {
+                            "source": "payload",
+                            "name": "ref"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+]
+```
+Now create a script: `nano webhook/script.sh` and then make it executable `chmod +x webhook/script.sh`
+
+Add to crontab to run at boot
+`webhook -hooks webhook/hooks.json -verbose -hotreload -port 9001`
 
 ## NGINX install
 When deploying container, **be sure to set network to nginx-proxy-manager_default**
