@@ -350,7 +350,7 @@ Then create a JSON file for the hooks: `nano hooks.json`...
                     "match":
                     {
                         "type": "value",
-                        "value": "refs/heads/master",
+                        "value": "refs/heads/main",
                         "parameter":
                         {
                             "source": "payload",
