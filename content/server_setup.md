@@ -391,7 +391,7 @@ Restart=on-failure
 [Install]
 WantedBy=default.target
 ```
-
+Enable and start the webhook service then check status (commands above)
 
 ## NGINX install
 When deploying container, **be sure to set network to nginx-proxy-manager_default**

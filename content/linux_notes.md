@@ -137,3 +137,5 @@ reload config - tmux source-file ~/.tmux.confg
 ## Hugo
 hugo server --bind=YOURLINODEPUBLICIP [or replace with FQDN]
 -D to allow drafts
+
+Good documentation site re `curl`: https://everything.curl.dev/
