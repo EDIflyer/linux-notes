@@ -62,11 +62,12 @@ send_msg "<i>Successfully cloned Github repo for $MY_DOMAIN</i>
 
 # Delete old version
 rm -rf $PUBLIC_WWW/*
-# Have Hugo generate the new static HTML directly into the public WWW folder
-# Save the output of Hugo to send to Telegram
-hugo_response=$(/usr/local/bin/hugo -s $WORKING_DIRECTORY -d $PUBLIC_WWW -b "https://${MY_DOMAIN}")
-# Send Hugo response to bot as a fenced code block to preserve formatting
-send_msg "<pre>$hugo_response</pre>"
+# Have mkdocs-material generate the new static HTML directly into the public WWW folder
+# Save the output to send to Telegram
+mkdocs_response=$(docker run --rm -it -v $WORKING_DIRECTORY:/docs squidfunk/mkdocs-material build)
+cp $WORKING_DIRECTORY/site $PUBLIC_WWW
+# Send response to bot as a fenced code block to preserve formatting
+send_msg "<pre>$mkdocs_response</pre>"
 
 # All done!
 send_msg "<b>Deployment successful!</b>"
