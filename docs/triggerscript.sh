@@ -5,12 +5,12 @@
 
 # Repo name on GitHub
 REMOTE_REPO=https://github.com/EDIflyer/linux-notes.git
-# A place to clone the remote repo so the static site generator can build from it
-WORKING_DIRECTORY=$HOME/repositories/linux-notes
+# A place to clone the remote repo so the static site generator can build from it; can't use $HOME as runs as root
+WORKING_DIRECTORY=/home/<user>/repositories/linux-notes
 # Location (server block) where the Nginx container looks for content to serve
 PUBLIC_WWW=/var/www/docs.alanjrobertson.co.uk/html
 # Backup folder in case something goes wrong during this script
-BACKUP_WWW=$HOME/docs/backup_html
+BACKUP_WWW=/home/<user>/docs/backup_html
 # Domain name so Hugo can generate links correctly
 MY_DOMAIN=docs.alanjrobertson.co.uk
 
