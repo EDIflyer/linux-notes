@@ -58,6 +58,7 @@ git clone $REMOTE_REPO $WORKING_DIRECTORY
 
 send_msg "<i>Successfully cloned Github repo for $MY_DOMAIN</i>
 <code>Message: $commit_message</code>
+<code>Commit ID: $commit_id</code>
 <code>Pushed by: $pusher_name</code>"
 
 # Delete old version
