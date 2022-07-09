@@ -289,7 +289,11 @@ Or for all containers:
 ## Setup webhooks
 Original project: https://github.com/adnanh/webhook
 Dockerised version: https://github.com/almir/docker-webhook
-Runs on port 9000 - can use NPM to reverse proxy as usual
+Runs on port 9000 - can use NPM to reverse proxy this, however need to add an appropriate firewall rule otherwise the nginx container won't be able to access that service on the host localhost (see https://superuser.com/questions/1709013/enable-access-to-host-service-with-ubuntu-firewall-from-docker-container)
+Check the network range for the nginx-proxy-manager_default network and then run a rule based on this on the host, e.g.
+`sudo ufw allow from 172.19.0.0/16`
+Then setup reverse proxy to the IP of the bridge network gateway (can confirm IP by looking at `ip addr show docker0` on the host) - normally should be 172.17.0.1.  If the container has been started with a `--add-host host.docker.internal:host-gateway` flag then can use host.docker.internal instead. In Portainer go to advanced container settings > network and add `host.docker.internal:host-gateway` to the 'Hosts file entries'
+
 Ensure -verbose -hotreload tags used (for logging and ability to reload hooks without re-running container respectively)
 
 ## NGINX install
