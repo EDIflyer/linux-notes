@@ -18,7 +18,7 @@ Add some triggerscript:
 --8<-- "docs/triggerscript.sh"
 ```
 
-List of markdown options
+List of markdown options  
 https://squidfunk.github.io/mkdocs-material/reference/
 
 List of markdown extensions (NB not all supported by Material for MkDocs)
@@ -37,3 +37,5 @@ Content Cell  | Content Cell
 Content Cell  | Content Cell
 
 This page was last updated: *{{ git_revision_date_localized }}*
+
+Handy markdown cheatsheet: https://yakworks.github.io/docmark/cheat-sheet/
