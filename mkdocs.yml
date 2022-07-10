@@ -17,9 +17,9 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
 
-# plugins:
-#   - search
-#   - git-revision-date-localized
+plugins:
+  - search
+  - git-revision-date-localized
 
 markdown_extensions:
   # Python Markdown
