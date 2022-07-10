@@ -503,10 +503,15 @@ services:
     logging:
       driver: json-file
       options: {}
+    networks:
+      - nginx-proxy-manager_default
     volumes:
       - /home/alan/mkdocs-live/linux-notes:/docs
     working_dir: /docs
-networks: {}
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default
 ```
 
 ## Hugo installation
