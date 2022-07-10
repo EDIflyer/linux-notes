@@ -307,7 +307,7 @@ Check the network range for the nginx-proxy-manager_default network and then run
 Then setup reverse proxy to the IP of the bridge network gateway (can confirm IP by looking at `ip addr show docker0` on the host) - normally should be 172.17.0.1.
 
 >In theory if the container has been started with a `--add-host host.docker.internal:host-gateway` flag then you should be able to n use host.docker.internal instead, **however at present this doesn't work with NPM**. In Portainer go to advanced container settings > network and add `host.docker.internal:host-gateway` to the 'Hosts file entries'
->![](images/2022-07-09-18-50-16.png)
+>![](../images/2022-07-09-18-50-16.png)
 > Ensure -verbose -hotreload tags used (for logging and ability to reload hooks without re-running container respectively)
 
 Good guide at https://ansonvandoren.com/posts/deploy-hugo-from-github/
@@ -447,7 +447,7 @@ Build an image that includes the git revision date plugin
 FROM squidfunk/mkdocs-material
 RUN pip install mkdocs-git-revision-date-localized-plugin
 ```
-![](images/2022-07-10-12-16-58.png)
+![](../images/2022-07-10-12-16-58.png)
 ``` docker
 version: "3"
 services:
@@ -551,8 +551,3 @@ git submodule add https://github.com/McShelby/hugo-theme-relearn.git themes/hugo
 Edit `config.toml`
 ```# Change the default theme to be use when building the site with Hugo
 theme = "hugo-theme-relearn"
-
-# For search functionality
-[outputs]
-home = [ "HTML", "RSS", "JSON"]```
-Update baseURL/languageCode/title

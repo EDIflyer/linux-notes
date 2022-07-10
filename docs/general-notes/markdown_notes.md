@@ -4,6 +4,10 @@ description: Notes on implementation of markdown in mkdocs-material
 
 ---
 
+Link to [server notes](../server-setup/server_setup.md)
+
+In VS Code type `(../` to bring up pop-up and navigate to file for internal link
+
 PyMdown Extensions
 https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex/
 
@@ -39,3 +43,4 @@ Content Cell  | Content Cell
 This page was last updated: *{{ git_revision_date_localized }}*
 
 Handy markdown cheatsheet: https://yakworks.github.io/docmark/cheat-sheet/
+Tutorial: https://commonmark.org/help/tutorial/

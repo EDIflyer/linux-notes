@@ -14,7 +14,7 @@ New test
     VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=mushan.vscode-paste-image
 
 Set `Paste Image: path` to `images` so they go into a subdirectory:
-![](images/2022-07-09-18-34-46.png)
+![](../images/2022-07-09-18-34-46.png)
 
 EKORA(r) by Clinical IT(c)
 
