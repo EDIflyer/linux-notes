@@ -83,3 +83,5 @@ First Header  | Second Header
 ------------- | -------------
 Content Cell  | Content Cell
 Content Cell  | Content Cell
+
+This page was last updated: *{{ git_revision_date_localized }}*
