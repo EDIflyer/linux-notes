@@ -6,7 +6,8 @@ description: Notes on implementation of markdown in mkdocs-material
 
 Link to [server notes](../server-setup/server_setup.md)
 
-In VS Code type `(../` to bring up pop-up and navigate to file for internal link
+In VS Code type `(../` to bring up pop-up and navigate to file for internal link...
+![](images/2022-07-10-22-45-00.png)
 
 PyMdown Extensions
 https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex/
