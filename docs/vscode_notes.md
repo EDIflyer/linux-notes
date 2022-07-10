@@ -24,3 +24,5 @@ Set `Paste Image: path` to `images` so they go into a subdirectory:
 
     ??? danger "Nested details!"
         And more content again.
+
+Use Ctrl-Alt-V to paste. 
