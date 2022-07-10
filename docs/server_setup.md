@@ -441,7 +441,7 @@ Build an image that includes the git revision date plugin
 FROM squidfunk/mkdocs-material
 RUN pip install mkdocs-git-revision-date-localized-plugin
 ```
-
+![](images/2022-07-10-12-16-58.png)
 ``` docker
 version: "3"
 services:
