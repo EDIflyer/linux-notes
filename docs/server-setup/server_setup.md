@@ -5,15 +5,16 @@ draft: false
 ---
 ### Users
 Add non-root user & then add to sudo group
-`sudo adduser <username> && sudo usermod -aG sudo <username>`
+`#!bash sudo adduser <username> && sudo usermod -aG sudo <username>`
 
 ### Software updates
-Update software
-`sudo apt update && sudo apt upgrade`
+Update software with `#!bash sudo apt update && sudo apt upgrade`
+
+Test git link clinicalit/ekora!33
 
 Switch on unattended upgrades
-`sudo apt install unattended-upgrades -y`
-`sudo dpkg-reconfigure --priority=low unattended-upgrades`
+`#!bash sudo apt install unattended-upgrades -y`
+`#!bash sudo dpkg-reconfigure --priority=low unattended-upgrades`
 
 ### Host setup
 Set timezone: `sudo timedatectl set-timezone Europe/London`
@@ -29,7 +30,7 @@ SSH setup - create public/private key pair
 `ssh-kegen`
 
 Copy public key across to the server
-`ssh-copy-id -i ~/.ssh/id_rsa.pub <username>@<linodeIP>`
+`#!bash ssh-copy-id -i ~/.ssh/id_rsa.pub <username>@<linodeIP>`
 
 Disable password login
 `sudo nano /etc/ssh/sshd_config`
@@ -70,22 +71,27 @@ Delete an existing rule
 sudo ufw delete allow 9443
 
 ### Setup fail2ban **CHANGE FOR DOCKER**
-crazymax/fail2ban
+!!! info "fail2ban options"
+    === "Docker setup"
+        ``` bash
+          crazymax/fail2ban
+        ```
+    === "Local non-Docker setup"
+        ``` bash
+        `sudo apt install fail2ban -y`
+        `cd /etc/fail2ban`
+        `sudo cp fail2ban.conf fail2ban.local` (good practice although unlikely will need to edit)
+        `sudo cp jail.conf jail.local`
+        `sudo nano jail.local`
+        uncomment `bantime.increment` (line 49)
+        uncomment `ignoreip` (line 92) and add the main IPs you will connect from
+        add `enabled = true` for jails you want to activate
+        `sudo systemctl restart fail2ban`
 
-Local non-Docker setup
-<!-- `sudo apt install fail2ban -y`
-`cd /etc/fail2ban`
-`sudo cp fail2ban.conf fail2ban.local` (good practice although unlikely will need to edit)
-`sudo cp jail.conf jail.local`
-`sudo nano jail.local`
-uncomment `bantime.increment` (line 49)
-uncomment `ignoreip` (line 92) and add the main IPs you will connect from
-add `enabled = true` for jails you want to activate
-`sudo systemctl restart fail2ban`
-
-check active jails (specific jails can only be activated once relevant service installed - eg nginx)
-`sudo fail2ban-client status`
-`sudo cat /var/log/fail2ban/error.log` -->
+        check active jails (specific jails can only be activated once relevant service installed - eg nginx)
+        `sudo fail2ban-client status`
+        `sudo cat /var/log/fail2ban/error.log`
+        ```
 
 ### Bash config
 `sudo apt install neofetch -y`

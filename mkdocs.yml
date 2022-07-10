@@ -1,4 +1,7 @@
 site_name: Tech & Programming Notes
+repo_url: https://github.com/EDIflyer/linux-notes
+repo_name: EDIflyer/linux-notes
+edit_uri: edit/main/docs/
 
 theme:
   name: material
@@ -17,9 +20,9 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
 
-plugins:
-  - search
-  - git-revision-date-localized
+# plugins:
+#   - search
+#   - git-revision-date-localized
 
 markdown_extensions:
   # Python Markdown
@@ -47,6 +50,8 @@ markdown_extensions:
       anchor_linenums: true
   - pymdownx.inlinehilite
   - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
   - pymdownx.mark
   - pymdownx.smartsymbols
   - pymdownx.snippets
