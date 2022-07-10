@@ -3,6 +3,7 @@ title: "VS Code notes"
 date: 2022-07-09T18:32:03+01:00
 draft: false
 ---
+New test
 ## Paste Image plugin
 ==Install extension:==
     Name: Paste Image
