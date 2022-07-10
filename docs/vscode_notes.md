@@ -19,3 +19,8 @@ Install extension:
 
 Set `Paste Image: path` to `images` so they go into a subdirectory:
 ![](images/2022-07-09-18-34-46.png)
+
+???+ note "Open styled details"
+
+    ??? danger "Nested details!"
+        And more content again.

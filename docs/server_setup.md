@@ -70,7 +70,10 @@ Delete an existing rule
 sudo ufw delete allow 9443
 
 ### Setup fail2ban **CHANGE FOR DOCKER**
-`sudo apt install fail2ban -y`
+crazymax/fail2ban
+
+Local non-Docker setup
+<!-- `sudo apt install fail2ban -y`
 `cd /etc/fail2ban`
 `sudo cp fail2ban.conf fail2ban.local` (good practice although unlikely will need to edit)
 `sudo cp jail.conf jail.local`
@@ -82,7 +85,7 @@ add `enabled = true` for jails you want to activate
 
 check active jails (specific jails can only be activated once relevant service installed - eg nginx)
 `sudo fail2ban-client status`
-`sudo cat /var/log/fail2ban/error.log`
+`sudo cat /var/log/fail2ban/error.log` -->
 
 ### Bash config
 `sudo apt install neofetch -y`
