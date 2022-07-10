@@ -5,17 +5,12 @@ draft: false
 ---
 ## Paste Image plugin
 Install extension:
->Name: Paste Image
-
->Id: mushan.vscode-paste-image
-
->Description: paste image from clipboard directly
-
->Version: 1.0.4
-
->Publisher: mushan
-
->VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=mushan.vscode-paste-image
+    Name: Paste Image
+    Id: mushan.vscode-paste-image
+    Description: paste image from clipboard directly
+    Version: 1.0.4
+    Publisher: mushan
+    VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=mushan.vscode-paste-image
 
 Set `Paste Image: path` to `images` so they go into a subdirectory:
 ![](images/2022-07-09-18-34-46.png)
@@ -25,4 +20,5 @@ Set `Paste Image: path` to `images` so they go into a subdirectory:
     ??? danger "Nested details!"
         And more content again.
 
-Use Ctrl-Alt-V to paste. 
+!!! info "Usage"
+    Use Ctrl-Alt-V to paste. 

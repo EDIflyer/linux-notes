@@ -48,7 +48,7 @@ Open new tab and check can still login OK before closing this connection!
 `sudo apt-get install ufw`
 
 Enable at boot time and immediately start uncomplicated firewall service
-```
+``` bash
 sudo systemctl enable ufw --now
 sudo ufw allow ssh
 sudo ufw allow 'WWW Full'
@@ -98,7 +98,7 @@ https://bashrcgenerator.com/ - excellent generator
 
 ### Install git and connect to Github
 `sudo apt install git -y`
-```
+``` bash
 cd ~
 mkdir repositories
 cd .ssh
@@ -134,7 +134,7 @@ See https://docs.docker.com/engine/install/debian/
 To enable non-root access to the Docker daemon run `sudo usermod -aG docker <username>` - then logout and back in
 
 Create Portainer volume and then start Docker container, but for security bind port only to localhost, so that it cannot be access except when an SSH tunnel is active.
-```
+``` bash
 docker volume create portainer_data
 docker run -d -p 127.0.0.1:8000:8000 -p 127.0.0.1:9000:9000 \
  --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock \
@@ -143,7 +143,7 @@ docker run -d -p 127.0.0.1:8000:8000 -p 127.0.0.1:9000:9000 \
 Possible route to use Wireguard https://www.portainer.io/blog/how-to-run-portainer-behind-a-wireguard-vpn
 
 SSH tunnel - example SSH connection string
-```
+``` bash
 ssh -L 9000:127.0.0.1:9000 <user>@<server FQDN> -i <PATH TO PRIVATE KEY>
 ```
 Then connect using http://localhost:9000
@@ -164,7 +164,7 @@ docker run --detach \
 
 ## NGINX Proxy Manager install
 Docker compose file from https://nginxproxymanager.com/setup/#running-the-app 
-```
+``` docker
 version: "3"
 services:
   app:
@@ -436,7 +436,13 @@ Copy across trigger script.
 
 ## mkdocs-material live setup
 See triggerscript for main live setup, however for testing changes live, setup a persistent container serving mkdocs-material
+Build an image that includes the git revision date plugin
+``` docker
+FROM squidfunk/mkdocs-material
+RUN pip install mkdocs-git-revision-date-localized-plugin
 ```
+
+``` docker
 version: "3"
 services:
   mkdocs-live:
