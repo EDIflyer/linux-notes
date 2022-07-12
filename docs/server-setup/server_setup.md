@@ -509,8 +509,8 @@ services:
       - PYTHONDONTWRITEBYTECODE=1
     expose:
       - 8000/tcp
-    hostname: be10e69122de
-    image: docker.io/squidfunk/mkdocs-material:latest
+    hostname: b6504768240d
+    image: docker.io/ediflyer/main:mkdocs-live
     ipc: private
     logging:
       driver: json-file
@@ -525,6 +525,11 @@ networks:
     external: true
     name: nginx-proxy-manager_default
 ```
+
+Docker compose file for mkdocs-material
+FROM squidfunk/mkdocs-material
+RUN pip install mkdocs-git-revision-date-localized-plugin
+RUN git config --global --add safe.directory /docs
 
 ## Hugo installation
 Download latest Hugo version from `https://github.com/gohugoio/hugo/releases` and copy to `/usr/local/bin`
