@@ -17,7 +17,7 @@ https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex/
 
 :smile:
 
-Add some recommended extensions:
+Add some recommended extensions using the full path:
 ``` yaml
 --8<-- "mkdocs.yml"
 ```

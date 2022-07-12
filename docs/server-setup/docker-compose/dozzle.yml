@@ -1,0 +1,24 @@
+version: "3"
+services:
+  dozzle:
+    container_name: dozzle
+    entrypoint:
+      - /dozzle
+    environment:
+      - PATH=/bin
+    expose:
+      - 8080/tcp
+    hostname: d29ba597cdd0
+    image: docker.io/amir20/dozzle:latest
+    logging:
+      driver: json-file
+      options: {}
+    networks:
+      - nginx-proxy-manager_default
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default

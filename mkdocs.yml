@@ -19,6 +19,9 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+  icon:
+    admonition:
+      example: fontawesome/solid/file-code
 
 plugins:
   - search
@@ -60,6 +63,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.magiclink:
+      repo: "linux-notes"
+      user: "EDIflyer"
       repo_url_shorthand: true
   - pymdownx.mark
   - pymdownx.smartsymbols

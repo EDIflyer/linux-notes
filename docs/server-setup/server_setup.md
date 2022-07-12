@@ -161,44 +161,35 @@ Use bind for nginx live website so can easily be updated from script
 
 ## Watchtower setup - monitor and update Docker containers
 https://github.com/containrrr/watchtower
+run `docker login` command to store private Docker Hub credentials in `$HOME/.docker/config.json` and then use that when start container
+Use the following docker run command, which links to this config file, links the local time and tells it to include stopped containers and verbose logging.
 ```
 docker run --detach \
     --name watchtower \
     --volume /var/run/docker.sock:/var/run/docker.sock \
+    --volume $HOME/.docker/config.json:/config.json \
+    -v /etc/localtime:/etc/localtime:ro \
+    -e WATCHTOWER_NOTIFICATIONS=email \
+    -e WATCHTOWER_NOTIFICATIONS_HOSTNAME=<hostname> \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_FROM=fromaddress@gmail.com \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_TO=toaddress@gmail.com \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER=smtp.gmail.com \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=587 \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=fromaddress@gmail.com \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=app_password \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_DELAY=2 \
     containrrr/watchtower --include-stopped --debug
 ```
+Option parameter to add at the end is `--run-once` to test it all works OK.
+!!! info "Private Docker Hub images"
+    Ensure any private docker images are started as `index.docker.io/<user>/main:tag` rather than `<user>/main:tag`
 
 ## NGINX Proxy Manager install
-Docker compose file from https://nginxproxymanager.com/setup/#running-the-app 
-``` docker
-version: "3"
-services:
-  app:
-    image: 'jc21/nginx-proxy-manager:latest'
-    restart: unless-stopped
-    ports:
-      # These ports are in format <host-port>:<container-port>
-      - '80:80' # Public HTTP Port
-      - '443:443' # Public HTTPS Port
-      - '81:81' # Admin Web Port [can comment this out later once reverse proxy setup]
-      # Add any other Stream port you want to expose
-      # - '21:21' # FTP
-
-    # Uncomment the next line if you uncomment anything in the section
-    # environment:
-      # Uncomment this if you want to change the location of 
-      # the SQLite DB file within the container
-      # DB_SQLITE_FILE: "/data/database.sqlite"
-
-      # Uncomment this if IPv6 is not enabled on your host
-      # DISABLE_IPV6: 'true'
-    extra_hosts:  # doesn't currently work but preparation in case fixed in the future
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
-```
-Paste this as a new stack in Portainer
+Apply this docker-compose (based on https://nginxproxymanager.com/setup/#running-the-app) as a stack in Portainer to deploy: 
+??? example "docker-compose/nginx-proxy-manager.yml"
+    ``` yaml
+    --8<-- "docs/server-setup/docker-compose/nginx-proxy-manager.yml"
+    ```
 
 ## Authelia setup
 https://www.authelia.com/integration/prologue/get-started/
@@ -207,86 +198,14 @@ https://www.authelia.com/integration/proxies/nginx-proxy-manager/
 
 
 ## Dozzle (log viewer) setup
-https://dozzle.dev/
-https://github.com/amir20/dozzle
+Nice logviewer application that lets you monitor all the container logs - https://dozzle.dev/
 
-Docker compose:
-```
-version: "3"
-services:
-  dozzle:
-    cap_add:
-      - AUDIT_WRITE
-      - CHOWN
-      - DAC_OVERRIDE
-      - FOWNER
-      - FSETID
-      - KILL
-      - MKNOD
-      - NET_BIND_SERVICE
-      - NET_RAW
-      - SETFCAP
-      - SETGID
-      - SETPCAP
-      - SETUID
-      - SYS_CHROOT
-    cap_drop:
-      - AUDIT_CONTROL
-      - BLOCK_SUSPEND
-      - DAC_READ_SEARCH
-      - IPC_LOCK
-      - IPC_OWNER
-      - LEASE
-      - LINUX_IMMUTABLE
-      - MAC_ADMIN
-      - MAC_OVERRIDE
-      - NET_ADMIN
-      - NET_BROADCAST
-      - SYSLOG
-      - SYS_ADMIN
-      - SYS_BOOT
-      - SYS_MODULE
-      - SYS_NICE
-      - SYS_PACCT
-      - SYS_PTRACE
-      - SYS_RAWIO
-      - SYS_RESOURCE
-      - SYS_TIME
-      - SYS_TTY_CONFIG
-      - WAKE_ALARM
-    container_name: dozzle
-    entrypoint:
-      - /dozzle
-    environment:
-      - PATH=/bin
-    expose:
-      - 8080/tcp
-    hostname: d29ba597cdd0
-    image: docker.io/amir20/dozzle:latest
-    ipc: private
-    labels:
-      org.opencontainers.image.created: '2022-06-28T22:26:04.008Z'
-      org.opencontainers.image.description: Realtime log viewer for docker containers.
-      org.opencontainers.image.licenses: MIT
-      org.opencontainers.image.revision: 6be73692baaadf1ceb61459f143eeb92232bbe79
-      org.opencontainers.image.source: https://github.com/amir20/dozzle
-      org.opencontainers.image.title: dozzle
-      org.opencontainers.image.url: https://github.com/amir20/dozzle
-      org.opencontainers.image.version: v3.12.7
-    logging:
-      driver: json-file
-      options: {}
-    networks:
-      - nginx-proxy-manager_default
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    working_dir: /
-networks:
-  nginx-proxy-manager_default:
-    external: true
-    name: nginx-proxy-manager_default
-```
-Add to nginx proxy manager as usual
+Apply this docker-compose as a stack in Portainer to deploy:
+??? example "docker-compose/dozzle.yml"
+    ``` yaml
+    --8<-- "docs/server-setup/docker-compose/dozzle.yml"
+    ```
+Add to nginx proxy manager as usual, but with the addition of `proxy_read_timeout 30m;` in the advanced settings tab to minimise the issue of the default 60s proxy timeout causing [repeat log entries](https://github.com/amir20/dozzle/issues/1404).
 
 ## Export existing container(s) as Docker Compose file(s)
 From https://github.com/Red5d/docker-autocompose this will automatically generate docker compose files for specified containers:
@@ -318,60 +237,12 @@ generate a v4 UUID to have as a 'secret' - https://www.uuidgenerator.net/
 
 Create a webhooks directory in the home directory: `sudo mkdir /opt/webhook`
 Then create a JSON file for the hooks: `sudo nano /opt/webhook/hooks.json` and set relevant trigger rules (such as the branch being pushed to):
-```
-[
-    {
-        "id": "redeploy",
-        "execute-command": "/opt/webhook/triggerscript.sh",
-        "command-working-directory": "/opt/webhook",
-        "pass-arguments-to-command":
-        [
-            {
-                "source": "payload",
-                "name": "head_commit.message"
-            },
-            {
-                "source": "payload",
-                "name": "pusher.name"
-            },
-            {
-                "source": "payload",
-                "name": "head_commit.id"
-            }
-        ],
-        "trigger-rule":
-        {
-            "and":
-            [
-                {
-                    "match":
-                    {
-                        "type": "payload-hash-sha1",
-                        "secret": "<insert_UUID_here>",
-                        "parameter":
-                        {
-                            "source": "header",
-                            "name": "X-Hub-Signature"
-                        }
-                    }
-                },
-                {
-                    "match":
-                    {
-                        "type": "value",
-                        "value": "refs/heads/main",
-                        "parameter":
-                        {
-                            "source": "payload",
-                            "name": "ref"
-                        }
-                    }
-                }
-            ]
-        }
-    }
-]
-```
+
+??? example "/opt/webhook/hooks.json"
+    ``` json
+    --8<-- "docs/server-setup/hooks.json"
+    ```
+
 Now create a script: `nano /opt/webhook/triggerscript.sh` and then make it executable `chmod +x /opt/webhook/triggerscript.sh`
 
 Create a service with `sudo nano /opt/webhook/webhooks.service`
@@ -440,13 +311,20 @@ See excellent guide at https://ansonvandoren.com/posts/telegram-notification-on-
 
 Copy across trigger script.
 
-## mkdocs-material live setup
-See triggerscript for main live setup, however for testing changes live, setup a persistent container serving mkdocs-material
-Build an image that includes the git revision date plugin
-``` docker
-FROM squidfunk/mkdocs-material
-RUN pip install mkdocs-git-revision-date-localized-plugin
-```
+## mkdocs-material setup
+See [`triggerscript.sh`](../triggerscript.sh) for the build command for the deployed setup, however for testing changes live a persistent container serving mkdocs-material is much quicker and easier to use.
+
+We want to use the [`git-revision-date-localized` plugin](https://github.com/timvink/mkdocs-git-revision-date-localized-plugin) and this plugin has to be installed by `pip` on top of the main `mkdocs-material` image, therefore we need to create a custom Dockerfile to add this command:
+???+ example "mkdocs.dockerfile"
+    ``` docker
+    FROM squidfunk/mkdocs-material
+    RUN pip install mkdocs-git-revision-date-localized-plugin
+    RUN git config --global --add safe.directory /docs
+    ```
+Once we have created that file we can then build the custom image using `docker build --tag="custom/mkdocs-material" --file="mkdocs.dockerfile" .` (the `.` at the end is important as it sets the build context and the command won't work without it!)
+
+Now that the custom image has been created we can use a docker-compose file to create a stack in Portainer.  The benefit of having this as a stack as is that we can easily re-deploy it.
+
 ![](../images/2022-07-10-12-16-58.png)
 ``` docker
 version: "3"
@@ -507,10 +385,11 @@ services:
       - PYTHON_GET_PIP_SHA256=c3b81e5d06371e135fb3156dc7d8fd6270735088428c4a9a5ec1f342e2024565
       - PACKAGES=/usr/local/lib/python3.9/site-packages
       - PYTHONDONTWRITEBYTECODE=1
+      - LABEL=com.centurylinklabs.watchtower.enable="false"
     expose:
       - 8000/tcp
     hostname: b6504768240d
-    image: docker.io/ediflyer/main:mkdocs-live
+    image: custom/mkdocs-material:latest
     ipc: private
     logging:
       driver: json-file
@@ -526,7 +405,7 @@ networks:
     name: nginx-proxy-manager_default
 ```
 
-Docker compose file for mkdocs-material
+### Docker compose file for mkdocs-material with date plugin
 FROM squidfunk/mkdocs-material
 RUN pip install mkdocs-git-revision-date-localized-plugin
 RUN git config --global --add safe.directory /docs

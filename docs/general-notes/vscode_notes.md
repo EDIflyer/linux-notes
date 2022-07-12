@@ -23,6 +23,12 @@ EKORA(r) by Clinical IT(c)
     ??? danger "Nested details!"
         And more content again.
 
+:fontawesome-regular-face-laugh-wink:
+
+:octicons-code-16:
+
+:fontawesome-solid-code-fork:
+
 !!! info "Usage"
     Use ++ctrl+alt+v++ to paste. 
 

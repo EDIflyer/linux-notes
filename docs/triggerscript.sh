@@ -66,7 +66,7 @@ send_msg "<i>Successfully cloned Github repo for $MY_DOMAIN</i>
 rm -rf $PUBLIC_WWW/*
 # Have mkdocs-material generate the new static HTML directly into the public WWW folder
 # Save the output to send to Telegram
-mkdocs_response=$(docker run --rm -i -v $WORKING_DIRECTORY:/docs ediflyer/main:mkdocs-live build)
+mkdocs_response=$(docker run --rm -i -v $WORKING_DIRECTORY:/docs custom/mkdocs-live build)
 cp $WORKING_DIRECTORY/site/* $PUBLIC_WWW
 # Send response to bot as a fenced code block to preserve formatting
 send_msg "<pre>$mkdocs_response</pre>"
