@@ -44,7 +44,8 @@ First Header  | Second Header
 Content Cell  | Content Cell
 Content Cell  | Content Cell
 
-This page was last updated: *{{ git_revision_date_localized }}*
+This page was last updated: *{{ git_revision_date_localized }}*  
+This site was last updated: *{{ git_site_revision_date_localized }}*
 
 Handy markdown cheatsheet: https://yakworks.github.io/docmark/cheat-sheet/
 Tutorial: https://commonmark.org/help/tutorial/
