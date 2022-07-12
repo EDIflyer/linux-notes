@@ -3,86 +3,132 @@ title: "Server setup"
 date: 2022-06-16T10:32:03+01:00
 draft: false
 ---
+Spin up server on Linode and SSH in using root commands.
+
 ### Users
-Add non-root user & then add to sudo group
-`#!bash sudo adduser <username> && sudo usermod -aG sudo <username>`
+Initially logged in as a root user - we therefore need to add a non-root user & then add them to the sudo group
+!!! quote "user setup"
+    ``` bash
+    sudo adduser <username> && sudo usermod -aG sudo <username>
+    ```
 
 ### Software updates
-Update software with `#!bash sudo apt update && sudo apt upgrade`
+Update package list and ensure all are the latest versions
+!!! quote "software update"
+    ``` bash
+    sudo apt update && sudo apt upgrade
+    ```
 
-Test git link clinicalit/ekora!33
+Next switch on unattended upgrades to ensure the server remains up to date
+!!! quote "software update"
+    ``` bash
+    sudo apt install unattended-upgrades -y
+    sudo dpkg-reconfigure --priority=low unattended-upgrades
+    ```
 
-Switch on unattended upgrades
-`#!bash sudo apt install unattended-upgrades -y`
-`#!bash sudo dpkg-reconfigure --priority=low unattended-upgrades`
-
-### Host setup
-Set timezone: `sudo timedatectl set-timezone Europe/London`
-Install ntp service: `sudo apt install systemd-timesyncd`
-Activate ntp: `sudo timedatectl set-ntp true`
-Check settings: `timedatectl`
-
-Set hostname `sudo hostnamectl set-hostname <hostname>`
-Add to hosts `sudo nano /etc/hosts` (and add a line with `IP` `FQDN` `hostname` - e.g. 1.2.3.4 server.domain.com server)
+### Host details
+!!! quote "Set timezone"
+    ``` bash
+    sudo timedatectl set-timezone Europe/London
+    ```
+!!! quote "Install ntp service"
+    ``` bash
+    sudo apt install systemd-timesyncd
+    ```
+!!! quote "Activate network time protocol"
+    ``` bash
+    sudo timedatectl set-ntp true
+    ```
+!!! quote "Check settings"
+    ``` bash
+    timedatectl
+    ```
+!!! quote "Set hostname"
+    ``` bash
+    sudo hostnamectl set-hostname <hostname>
+    ```
+!!! quote "Add to hosts"
+    ``` bash
+    sudo nano /etc/hosts
+    ```
+    add a line with `IP FQDN hostname` - e.g. 1.2.3.4 server.domain.com server
 
 ### SSH setup
-SSH setup - create public/private key pair
-`ssh-kegen`
+!!! quote "Create public/private key pair on local machine"
+    ``` bash
+    ssh-kegen
+    ```
+!!! quote "Copy public key across to the server"
+    ``` bash
+    ssh-copy-id -i ~/.ssh/id_rsa.pub <username>@<linodeIP>
+    ```
+!!! quote "Disable password login"
+    ``` bash
+    sudo nano /etc/ssh/sshd_config
+    ```
+    Change the following parameters:  
+    ``` bash
+    PermitRootLogin no
+    PermitRootLogin prohibit-password
+    ChallengeResponseAuthentication no
+    PasswordAuthentication no
+    UsePAM no
+    AllowUsers <username1> <username2>
+    ```
+!!! quote "Restart SSH daemon"
+    ``` bash
+    sudo systemctl restart sshd
+    ```
+    !!! danger "Check first!"
+          Open new tab and check can still login OK before closing this connection!
 
-Copy public key across to the server
-`#!bash ssh-copy-id -i ~/.ssh/id_rsa.pub <username>@<linodeIP>`
-
-Disable password login
-`sudo nano /etc/ssh/sshd_config`
-PermitRootLogin no
-PermitRootLogin prohibit-password
-ChallengeResponseAuthentication no
-PasswordAuthentication no
-UsePAM no
-AllowUsers <username1> <username2>
-
-Restart SSH daemon
-`sudo systemctl restart sshd`
-Open new tab and check can still login OK before closing this connection!
 
 ### Setup firewall
-`sudo apt-get install ufw`
+!!! quote "Install uncomplicated firewall"
+    ``` bash
+    sudo apt-get install ufw
+    ```
+Enable at boot time and immediately start the service
+!!! quote "ufw setup commands"
+    ``` bash
+    sudo systemctl enable ufw --now
+    sudo ufw allow ssh
+    sudo ufw allow 'WWW Full'
+    sudo ufw default allow outgoing
+    sudo ufw default deny incoming
+    sudo ufw show added [to confirm ssh added]
+    sudo ufw enable
+    sudo ufw status numbered
+    sudo ufw logging on (see /var/log/ufw.log)
+    ```
+!!! tip "To see a list of ports currently listening for open connections"
+    ``` bash
+    sudo ss -atpu
+    ```
 
-Enable at boot time and immediately start uncomplicated firewall service
-``` bash
-sudo systemctl enable ufw --now
-sudo ufw allow ssh
-sudo ufw allow 'WWW Full'
-sudo ufw default allow outgoing
-sudo ufw default deny incoming
-sudo ufw show added [to confirm ssh added]
-sudo ufw enable
-sudo ufw status numbered
-sudo ufw logging on (see /var/log/ufw.log)
-```
+!!! warning "Issue with Docker overruling ufw settings for opening ports"
+    Docker maintains its own `iptables` chain which means that any ports opened externally in Docker will automatically be allowed regardless of ufw settings (see [this](https://stackoverflow.com/questions/30383845/what-is-the-best-practice-of-docker-ufw-under-ubuntu/51741599#51741599) Stack Overflow article).  
+    
+Given we are going to set up a reverse proxy manager the easier option is to only internally 'expose' ports when setting up a container rather than 'open' them. This means they will be available internally on the Docker network and the reverse proxy will be able to point to them OK but they won't be open to external access. 
 
-See list of ports listening for open connections
-sudo ss -atpu
-
-Issue with Docker overruling ufw settings for opening ports:
-https://stackoverflow.com/questions/30383845/what-is-the-best-practice-of-docker-ufw-under-ubuntu/51741599#51741599
-
-Delete an existing rule
-sudo ufw delete allow 9443
-
+!!! tip "To delete an existing rule enter the existing rule with `delete` before it"
+    ``` bash
+    sudo ufw delete allow 9443
+    ```
 ### Setup fail2ban **CHANGE FOR DOCKER**
-!!! info "fail2ban options"
+!!! quote "fail2ban options"
     === "Docker setup"
         ``` bash
           crazymax/fail2ban
         ```
     === "Local non-Docker setup"
         ``` bash
-        `sudo apt install fail2ban -y`
-        `cd /etc/fail2ban`
-        `sudo cp fail2ban.conf fail2ban.local` (good practice although unlikely will need to edit)
-        `sudo cp jail.conf jail.local`
-        `sudo nano jail.local`
+        sudo apt install fail2ban -y
+        cd /etc/fail2ban
+        sudo cp fail2ban.conf fail2ban.local #good practice although unlikely will need to edit
+        sudo cp jail.conf jail.local
+        sudo nano jail.local
+        ```
         uncomment `bantime.increment` (line 49)
         uncomment `ignoreip` (line 92) and add the main IPs you will connect from
         add `enabled = true` for jails you want to activate
@@ -91,9 +137,12 @@ sudo ufw delete allow 9443
         check active jails (specific jails can only be activated once relevant service installed - eg nginx)
         `sudo fail2ban-client status`
         `sudo cat /var/log/fail2ban/error.log`
-        ```
 
 ### Bash config
+!!! quote ""
+    ``` bash
+    
+    ```
 `sudo apt install neofetch -y`
 https://bashrcgenerator.com/ - excellent generator
 `nano ~/.bashrc` 
@@ -134,7 +183,9 @@ Ensure a Nerd Font [https://www.nerdfonts.com/] such as Caskaydia Cove NF is ins
 `eval "$(oh-my-posh init bash --config ~/.poshthemes/[theme_name].omp.json)"` to switch theme
 
 ## Docker/Portainer setup
-Aim for Alpine Linux-based containers to minimise size/bloat
+!!! info "Container options"
+    In general aim to use Alpine Linux-based containers to minimise size/bloat of the underlying container.
+
 See https://docs.docker.com/engine/install/debian/
 `sudo curl -sSL https://get.docker.com/ | sh`
 To enable non-root access to the Docker daemon run `sudo usermod -aG docker <username>` - then logout and back in
@@ -160,29 +211,43 @@ Aim to put volumes in /var/lib/docker/volums/[containername]
 Use bind for nginx live website so can easily be updated from script
 
 ## Watchtower setup - monitor and update Docker containers
-https://github.com/containrrr/watchtower
-run `docker login` command to store private Docker Hub credentials in `$HOME/.docker/config.json` and then use that when start container
-Use the following docker run command, which links to this config file, links the local time and tells it to include stopped containers and verbose logging.
-```
-docker run --detach \
-    --name watchtower \
-    --volume /var/run/docker.sock:/var/run/docker.sock \
-    --volume $HOME/.docker/config.json:/config.json \
-    -v /etc/localtime:/etc/localtime:ro \
-    -e WATCHTOWER_NOTIFICATIONS=email \
-    -e WATCHTOWER_NOTIFICATIONS_HOSTNAME=<hostname> \
-    -e WATCHTOWER_NOTIFICATION_EMAIL_FROM=fromaddress@gmail.com \
-    -e WATCHTOWER_NOTIFICATION_EMAIL_TO=toaddress@gmail.com \
-    -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER=smtp.gmail.com \
-    -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=587 \
-    -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=fromaddress@gmail.com \
-    -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=app_password \
-    -e WATCHTOWER_NOTIFICATION_EMAIL_DELAY=2 \
-    containrrr/watchtower --include-stopped --debug
-```
-Option parameter to add at the end is `--run-once` to test it all works OK.
+[Watchtower](https://containrrr.dev/watchtower/) is a container-based solution for automating Docker container base image updates.  
+It can pull from public repositories but to link to a private Docker Hub you need to supply login credentials.  This is best achieved by running a `docker login` command in the terminal, whith will create a file in `$HOME/.docker/config.json` that we can then link as a volume to the Watchtower container.  
+The configuration below links to this config file and also links to the local time and tells Watchtower to include stopped containers and verbose logging.
+=== "docker run"
+    ??? quote "bash"
+        ``` bash
+        docker run --detach \
+            --name watchtower \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
+            --volume $HOME/.docker/config.json:/config.json \
+            -v /etc/localtime:/etc/localtime:ro \
+            -e WATCHTOWER_NOTIFICATIONS=email
+            -e WATCHTOWER_NOTIFICATIONS_HOSTNAME=<hostname>
+            -e WATCHTOWER_NOTIFICATION_EMAIL_TO=<target email>
+            -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=<password>
+            -e WATCHTOWER_NOTIFICATION_EMAIL_DELAY=2
+            -e WATCHTOWER_NOTIFICATION_EMAIL_FROM=<sending email>
+            -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER=<mailserver>
+            -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=587
+            -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=<maillogin>
+            containrrr/watchtower --include-stopped --debug
+        ```
+=== "docker-compose (Portainer stack)"
+    ???+ example "docker-compose/watchtower.yml" 
+        ``` yaml
+        --8<-- "docs/server-setup/docker-compose/watchtower.yml"
+        ```
+!!! tip "Run frequency"
+    By default Watchtower runs once per day, with the first run 24h after container activation.  This can be adjusted by passing the `--interval` [command](https://containrrr.dev/watchtower/arguments/#poll_interval) and specifying the number of seconds. There is also the option of using the `--run-once` flag to immediately check all containers and then stop Watchtower running.
 !!! info "Private Docker Hub images"
-    Ensure any private docker images are started as `index.docker.io/<user>/main:tag` rather than `<user>/main:tag`
+    Ensure any private docker images have been started as `index.docker.io/<user>/main:tag` rather than `<user>/main:tag`
+!!! tip "Exclude containers"
+    To exclude a container from being checked it needs to be built with a label set in the docker-compose to tell Watchtower to ignore it
+    ``` yaml
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+    ```
 
 ## NGINX Proxy Manager install
 Apply this docker-compose (based on https://nginxproxymanager.com/setup/#running-the-app) as a stack in Portainer to deploy: 
@@ -326,84 +391,10 @@ Once we have created that file we can then build the custom image using `docker 
 Now that the custom image has been created we can use a docker-compose file to create a stack in Portainer.  The benefit of having this as a stack as is that we can easily re-deploy it.
 
 ![](../images/2022-07-10-12-16-58.png)
-``` docker
-version: "3"
-services:
-  mkdocs-live:
-    cap_add:
-      - AUDIT_WRITE
-      - CHOWN
-      - DAC_OVERRIDE
-      - FOWNER
-      - FSETID
-      - KILL
-      - MKNOD
-      - NET_BIND_SERVICE
-      - NET_RAW
-      - SETFCAP
-      - SETGID
-      - SETPCAP
-      - SETUID
-      - SYS_CHROOT
-    cap_drop:
-      - AUDIT_CONTROL
-      - BLOCK_SUSPEND
-      - DAC_READ_SEARCH
-      - IPC_LOCK
-      - IPC_OWNER
-      - LEASE
-      - LINUX_IMMUTABLE
-      - MAC_ADMIN
-      - MAC_OVERRIDE
-      - NET_ADMIN
-      - NET_BROADCAST
-      - SYSLOG
-      - SYS_ADMIN
-      - SYS_BOOT
-      - SYS_MODULE
-      - SYS_NICE
-      - SYS_PACCT
-      - SYS_PTRACE
-      - SYS_RAWIO
-      - SYS_RESOURCE
-      - SYS_TIME
-      - SYS_TTY_CONFIG
-      - WAKE_ALARM
-    command:
-      - serve
-      - --dev-addr=0.0.0.0:8000
-    container_name: mkdocs-live
-    entrypoint:
-      - mkdocs
-    environment:
-      - PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-      - LANG=C.UTF-8
-      - GPG_KEY=E3FF2839C048B25C084DEBE9B26995E310250568
-      - PYTHON_VERSION=3.9.2
-      - PYTHON_PIP_VERSION=21.0.1
-      - PYTHON_GET_PIP_URL=https://github.com/pypa/get-pip/raw/b60e2320d9e8d02348525bd74e871e466afdf77c/get-pip.py
-      - PYTHON_GET_PIP_SHA256=c3b81e5d06371e135fb3156dc7d8fd6270735088428c4a9a5ec1f342e2024565
-      - PACKAGES=/usr/local/lib/python3.9/site-packages
-      - PYTHONDONTWRITEBYTECODE=1
-      - LABEL=com.centurylinklabs.watchtower.enable="false"
-    expose:
-      - 8000/tcp
-    hostname: b6504768240d
-    image: custom/mkdocs-material:latest
-    ipc: private
-    logging:
-      driver: json-file
-      options: {}
-    networks:
-      - nginx-proxy-manager_default
-    volumes:
-      - /home/alan/mkdocs-live/linux-notes:/docs
-    working_dir: /docs
-networks:
-  nginx-proxy-manager_default:
-    external: true
-    name: nginx-proxy-manager_default
-```
+??? example "docker-compose/mkdocs-live.yml"
+    ``` yaml
+    --8<-- "docs/server-setup/docker-compose/mkdocs-live.yml"
+    ```
 
 ### Docker compose file for mkdocs-material with date plugin
 FROM squidfunk/mkdocs-material

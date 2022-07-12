@@ -15,6 +15,8 @@ https://chrieke.medium.com/the-best-mkdocs-plugins-and-customizations-fc820eb197
 PyMdown Extensions  
 https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex/
 
+Test git link clinicalit/ekora!33
+
 :smile:
 
 Add some recommended extensions using the full path:

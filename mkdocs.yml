@@ -22,6 +22,8 @@ theme:
   icon:
     admonition:
       example: fontawesome/solid/file-code
+      quote: fontawesome/solid/terminal
+      tip: fontawesome/solid/lightbulb
 
 plugins:
   - search
