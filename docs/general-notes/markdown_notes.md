@@ -7,7 +7,7 @@ description: Notes on implementation of markdown in mkdocs-material
 Link to [server notes](../server-setup/server_setup.md)
 
 In VS Code type `(../` to bring up pop-up and navigate to file for internal link...
-![](images/2022-07-10-22-45-00.png)
+![](docs/images/2022-07-13-01-02-58.png)
 
 Top MkDocs extensions  
 https://chrieke.medium.com/the-best-mkdocs-plugins-and-customizations-fc820eb19759
