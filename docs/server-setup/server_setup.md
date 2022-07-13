@@ -236,7 +236,7 @@ The configuration below links to this config file and also links to the local ti
         ```
 === "docker-compose (Portainer stack)"
     ???+ example "docker-compose/watchtower.yml" 
-        ``` yaml
+        ``` yaml linenums="1"
         --8<-- "docs/server-setup/docker-compose/watchtower.yml"
         ```
 !!! tip "Run frequency"
@@ -253,7 +253,7 @@ The configuration below links to this config file and also links to the local ti
 ## NGINX Proxy Manager install
 Apply this docker-compose (based on https://nginxproxymanager.com/setup/#running-the-app) as a stack in Portainer to deploy: 
 ??? example "docker-compose/nginx-proxy-manager.yml"
-    ``` yaml
+    ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/nginx-proxy-manager.yml"
     ```
 
@@ -268,7 +268,7 @@ Nice logviewer application that lets you monitor all the container logs - https:
 
 Apply this docker-compose as a stack in Portainer to deploy:
 ??? example "docker-compose/dozzle.yml"
-    ``` yaml
+    ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/dozzle.yml"
     ```
 Add to nginx proxy manager as usual, but with the addition of `proxy_read_timeout 30m;` in the advanced settings tab to minimise the issue of the default 60s proxy timeout causing [repeat log entries](https://github.com/amir20/dozzle/issues/1404).
@@ -384,20 +384,22 @@ Copy across trigger script.
 ## mkdocs-material setup
 See [`triggerscript.sh`](../triggerscript.sh) for the build command for the deployed setup, however for testing changes live a persistent container serving mkdocs-material is much quicker and easier to use.
 
-We want to use the [`git-revision-date-localized` plugin](https://github.com/timvink/mkdocs-git-revision-date-localized-plugin) and this plugin has to be installed by `pip` on top of the main `mkdocs-material` image, therefore we need to create a custom Dockerfile to add this command:
-???+ example "mkdocs.dockerfile"
-    ``` docker
+We want to use the [`git-revision-date-localized` plugin](https://github.com/timvink/mkdocs-git-revision-date-localized-plugin) and the [MkDocs GLightbox plugin](https://blueswen.github.io/mkdocs-glightbox/) - these need to be installed by `pip` on top of the main `mkdocs-material` image, therefore we need to create a custom Dockerfile to add the revelant commands and create a custom image before we can activate them in the `mkdocs.yml` configuration file:
+??? example "mkdocs.dockerfile - use in Portainer as Images > Build image"
+    Name: `custom/mkdocs-material`
+    ``` docker linenums="1"
     FROM squidfunk/mkdocs-material
     RUN pip install mkdocs-git-revision-date-localized-plugin
+    RUN pip install mkdocs-glightbox
     RUN git config --global --add safe.directory /docs
     ```
+    ![](../images/2022-07-10-12-16-58.png)
 Once we have created that file we can then build the custom image using `docker build --tag="custom/mkdocs-material" --file="mkdocs.dockerfile" .` (the `.` at the end is important as it sets the build context and the command won't work without it!)
 
 Now that the custom image has been created we can use a docker-compose file to create a stack in Portainer.  The benefit of having this as a stack as is that we can easily re-deploy it.
 
-![](../images/2022-07-10-12-16-58.png)
 ??? example "docker-compose/mkdocs-live.yml"
-    ``` yaml
+    ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/mkdocs-live.yml"
     ```
 

@@ -37,6 +37,7 @@ plugins:
       exclude:
           - index.md
       enabled: true
+  - glightbox
 
 markdown_extensions:
   # Python Markdown
