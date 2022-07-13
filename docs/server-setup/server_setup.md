@@ -171,7 +171,8 @@ ssh -T git@github.com
 
 git clone <enter SSH details for repository>
 
-### Install oh-my-posh [https://ohmyposh.dev/]
+### Install oh-my-posh
+https://ohmyposh.dev/
 sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
 sudo chmod +x /usr/local/bin/oh-my-posh
 mkdir ~/.poshthemes
@@ -215,7 +216,7 @@ Use bind for nginx live website so can easily be updated from script
 It can pull from public repositories but to link to a private Docker Hub you need to supply login credentials.  This is best achieved by running a `docker login` command in the terminal, whith will create a file in `$HOME/.docker/config.json` that we can then link as a volume to the Watchtower container.  
 The configuration below links to this config file and also links to the local time and tells Watchtower to include stopped containers and verbose logging.
 === "docker run"
-    ??? quote "bash"
+    ???+ quote "bash"
         ``` bash
         docker run --detach \
             --name watchtower \
