@@ -304,13 +304,13 @@ Create a webhooks directory in the home directory: `sudo mkdir /opt/webhook`
 Then create a JSON file for the hooks: `sudo nano /opt/webhook/hooks.json` and set relevant trigger rules (such as the branch being pushed to):
 
 ??? example "/opt/webhook/hooks.json"
-    ``` json
+    ``` json linenums="1"
     --8<-- "docs/server-setup/hooks.json"
     ```
 
 Now create a script: `nano /opt/webhook/triggerscript.sh` and then make it executable `chmod +x /opt/webhook/triggerscript.sh`
 ??? example "/opt/webhook/triggerscript.sh"
-    ``` bash
+    ``` bash linenums="1"
     --8<-- "docs/server-setup/triggerscript.sh"
     ```
 
