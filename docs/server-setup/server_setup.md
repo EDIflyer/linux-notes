@@ -310,6 +310,10 @@ Then create a JSON file for the hooks: `sudo nano /opt/webhook/hooks.json` and s
     ```
 
 Now create a script: `nano /opt/webhook/triggerscript.sh` and then make it executable `chmod +x /opt/webhook/triggerscript.sh`
+??? example "/opt/webhook/triggerscript.sh"
+    ``` bash
+    --8<-- "docs/server-setup/triggerscript.sh"
+    ```
 
 Create a service with `sudo nano /opt/webhook/webhooks.service`
 ```
