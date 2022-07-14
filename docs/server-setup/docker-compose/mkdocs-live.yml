@@ -30,7 +30,7 @@ services:
     networks:
       - nginx-proxy-manager_default
     volumes:
-      - /home/alan/mkdocs-live/linux-notes:/docs
+      - /home/[USER_DIRECTORY]/containers/mkdocs-live/[REPOSITORY]:/docs
     working_dir: /docs
 networks:
   nginx-proxy-manager_default:

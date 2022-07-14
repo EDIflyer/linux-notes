@@ -22,5 +22,5 @@ services:
     extra_hosts:  # doesn't currently work but preparation in case fixed in the future
       - "host.docker.internal:host-gateway"
     volumes:
-      - ./data:/data
+      - /home/[USER_DIRECTORY]/containers/nginx-proxy-manager/data:/data
       - ./letsencrypt:/etc/letsencrypt

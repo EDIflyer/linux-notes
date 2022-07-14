@@ -30,7 +30,7 @@ services:
       options: {}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /home/alan/.docker/config.json:/config.json
+      - /home/[USER_DIRECTORY]/.docker/config.json:/config.json
       - /etc/localtime:/etc/localtime:ro
     working_dir: /
 networks: {}

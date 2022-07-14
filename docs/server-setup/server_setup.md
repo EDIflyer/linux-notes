@@ -276,10 +276,14 @@ Add to nginx proxy manager as usual, but with the addition of `proxy_read_timeou
 ## Export existing container(s) as Docker Compose file(s)
 From https://github.com/Red5d/docker-autocompose this will automatically generate docker compose files for specified containers:
 
-`docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/red5d/docker-autocompose <container-name-or-id> <additional-names-or-ids>`
+``` bash
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/red5d/docker-autocompose <container-name-or-id> <additional-names-or-ids>
+```
 
 Or for all containers:
-`docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/red5d/docker-autocompose $(docker ps -aq)`
+``` bash
+docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/red5d/docker-autocompose $(docker ps -aq)
+```
 
 ## Setup webhooks
 Original project: https://github.com/adnanh/webhook
@@ -384,17 +388,23 @@ Copy across trigger script.
 ## mkdocs-material setup
 See [`triggerscript.sh`](../triggerscript.sh) for the build command for the deployed setup, however for testing changes live a persistent container serving mkdocs-material is much quicker and easier to use.
 
-We want to use the [`git-revision-date-localized` plugin](https://github.com/timvink/mkdocs-git-revision-date-localized-plugin) and the [MkDocs GLightbox plugin](https://blueswen.github.io/mkdocs-glightbox/) - these need to be installed by `pip` on top of the main `mkdocs-material` image, therefore we need to create a custom Dockerfile to add the revelant commands and create a custom image before we can activate them in the `mkdocs.yml` configuration file:
+We want to use the [mkdocs-git-revision-date-localized plugin](https://github.com/timvink/mkdocs-git-revision-date-localized-plugin) and the [MkDocs GLightbox plugin](https://github.com/blueswen/mkdocs-glightbox) - these need to be installed by `pip` on top of the main `mkdocs-material` image, therefore we need to create a custom Dockerfile to add the revelant commands and create a custom image before we can activate them in the `mkdocs.yml` configuration file:
 ??? example "mkdocs.dockerfile - use in Portainer as Images > Build image"
-    Name: `custom/mkdocs-material`
     ``` docker linenums="1"
     FROM squidfunk/mkdocs-material
     RUN pip install mkdocs-git-revision-date-localized-plugin
     RUN pip install mkdocs-glightbox
     RUN git config --global --add safe.directory /docs
     ```
+    Once we have created that file we can then either build the custom image using the following command:  
+    ``` bash
+    docker build --tag="custom/mkdocs-material" --file="mkdocs.dockerfile" .
+    ```
+    (the `.` at the end is important as it sets the build context and the command won't work without it!)  
+    
+    Or using Portainer we can just paste directly in as a custom image:  
+    Name: `custom/mkdocs-material`
     ![](../images/2022-07-10-12-16-58.png)
-Once we have created that file we can then build the custom image using `docker build --tag="custom/mkdocs-material" --file="mkdocs.dockerfile" .` (the `.` at the end is important as it sets the build context and the command won't work without it!)
 
 Now that the custom image has been created we can use a docker-compose file to create a stack in Portainer.  The benefit of having this as a stack as is that we can easily re-deploy it.
 
@@ -433,3 +443,37 @@ git submodule add https://github.com/McShelby/hugo-theme-relearn.git themes/hugo
 Edit `config.toml`
 ```# Change the default theme to be use when building the site with Hugo
 theme = "hugo-theme-relearn"
+
+## Uptime Kuma monitoring
+A nice status monitoring app - https://github.com/louislam/uptime-kuma
+
+Install it via docker-compose:
+??? example "docker-compose/uptime-kuma.yml" 
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/uptime-kuma.yml"
+    ```
+
+???+ tip "Join to bridge network post setup if required"
+    Remember docker-compose can only join the new container to one network, so need to manually add to bridge network afterwards if you also want to monitor containers that aren't on the `nginx-proxy-manager_default` network so use the following command (or add network via Portainer):  
+    ``` bash
+    docker network connect bridge uptime-kuma
+    ```
+
+## Filebrowser
+A nice GUI file browser - https://github.com/filebrowser/filebrowser
+
+???+ warning "Create the empty db file first"
+    ``` bash
+    mkdir -p $HOME/containers/filebrowser && touch $HOME/containers/filebrowser/filebrowser.db
+    ```
+
+Then install via docker-compose:
+??? example "docker-compose/filebrowser.yml" 
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/filebrowser.yml"
+    ```
+
+Setup NPM SSH reverse proxy (remember to include websocket support) and then login:
+???+ info "Default credentials"
+    Username: `admin`  
+    Password: `admin`

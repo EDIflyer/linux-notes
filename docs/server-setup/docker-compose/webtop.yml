@@ -13,12 +13,12 @@ services:
       - SUBFOLDER=/ #optional
       - KEYBOARD=en-us-qwerty #optional
     volumes:
-      - /home/alan/webtop:/config
+      - /home/alan/containers/webtop:/config
       #- /var/run/docker.sock:/var/run/docker.sock #optional
     ports:
       - 3000:3000
     labels:
-      - "com.centurylinklabs.watchtower.enable=false"
+      - "com.centurylinklabs.watchtower.enable=false" #to prevent watchtower trying to update the image
     devices:
       - /dev/dri:/dev/dri #optional
     #shm_size: "1gb" #optional
