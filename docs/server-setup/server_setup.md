@@ -473,7 +473,9 @@ Then install via docker-compose:
     --8<-- "docs/server-setup/docker-compose/filebrowser.yml"
     ```
 
-Setup NPM SSH reverse proxy (remember to include websocket support) and then login:
+Then setup NPM SSH reverse proxy (remember to include websocket support) and then login:
 ???+ info "Default credentials"
     Username: `admin`  
     Password: `admin`
+
+To customise the appearance create `img` and `img/icons` directories in a subfolder of the `containers/filebrowser` directory (e.g., `customisation` or `branding`) and add the `logo.svg`  and `favicon.ico` and 16x16 and 32x32 PNGs (if you only do the `.ico`) then the browser will pick the internal higher resolution PNGs.
