@@ -479,3 +479,6 @@ Then setup NPM SSH reverse proxy (remember to include websocket support) and the
     Password: `admin`
 
 To customise the appearance create `img` and `img/icons` directories in a subfolder of the `containers/filebrowser` directory (e.g., `customisation` or `branding`) and add the `logo.svg`  and `favicon.ico` and 16x16 and 32x32 PNGs (if you only do the `.ico`) then the browser will pick the internal higher resolution PNGs.
+![](docs/images/2022-07-15-22-05-39.png)
+Then change the instance name and set the branding directory path in Settings > Global Settings
+![](docs/images/2022-07-15-22-06-56.png)
