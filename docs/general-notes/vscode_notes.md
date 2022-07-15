@@ -1,20 +1,22 @@
 ---
 title: "VS Code notes"
 date: 2022-07-09T18:32:03+01:00
-draft: false
 ---
-New test
 ## Paste Image plugin
-==Install extension:==
+=== "Install extension"
+    ```
     Name: Paste Image
     Id: mushan.vscode-paste-image
     Description: paste image from clipboard directly
     Version: 1.0.4
     Publisher: mushan
     VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=mushan.vscode-paste-image
+    ```
 
-Set `Paste Image: path` to `images` so they go into a subdirectory:
-![](../images/2022-07-09-18-34-46.png)
+???+ tip "Path settings"
+    Set `Paste Image: Base Path` to `${currentFileDir}` and `Paste Image: path` to `${projectRoot}/docs/images` so they go into an images subdirectory and are correctly referenced by the markdown files.
+
+## Test items
 
 EKORA(r) by Clinical IT(c)
 
