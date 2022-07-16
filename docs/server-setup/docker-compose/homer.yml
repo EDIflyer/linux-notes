@@ -1,0 +1,22 @@
+---
+version: "2"
+services:
+  homer:
+    image: b4bz/homer
+    #To build from source, comment previous line and uncomment below
+    #build: .
+    container_name: homer
+    volumes:
+      - /home/alan/containers/homer/assets:/www/assets:rw
+    expose:
+      - 8080/tcp
+    user: 1000:1000 # default
+    environment:
+      - INIT_ASSETS=1 # default - installs example configuration file & assets (favicons, ...) to help you get started.
+      - TZ=Europe/London
+    networks:
+      - nginx-proxy-manager_default
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default      

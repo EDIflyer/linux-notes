@@ -6,6 +6,7 @@ services:
       - /dozzle
     environment:
       - PATH=/bin
+      - TZ=Europe/London
     expose:
       - 8080/tcp
     hostname: d29ba597cdd0

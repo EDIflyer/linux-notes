@@ -1,0 +1,22 @@
+---
+version: "2.1"
+services:
+  nextcloud:
+    image: lscr.io/linuxserver/nextcloud:latest
+    container_name: nextcloud
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /home/alan/containers/nextcloud/appdata:/config
+      - /home/alan/containers/nextcloud/data:/data
+    expose:
+      - 443/tcp
+    restart: unless-stopped
+    networks:
+      - nginx-proxy-manager_default
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default    

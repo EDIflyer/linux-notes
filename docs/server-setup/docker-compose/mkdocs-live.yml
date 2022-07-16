@@ -17,6 +17,7 @@ services:
       - PYTHON_GET_PIP_SHA256=c3b81e5d06371e135fb3156dc7d8fd6270735088428c4a9a5ec1f342e2024565
       - PACKAGES=/usr/local/lib/python3.9/site-packages
       - PYTHONDONTWRITEBYTECODE=1
+      - TZ=Europe/London
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
     expose:
@@ -27,11 +28,11 @@ services:
     logging:
       driver: json-file
       options: {}
+    volumes:
+      - /home/alan/containers/mkdocs-live/[REPOSITORY]:/docs
+    working_dir: /docs
     networks:
       - nginx-proxy-manager_default
-    volumes:
-      - /home/[USER_DIRECTORY]/containers/mkdocs-live/[REPOSITORY]:/docs
-    working_dir: /docs
 networks:
   nginx-proxy-manager_default:
     external: true

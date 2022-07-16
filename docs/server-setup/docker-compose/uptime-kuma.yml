@@ -13,6 +13,7 @@ services:
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
       - NODE_VERSION=16.15.0
       - YARN_VERSION=1.22.18
+      - TZ=Europe/London
     hostname: 2331f8c6db9c
     image: louislam/uptime-kuma:1
     ipc: private
@@ -26,7 +27,7 @@ services:
     networks:
       - nginx-proxy-manager_default    
     volumes:
-      - /home/[USER_DIRECTORY]/containers/uptime-kuma/data:/app/data
+      - /home/alan/containers/uptime-kuma/data:/app/data
     working_dir: /app
 networks:
   nginx-proxy-manager_default:

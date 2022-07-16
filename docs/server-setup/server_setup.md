@@ -5,6 +5,7 @@ draft: false
 ---
 Spin up server on Linode and SSH in using root commands.
 
+## Host setup
 ### Users
 Initially logged in as a root user - we therefore need to add a non-root user & then add them to the sudo group
 !!! quote "user setup"
@@ -211,7 +212,7 @@ Go to Environments > local and add public IP to allow all the ports links to be 
 Aim to put volumes in /var/lib/docker/volums/[containername]
 Use bind for nginx live website so can easily be updated from script
 
-## Watchtower setup - monitor and update Docker containers
+### Watchtower setup - monitor and update Docker containers
 [Watchtower](https://containrrr.dev/watchtower/) is a container-based solution for automating Docker container base image updates.  
 It can pull from public repositories but to link to a private Docker Hub you need to supply login credentials.  This is best achieved by running a `docker login` command in the terminal, whith will create a file in `$HOME/.docker/config.json` that we can then link as a volume to the Watchtower container.  
 The configuration below links to this config file and also links to the local time and tells Watchtower to include stopped containers and verbose logging.
@@ -250,20 +251,20 @@ The configuration below links to this config file and also links to the local ti
       - "com.centurylinklabs.watchtower.enable=false"
     ```
 
-## NGINX Proxy Manager install
+### NGINX Proxy Manager install
 Apply this docker-compose (based on https://nginxproxymanager.com/setup/#running-the-app) as a stack in Portainer to deploy: 
 ??? example "docker-compose/nginx-proxy-manager.yml"
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/nginx-proxy-manager.yml"
     ```
 
-## Authelia setup
+### Authelia setup
 https://www.authelia.com/integration/prologue/get-started/
 https://www.authelia.com/integration/deployment/docker/#lite
 https://www.authelia.com/integration/proxies/nginx-proxy-manager/
 
 
-## Dozzle (log viewer) setup
+### Dozzle (log viewer) setup
 Nice logviewer application that lets you monitor all the container logs - https://dozzle.dev/
 
 Apply this docker-compose as a stack in Portainer to deploy:
@@ -273,7 +274,7 @@ Apply this docker-compose as a stack in Portainer to deploy:
     ```
 Add to nginx proxy manager as usual, but with the addition of `proxy_read_timeout 30m;` in the advanced settings tab to minimise the issue of the default 60s proxy timeout causing [repeat log entries](https://github.com/amir20/dozzle/issues/1404).
 
-## Export existing container(s) as Docker Compose file(s)
+### Export existing container(s) as Docker Compose file(s)
 From https://github.com/Red5d/docker-autocompose this will automatically generate docker compose files for specified containers:
 
 ``` bash
@@ -285,7 +286,7 @@ Or for all containers:
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/red5d/docker-autocompose $(docker ps -aq)
 ```
 
-## Setup webhooks
+### Setup webhooks
 Original project: https://github.com/adnanh/webhook
 `sudo apt install webhook`
 
@@ -347,7 +348,7 @@ WantedBy=default.target
 ```
 Enable and start the webhook service then check status (commands above)
 
-## NGINX install
+### NGINX install
 When deploying container, **be sure to set network to nginx-proxy-manager_default**. Also bind /usr/share/nginx/html on the container to /var/www/<sitename>/html on the host
 
 In NPM add proxy host - enter subdomain.domain.tld then redirect to docker container name on relevant port
@@ -380,12 +381,12 @@ to test cert renewal
 `sudo certbot renew --dry-run`
 (see https://certbot.eff.org/instructions?ws=nginx&os=debianbuster for explanation of terminology) -->
 
-## Telegram notifcation
+### Telegram notifcation
 See excellent guide at https://ansonvandoren.com/posts/telegram-notification-on-deploy/
 
 Copy across trigger script.
 
-## mkdocs-material setup
+### mkdocs-material setup
 See [`triggerscript.sh`](../triggerscript.sh) for the build command for the deployed setup, however for testing changes live a persistent container serving mkdocs-material is much quicker and easier to use.
 
 We want to use the [mkdocs-git-revision-date-localized plugin](https://github.com/timvink/mkdocs-git-revision-date-localized-plugin) and the [MkDocs GLightbox plugin](https://github.com/blueswen/mkdocs-glightbox) - these need to be installed by `pip` on top of the main `mkdocs-material` image, therefore we need to create a custom Dockerfile to add the revelant commands and create a custom image before we can activate them in the `mkdocs.yml` configuration file:
@@ -418,7 +419,7 @@ FROM squidfunk/mkdocs-material
 RUN pip install mkdocs-git-revision-date-localized-plugin
 RUN git config --global --add safe.directory /docs
 
-## Hugo installation
+<!-- ## Hugo installation
 Download latest Hugo version from `https://github.com/gohugoio/hugo/releases` and copy to `/usr/local/bin`
 
 Create new Hugo site in the repository
@@ -441,10 +442,10 @@ git submodule add https://github.com/McShelby/hugo-theme-relearn.git themes/hugo
 ```
 
 Edit `config.toml`
-```# Change the default theme to be use when building the site with Hugo
-theme = "hugo-theme-relearn"
+# Change the default theme to be use when building the site with Hugo
+theme = "hugo-theme-relearn" -->
 
-## Uptime Kuma monitoring
+### Uptime Kuma monitoring
 A nice status monitoring app - https://github.com/louislam/uptime-kuma
 
 Install it via docker-compose:
@@ -459,7 +460,7 @@ Install it via docker-compose:
     docker network connect bridge uptime-kuma
     ```
 
-## Filebrowser
+### Filebrowser
 A nice GUI file browser - https://github.com/filebrowser/filebrowser
 
 ???+ warning "Create the empty db file first"
@@ -480,6 +481,52 @@ Then setup NPM SSH reverse proxy (remember to include websocket support) and the
 
 ![](../images/2022-07-15-22-05-39.png){ align=right } To customise the appearance create `img` and `img/icons` directories in a subfolder of the `containers/filebrowser` directory (e.g., `customisation` or `branding`)
 and add the `logo.svg`  and `favicon.ico` and 16x16 and 32x32 PNGs (if you only do the `.ico`) then the browser will pick the internal higher resolution PNGs.
-![](../images/2022-07-15-22-06-56.png){ align=right }
+![](../images/2022-07-15-22-06-56.png){ align=right }  
+
+???+ tip "Generating favicons"
+    The [favicon generator](https://realfavicongenerator.net/) is a very useful website to generate all the required favicons for different platforms.
+
 Then change the instance name and set the branding directory path in Settings > Global Settings (matching the one set in the docker-compose file above)
 
+### NextCloud
+Cloud-hosted sharing & collaboration server - https://hub.docker.com/r/linuxserver/nextcloud and https://nextcloud.com/
+
+Then install via docker-compose:
+??? example "docker-compose/nextcloud.yml - remember to change host directories if required" 
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/nextcloud.yml"
+    ```
+The setup NPM SSH reverse proxy to https port 443 and navigate to new site to setup login.
+
+???+ info "Setup 2FA"
+    After login go to User > Settings > Security (Administration section) > Enforce two-factor authentication.  
+    Then go User > Apps > Two-Factor TOTP Provider (https://apps.nextcloud.com/apps/twofactor_totp) *or just click on search icon at the top right and type in TOTP*  
+    Then go back to User > Settings > Security (Personal section) > Tick 'Enable TOTP' and verify the code
+
+### Homepage options
+
+=== "Homer"
+    https://github.com/bastienwirtz/homer
+    ???+ warning "Create the empty assets folder first"
+        ``` bash
+        mkdir -p $HOME/containers/homer/assets
+        ```
+
+    Then install via docker-compose (stack on Portainer):
+    ??? example "docker-compose/homer.yml" 
+        ``` yaml linenums="1"
+        --8<-- "docs/server-setup/docker-compose/homer.yml"
+        ```
+
+=== "Heimdall"
+    https://github.com/linuxserver/Heimdall
+
+    Then install via docker-compose (stack on Portainer):
+    ??? example "docker-compose/heimdall.yml" 
+        ``` yaml linenums="1"
+        --8<-- "docs/server-setup/docker-compose/heimdall.yml"
+        ```
+    ???+ warning "Fix max image size issue by increasing default PHP 2MB limit"
+        ``` bash
+        echo "upload_max_filesize = 30M" >> /home/alan/containers/heimdall/php/php-local.ini
+        ```

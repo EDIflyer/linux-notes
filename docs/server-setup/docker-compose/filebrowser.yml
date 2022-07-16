@@ -11,6 +11,8 @@ services:
       - /home/alan/:/srv
       - /home/alan/containers/filebrowser/filebrowser.db:/database.db:rw
       - /home/alan/containers/filebrowser/branding:/branding
+    environment:
+      - TZ=Europe/London
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
