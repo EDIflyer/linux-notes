@@ -259,9 +259,17 @@ Apply this docker-compose (based on https://nginxproxymanager.com/setup/#running
     ```
 
 ### Authelia setup
-https://www.authelia.com/integration/prologue/get-started/
-https://www.authelia.com/integration/deployment/docker/#lite
-https://www.authelia.com/integration/proxies/nginx-proxy-manager/
+Authelia is an open-source authentication and authorization server providing two-factor authentication and single sign-on (SSO) for applications via a web portal. https://github.com/authelia/authelia
+
+There is a good guide available at [IBRACORP](https://docs.ibracorp.io/authelia/)
+
+Install via docker-compose/Portainer stack (installs Authelia, Redis and MariaDB)
+??? "docker-compose/authelia.yml"
+    ???+ warning "Variables in docker-compose"
+        Remember to set passwords for MariaDB and Redis before running the docker compose
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/authelia.yml"
+    ```
 
 
 ### Dozzle (log viewer) setup
@@ -521,7 +529,7 @@ The setup NPM SSH reverse proxy to https port 443 and navigate to new site to se
 === "Heimdall"
     https://github.com/linuxserver/Heimdall
 
-    Then install via docker-compose (stack on Portainer):
+    Install via docker-compose (stack on Portainer):
     ??? example "docker-compose/heimdall.yml" 
         ``` yaml linenums="1"
         --8<-- "docs/server-setup/docker-compose/heimdall.yml"
@@ -530,3 +538,21 @@ The setup NPM SSH reverse proxy to https port 443 and navigate to new site to se
         ``` bash
         echo "upload_max_filesize = 30M" >> /home/alan/containers/heimdall/php/php-local.ini
         ```
+        
+=== "Dashy"        
+    https://github.com/Lissy93/dashy
+
+    ???+ danger "DO NOT USE IF RAM <1GB"
+        Build fails unless higher RAM levels, leading to high CPU and swap usage.  
+        See discussion at https://github.com/Lissy93/dashy/issues/136
+
+    ???+ warning "Create the empty db file first"
+        ``` bash
+        mkdir -p $HOME/containers/dashy && touch $HOME/containers/dashy/my-conf.yml
+        ```
+
+    Install via docker-compose (stack on Portainer):
+    ??? example "docker-compose/dashy.yml" 
+        ``` yaml linenums="1"
+        --8<-- "docs/server-setup/docker-compose/dashy.yml"
+        ```    

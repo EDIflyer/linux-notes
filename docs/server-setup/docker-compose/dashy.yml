@@ -1,0 +1,21 @@
+---
+version: "3"
+services:
+  dashy:
+    image: lissy93/dashy:latest
+    container_name: dashy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /home/alan/containers/dashy/my-conf.yml:/app/public/conf.yml
+    expose:
+      - 80/tcp
+    restart: unless-stopped
+    networks:
+      - nginx-proxy-manager_default
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default          
