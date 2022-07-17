@@ -37,11 +37,18 @@ access_control:
     # Rules applied to everyone and are read top to bottom
     # Set to bypass, one_factor or two_factor
     # Remember main login page needs to be allowed to bypass
-    - domain: auth.example.com
+    - domain: "auth.example.com"
       policy: bypass
-    - domain: important.example.com
+    - domain: "status.example.com" # allow /status, /assets, /api and icon.svg to be available to unauthenticated users
+      resources:
+        - "^/status([/?].*)?$"
+        - "^/assets([/?].*)?$"
+        - "^/api([/?].*)?$"
+        - "^/icon.svg$"
+      policy: bypass
+    - domain: "important.example.com"
       policy: two_factor
-    - domain: *.example.com
+    - domain: "*.example.com"
       policy: one_factor
 
 session:
@@ -49,14 +56,16 @@ session:
   # This secret can also be set using the env variables AUTHELIA_SESSION_SECRET_FILE
   secret: unsecure_session_secret
   expiration: 3600  # 1 hour
-  inactivity: 300  # 5 minutes
+  inactivity: 600  # 10 minutes
   domain: example.com  # Should match whatever your root protected domain is
 
-# redis:
-#   host: redis
-#   port: 6379
-#   # This secret can also be set using the env variables AUTHELIA_SESSION_REDIS_PASSWORD_FILE
-#   # password: authelia
+  # option to install Redis in-memory database - this allows persistence of sessions even when Authelia container is restarted, e.g. for config changes
+  redis:
+    host: redis
+    port: 6379
+    # This secret can also be set using the env variables AUTHELIA_SESSION_REDIS_PASSWORD_FILE
+    # Has issues with some special characters so stick to text/numbers - set this in docker-compose file too
+    password: authelia
 
 regulation:
   max_retries: 3

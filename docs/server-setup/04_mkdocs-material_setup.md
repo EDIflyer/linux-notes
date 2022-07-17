@@ -59,6 +59,11 @@ Edit `config.toml`
 # Change the default theme to be use when building the site with Hugo
 theme = "hugo-theme-relearn" -->
 
+### Logo/Favicon setup
+Place desired PNG/SVG logo and `favicon.ico` in `docs/images`.
+
+See https://realfavicongenerator.net/ to generate a favicon from a logo.
+
 ### NGINX install
 When deploying container, **be sure to set network to nginx-proxy-manager_default**. Also bind /usr/share/nginx/html on the container to /var/www/<sitename>/html on the host
 

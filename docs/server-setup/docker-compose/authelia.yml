@@ -13,6 +13,23 @@ services:
       - nginx-proxy-manager_default
     restart: unless-stopped
 
+  redis:
+    container_name: redis
+    image: bitnami/redis:latest
+    expose:
+      - 6379
+    volumes:
+      - /home/alan/containers/redis:/bitnami/redis/data
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - REDIS_PASSWORD="YOUR_REDIS_PASSWORD"
+      - REDIS_AOF_ENABLED=no
+      - TZ=Europe/London
+    networks:
+      - nginx-proxy-manager_default
+    restart: unless-stopped    
+
 networks:
   nginx-proxy-manager_default:
     external: true
