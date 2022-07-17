@@ -1,6 +1,7 @@
 ---
 title: "2 - Docker & Portainer setup"
 ---
+# Docker & Portainer setup
 !!! info "Container options"
     In general aim to use Alpine Linux-based containers to minimise size/bloat of the underlying container.
 

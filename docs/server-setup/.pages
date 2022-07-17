@@ -1,0 +1,6 @@
+nav:
+    - server_setup.md
+    - docker_setup.md
+    - authelia_setup.md
+    - mkdocs-material_setup.md
+    - webhooks_setup.md

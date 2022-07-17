@@ -3,34 +3,21 @@ services:
   mkdocs-live:
     command:
       - serve
-      - --dev-addr=0.0.0.0:8000
     container_name: mkdocs-live
     entrypoint:
       - mkdocs
     environment:
       - PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-      - LANG=C.UTF-8
-      - GPG_KEY=E3FF2839C048B25C084DEBE9B26995E310250568
-      - PYTHON_VERSION=3.9.2
-      - PYTHON_PIP_VERSION=21.0.1
-      - PYTHON_GET_PIP_URL=https://github.com/pypa/get-pip/raw/b60e2320d9e8d02348525bd74e871e466afdf77c/get-pip.py
-      - PYTHON_GET_PIP_SHA256=c3b81e5d06371e135fb3156dc7d8fd6270735088428c4a9a5ec1f342e2024565
-      - PACKAGES=/usr/local/lib/python3.9/site-packages
-      - PYTHONDONTWRITEBYTECODE=1
       - TZ=Europe/London
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
     expose:
       - 8000/tcp
-    hostname: b6504768240d
     image: custom/mkdocs-material:latest
-    ipc: private
-    logging:
-      driver: json-file
-      options: {}
     volumes:
-      - /home/alan/containers/mkdocs-live/[REPOSITORY]:/docs
+      - /home/alan/containers/mkdocs-live/linux-notes:/docs
     working_dir: /docs
+    restart: unless-stopped
     networks:
       - nginx-proxy-manager_default
 networks:

@@ -1,6 +1,7 @@
 ---
 title: "3 - Authelia setup"
 ---
+# Authelia setup
 Authelia is an open-source authentication and authorization server providing two-factor authentication and single sign-on (SSO) for applications via a web portal. https://github.com/authelia/authelia
 
 ### Guides and initial folder setup

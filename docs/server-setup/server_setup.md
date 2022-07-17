@@ -1,6 +1,7 @@
 ---
 title: "1 - Initial server setup"
 ---
+# Initial server setup <!-- Setting an L1 heading title here overrides the title used in the navigation -->
 Spin up server on Linode and SSH in using root commands.
 
 ### Users

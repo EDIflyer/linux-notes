@@ -40,6 +40,7 @@ plugins:
           - index.md
       enabled: true
   - glightbox
+  - awesome-pages
 
 markdown_extensions:
   # Python Markdown

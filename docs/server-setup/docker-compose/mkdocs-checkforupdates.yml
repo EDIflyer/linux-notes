@@ -1,0 +1,7 @@
+version: '3'
+services:
+  mkdocs-checkforupdates:
+    container_name: mkdocs-checkforupdates    
+    image: squidfunk/mkdocs-material
+    restart: "no"
+    network_mode: none

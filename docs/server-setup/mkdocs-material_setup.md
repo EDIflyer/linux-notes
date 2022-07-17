@@ -1,6 +1,7 @@
 ---
 title: "4 - Material for MkDocs setup"
 ---
+# Material for MkDocs setup
 See [`triggerscript.sh`](../triggerscript.sh) for the build command for the deployed setup, however for testing changes live a persistent container serving mkdocs-material is much quicker and easier to use.
 
 We want to use the [mkdocs-git-revision-date-localized plugin](https://github.com/timvink/mkdocs-git-revision-date-localized-plugin) and the [MkDocs GLightbox plugin](https://github.com/blueswen/mkdocs-glightbox) - these need to be installed by `pip` on top of the main `mkdocs-material` image, therefore we need to create a custom Dockerfile to add the revelant commands and create a custom image before we can activate them in the `mkdocs.yml` configuration file:
@@ -9,6 +10,7 @@ We want to use the [mkdocs-git-revision-date-localized plugin](https://github.co
     FROM squidfunk/mkdocs-material
     RUN pip install mkdocs-git-revision-date-localized-plugin
     RUN pip install mkdocs-glightbox
+    RUN pip install mkdocs-awesome-pages-plugin
     RUN git config --global --add safe.directory /docs
     ```
     Once we have created that file we can then either build the custom image using the following command:  
@@ -26,6 +28,13 @@ Now that the custom image has been created we can use a docker-compose file to c
 ??? example "docker-compose/mkdocs-live.yml"
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/mkdocs-live.yml"
+    ```
+
+However as we have created a custom image we also need to create a stopped container using the standard image so we will be notified by Watchtower if it detects and update and thus we can redeploy the live mkdocs stack (the deployment one isn't running but will use the latest image too)
+
+??? example "docker-compose/mkdocs-checkforupdates.yml"
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/mkdocs-checkforupdates.yml"
     ```
 
 ## Docker compose file for mkdocs-material with date plugin

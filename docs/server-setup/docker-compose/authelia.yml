@@ -15,16 +15,13 @@ services:
 
   redis:
     container_name: redis
-    image: bitnami/redis:latest
+    image: redis:alpine
     expose:
       - 6379
+    command: redis-server --save 20 1 --loglevel warning --requirepass YOURPASSWORD
     volumes:
-      - /home/alan/containers/redis:/bitnami/redis/data
+      - /home/alan/containers/redis:/data
     environment:
-      - PUID=1000
-      - PGID=1000
-      - REDIS_PASSWORD="YOUR_REDIS_PASSWORD"
-      - REDIS_AOF_ENABLED=no
       - TZ=Europe/London
     networks:
       - nginx-proxy-manager_default
