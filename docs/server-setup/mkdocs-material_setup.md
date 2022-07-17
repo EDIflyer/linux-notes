@@ -2,7 +2,7 @@
 title: "4 - Material for MkDocs setup"
 ---
 # Material for MkDocs setup
-See [`triggerscript.sh`](../triggerscript.sh) for the build command for the deployed setup, however for testing changes live a persistent container serving mkdocs-material is much quicker and easier to use.
+See [`triggerscript.sh`](triggerscript.sh) for the build command for the deployed setup, however for testing changes live a persistent container serving mkdocs-material is much quicker and easier to use.
 
 We want to use the [mkdocs-git-revision-date-localized plugin](https://github.com/timvink/mkdocs-git-revision-date-localized-plugin) and the [MkDocs GLightbox plugin](https://github.com/blueswen/mkdocs-glightbox) - these need to be installed by `pip` on top of the main `mkdocs-material` image, therefore we need to create a custom Dockerfile to add the revelant commands and create a custom image before we can activate them in the `mkdocs.yml` configuration file:
 ??? example "mkdocs.dockerfile - use in Portainer as Images > Build image"
@@ -26,7 +26,7 @@ We want to use the [mkdocs-git-revision-date-localized plugin](https://github.co
 Now that the custom image has been created we can use a docker-compose file to create a stack in Portainer.  The benefit of having this as a stack as is that we can easily re-deploy it.
 
 ??? example "docker-compose/mkdocs-live.yml"
-    ``` yaml linenums="1"
+    ``` yaml linenums="1" hl_lines="19"
     --8<-- "docs/server-setup/docker-compose/mkdocs-live.yml"
     ```
 
@@ -36,6 +36,8 @@ However as we have created a custom image we also need to create a stopped conta
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/mkdocs-checkforupdates.yml"
     ```
+
+==Refer to .pages from [Awesome Pages plugin](https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin)==
 
 ## Docker compose file for mkdocs-material with date plugin
 FROM squidfunk/mkdocs-material
