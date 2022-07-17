@@ -56,7 +56,7 @@ session:
   # This secret can also be set using the env variables AUTHELIA_SESSION_SECRET_FILE
   secret: unsecure_session_secret
   expiration: 3600  # 1 hour
-  inactivity: 600  # 10 minutes
+  inactivity: 30m  # 30 minutes
   domain: example.com  # Should match whatever your root protected domain is
 
   # option to install Redis in-memory database - this allows persistence of sessions even when Authelia container is restarted, e.g. for config changes
