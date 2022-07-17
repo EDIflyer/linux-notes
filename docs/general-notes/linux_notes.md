@@ -42,6 +42,9 @@ Ctrl-L clear screen
 Ctrl-R search command history
 cd - to switch between directories
 
+## Docker tips
+Attach to running container `docker exec -it [container name] sh`
+
 # command line startup - either pfetch (v compact) or neofetch (bigger but prettier)
 wget https://github.com/dylanaraps/pfetch/raw/master/pfetch
 chmod +x pfetch

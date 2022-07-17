@@ -18,6 +18,7 @@ https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex/
 Test git link clinicalit/ekora!33
 
 :smile:
+:fontawesome-solid-terminal:
 
 Add some recommended extensions using the full path:
 ``` yaml
@@ -53,3 +54,8 @@ This site was last updated: *{{ git_site_revision_date_localized }}*
 
 Handy markdown cheatsheet: https://yakworks.github.io/docmark/cheat-sheet/
 Tutorial: https://commonmark.org/help/tutorial/
+
+1. Set the `jwt_secret` with a 128-bit key (e.g. from https://www.allkeysgenerator.com/Random/Security-Encryption-Key-Generator.aspx)
+1. Set the `default_redirection_url` with the one for this domain
+1. Under `access_control` set the policy for different subdomains (options: bypass/one_factor/two_factor). Useful IBRACORP [guide](https://docs.ibracorp.io/authelia/authelia/rules) and [video](https://youtu.be/IWNypK2WxB0?t=1244) to rules
+1. Under `session` set another random 128-bit key for the `secret` and change the `domain` to the main domain name (i.e. no subdomains)
