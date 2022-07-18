@@ -31,7 +31,7 @@ A number of items need to be replaced in the configuration file:
 1. Under `storage` set a 512-bit key for the `encryption_key`
 1. Add relevant SMTP credentials under `notifier`
 ??? example "authelia/config/configuration.yml"
-    ``` yaml linenums="1" hl_lines="13 14 40-52 57 60 68 76 83-89"
+    ``` yaml linenums="1" hl_lines="30 39 45 129-141 153 171 182 208 236-242"
     --8<-- "docs/server-setup/config/authelia/configuration.yml"
     ```
 ### Container setup
