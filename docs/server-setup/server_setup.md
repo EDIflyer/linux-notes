@@ -81,12 +81,18 @@ Next switch on unattended upgrades to ensure the server remains up to date
     !!! danger "Check first!"
           Open new tab and check can still login OK before closing this connection!
 
-### setup btop (formerly bpytop)
-pre-requisite: sudo apt install bzip2 make
-go to https://github.com/aristocratos/btop/releases/latest
-wget [latest x64 version for Linode, armv7l for Pi]
-tar -xjf [filename].tgz
-./install.sh
+### Setup btop (formerly bpytop)
+!!! quote "Install pre-requisites"
+    ``` bash
+    sudo apt install bzip2 make
+    ```
+Go to https://github.com/aristocratos/btop/releases/latest to check the latest release, right-clock and copy the URL.
+!!! quote "Download, untar and install"
+    ``` bash
+    wget [latest x64 version for Linode, armv7l for Pi]
+    tar -xjf [filename].tgz
+    ./install.sh
+    ```
 
 
 ### Setup firewall
@@ -121,7 +127,7 @@ Given we are going to set up a reverse proxy manager the easier option is to onl
     ``` bash
     sudo ufw delete allow 9443
     ```
-### Setup fail2ban **CHANGE FOR DOCKER**
+### Setup fail2ban ==**CHANGE FOR DOCKER**==
 !!! quote "fail2ban options"
     === "Docker setup"
         ``` bash
@@ -144,47 +150,72 @@ Given we are going to set up a reverse proxy manager the easier option is to onl
         `sudo fail2ban-client status`
         `sudo cat /var/log/fail2ban/error.log`
 
-### Bash config
-!!! quote ""
+### Bash config (optional!)
+#### Neofetch
+Neofetch is a command-line system information tool written in bash that displays information about your operating system, software and hardware in an aesthetic and visually pleasing way - https://github.com/dylanaraps/neofetch
+!!! quote "Install neofetch and run on terminal session startup"
     ``` bash
-    
+    sudo apt install neofetch -y && nano ~/.bashrc
     ```
-`sudo apt install neofetch -y`
-https://bashrcgenerator.com/ - excellent generator
-`nano ~/.bashrc` 
-- add `PROMPT_COMMAND="history -a; history -c; history -r; echo -n $(date +%H:%M:%S)\| "` to the penultimate line
-- add `neofetch` to the last line
-`neofetch`
-`nano ~/.config/neofetch/config.conf` uncomment and rename IP addresses/add back in desired sections (copy template across from Dropbox)
+    add `PROMPT_COMMAND="history -a; history -c; history -r; echo -n $(date +%H:%M:%S)\| "` to the penultimate line
+    add `neofetch` to the last line
+    ``` bash
+    nano ~/.config/neofetch/config.conf
+    ```
+    uncomment and rename IP addresses/add back in desired sections (copy template across from Dropbox)
+https://bashrcgenerator.com/ - useful generator
+#### oh-my-posh
+Command line prettifier - handy for git directories - https://ohmyposh.dev/
+!!! quote "Install neofetch and run on terminal session startup"
+    ``` bash
+    sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
+    sudo chmod +x /usr/local/bin/oh-my-posh
+    mkdir ~/.poshthemes
+    wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -O ~/.poshthemes/themes.zip
+    unzip ~/.poshthemes/themes.zip -d ~/.poshthemes
+    chmod u+rw ~/.poshthemes/*.omp.*
+    rm ~/.poshthemes/themes.zip
+    ```
+Ensure a Nerd Font [https://www.nerdfonts.com/] such as Caskaydia Cove NF is installed and selected in the terminal program  
+Use `eval "$(oh-my-posh init bash --config ~/.poshthemes/[theme_name].omp.json)"` to switch theme
 
-### Install git and connect to Github
-`sudo apt install git -y`
-``` bash
-cd ~
-mkdir repositories
-cd .ssh
-copy private key for git syncing into this directory
-nano config
-```
-```
-Host github.com
-  IdentityFile ~/.ssh/github_sync_private.key
-```
-git config --global user.name "<username>"
-git config --global user.email "<email>"
-ssh -T git@github.com
-(should then receive confirmation of success)
-
-git clone <enter SSH details for repository>
-
-### Install oh-my-posh
-https://ohmyposh.dev/
-sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
-sudo chmod +x /usr/local/bin/oh-my-posh
-mkdir ~/.poshthemes
-wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -O ~/.poshthemes/themes.zip
-unzip ~/.poshthemes/themes.zip -d ~/.poshthemes
-chmod u+rw ~/.poshthemes/*.omp.*
-rm ~/.poshthemes/themes.zip
-Ensure a Nerd Font [https://www.nerdfonts.com/] such as Caskaydia Cove NF is installed and selected in the terminal program
-`eval "$(oh-my-posh init bash --config ~/.poshthemes/[theme_name].omp.json)"` to switch theme
+### Install git and connect to GitHub
+We now need to install git on the server and also use an SSH key to connect to our GitHub account.
+!!! quote "Setup SSH key on server and copy to GitHub account"
+    ``` bash
+    cd ~
+    ssh-keygen -t ed25519 -C "your_email@example.com"
+    ```
+    Enter `github_sync` when prompted for filename to save the key. This will then create a private key called `github_sync` and a public key called `github_sync.pub`  
+    Then copy private key to the `.ssh` sub-directory in home directory:
+    ``` bash
+    cp github_sync ~/.ssh/github_sync
+    ```
+    We then need to [add the public key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) to our GitHub account.  The easiest way is to run `cat github_sync.pub` and copy the output to the clipboard the paste into the [Settings > Access > SSH and GPG keys](https://github.com/settings/keys) section of GitHub.
+!!! quote "Install git and set up syncing"
+    ``` bash
+    sudo apt install git -y
+    mkdir repositories
+    ```
+    Now edit the config file in the `.ssh` directory:
+    ```
+    nano ~/.ssh/config
+    ```
+    and add these lines:
+    ```
+    Host github.com
+    IdentityFile ~/.ssh/github_sync
+    ```
+    Run git configuration
+    ``` bash
+    git config --global user.name "<username>"
+    git config --global user.email "<email>"
+    ```
+    Now test the connection:
+    ``` bash
+    ssh -T git@github.com
+    ```
+    Once the GitHub pulic key fingerprint is accepted there should be a confirmation message of `Hi username! You've successfully authenticated, but GitHub does not provide shell access.`
+Backup the GitHub sync private/public keypair.  
+Usage:
+`git clone <enter SSH details for repository>`
