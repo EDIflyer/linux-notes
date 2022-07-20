@@ -157,7 +157,8 @@ Neofetch is a command-line system information tool written in bash that displays
     ``` bash
     sudo apt install neofetch -y && nano ~/.bashrc
     ```
-    add `PROMPT_COMMAND="history -a; history -c; history -r; echo -n $(date +%H:%M:%S)\| "` to the penultimate line
+    add `PROMPT_COMMAND="history -a; history -c; history -r;"` to the penultimate line to enable longer history
+    ==add more on history plus bits where it adds timestamps==
     add `neofetch` to the last line
     ``` bash
     nano ~/.config/neofetch/config.conf
