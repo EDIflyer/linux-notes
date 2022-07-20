@@ -2,9 +2,16 @@
 title: "4 - Material for MkDocs setup"
 ---
 # Material for MkDocs setup
-See [`triggerscript.sh`](triggerscript.sh) for the build command for the deployed setup, however for testing changes live a persistent container serving mkdocs-material is much quicker and easier to use.
+### Create a live container
+A script ([see below](#main-build-script)) is used to run for the build command for the deployed setup, however for testing changes live a persistent container serving mkdocs-material is much quicker and easier to use as changes are displayed instantly (esp if editing using SSH Remote connection in VS Code).
 
-We want to use the [mkdocs-git-revision-date-localized plugin](https://github.com/timvink/mkdocs-git-revision-date-localized-plugin) and the [MkDocs GLightbox plugin](https://github.com/blueswen/mkdocs-glightbox) - these need to be installed by `pip` on top of the main `mkdocs-material` image, therefore we need to create a custom Dockerfile to add the revelant commands and create a custom image before we can activate them in the `mkdocs.yml` configuration file:
+To enhance the documentation site plugins are used to extend the functionality of Material for MkDocs.  The main ones used in the case of this site are:
+
+- [mkdocs-git-revision-date-localized plugin](https://github.com/timvink/mkdocs-git-revision-date-localized-plugin)
+- [mkdocs-glightbox plugin](https://github.com/blueswen/mkdocs-glightbox)
+- [mkdocs-awesome-pages plugin](https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin)
+
+These need to be installed by `pip` on top of the main `mkdocs-material` image, therefore a custom Dockerfile is needed to add the relevant colour commands and create a custom image before they can be activated in the `mkdocs.yml` configuration file:
 ??? example "mkdocs.dockerfile - use in Portainer as Images > Build image"
     ``` docker linenums="1"
     FROM squidfunk/mkdocs-material
@@ -13,36 +20,54 @@ We want to use the [mkdocs-git-revision-date-localized plugin](https://github.co
     RUN pip install mkdocs-awesome-pages-plugin
     RUN git config --global --add safe.directory /docs
     ```
-    Once we have created that file we can then either build the custom image using the following command:  
-    ``` bash
-    docker build --tag="custom/mkdocs-material" --file="mkdocs.dockerfile" .
-    ```
-    (the `.` at the end is important as it sets the build context and the command won't work without it!)  
-    
-    Or using Portainer we can just paste directly in as a custom image:  
-    Name: `custom/mkdocs-material`
-    ![](../images/2022-07-10-12-16-58.png)
+    Once this dockerfile has been created the custom image can be built either using `docker build` or Portainer:  
+    === "docker build"
+        ``` bash
+        docker build --pull --tag="custom/mkdocs-material" --file="mkdocs.dockerfile" .
+        ```
+        The `.` at the end is important as it sets the build context and the command won't work without it!
+        
+        !!! hint "docker build known issue"
+            Docker build scans the whole directory structure therefore rather than placing the dockerfile in the home directory, place instead in an empty subdirectory (e.g., `dockerfiles`), otherwise you will receive an error saying "`error checking context: 'no permission to read from [folder xyz]'`"
 
-Now that the custom image has been created we can use a docker-compose file to create a stack in Portainer.  The benefit of having this as a stack as is that we can easily re-deploy it.
+    === "Portainer"
+        The above text can be pasted directly in as a custom image:  
+        Name: `custom/mkdocs-material`
+        ![](../images/2022-07-10-12-16-58.png)
+
+Now that the custom image has been created above, a docker-compose file may be used to create a stack in Portainer.  The benefit of having this as a stack as is that it can easily be re-deployed, for example when the underlying image has been updated with a new plugin or a new version.
 
 ??? example "docker-compose/mkdocs-live.yml"
     ``` yaml linenums="1" hl_lines="19"
     --8<-- "docs/server-setup/docker-compose/mkdocs-live.yml"
     ```
 
-However as we have created a custom image we also need to create a stopped container using the standard image so we will be notified by Watchtower if it detects and update and thus we can redeploy the live mkdocs stack (the deployment one isn't running but will use the latest image too)
+However as a custom image is now in use the Watchtower system will not be able to monitor it (as it has nothing to compare it to).  It is therefore necessary to create a (stopped) container using the standard image that can be monitored by Watchtower.  When the update email mentions an update to this image a new custom image can then be rebuilt and deployed.
 
 ??? example "docker-compose/mkdocs-checkforupdates.yml"
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/mkdocs-checkforupdates.yml"
     ```
 
-==Refer to .pages from [Awesome Pages plugin](https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin)==
+### Updating the custom image
+!!! tip "How to check the installed version of mkdocs-material (e.g. to ensure a custom image has updated)"
+    ``` bash
+    docker exec -it mkdocs-live pip3 show mkdocs-material
+    ```
 
-## Docker compose file for mkdocs-material with date plugin
-FROM squidfunk/mkdocs-material
-RUN pip install mkdocs-git-revision-date-localized-plugin
-RUN git config --global --add safe.directory /docs
+When a new version is released the following steps need to be undertaken to update the custom image:
+
+1. Rebuild the custom container (see instructions above)
+2. Redeploy the mkdocs-live stack (so that it switches to use this updated container, otherwise it will continue to use the old one)
+3. Remove the old image (this will now be untagged in the image list as the tag transferred to the new custom image and will also now show as unused. Prior to step #2 this would still be used by the mkdocs-live container)
+
+### Main build script
+This is used to run for the build command for the deployed setup, making used of the custom container created above (and thus making use of all the plugins that have been installed).
+
+??? example "triggerscript.sh - [[DOWNLOAD](../server-setup/triggerscript.sh)]"
+    ``` bash linenums="1"
+    --8<-- "docs/server-setup/triggerscript.sh"
+    ```
 
 <!-- ## Hugo installation
 Download latest Hugo version from `https://github.com/gohugoio/hugo/releases` and copy to `/usr/local/bin`
@@ -79,6 +104,9 @@ See https://realfavicongenerator.net/ to generate a favicon from a logo.
 When deploying container, **be sure to set network to nginx-proxy-manager_default**. Also bind /usr/share/nginx/html on the container to /var/www/<sitename>/html on the host
 
 In NPM add proxy host - enter subdomain.domain.tld then redirect to docker container name on relevant port
+
+### Awesome Pages plugin usage
+==Refer to .pages from [Awesome Pages plugin](https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin)==
 
 <!-- ### Setup site on NGINX
 Add the following line to the http block of /etc/nginx/nginx.conf to disable version info

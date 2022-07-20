@@ -16,6 +16,10 @@ date: 2022-07-09T18:32:03+01:00
 ???+ tip "Path settings"
     Set `Paste Image: Base Path` to `${currentFileDir}` and `Paste Image: path` to `${projectRoot}/docs/images` so they go into an images subdirectory and are correctly referenced by the markdown files.
 
+## Spellcheck plugin
+https://github.com/streetsidesoftware/vscode-spell-checker
+Turn on English (GB) by changing "cSpell.language": "en" to "cSpell.language": "en-GB"
+
 ## Test items
 
 EKORA(r) by Clinical IT(c)
