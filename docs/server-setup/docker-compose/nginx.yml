@@ -1,0 +1,23 @@
+version: "3"
+services:
+  nginx:
+    command:
+      - nginx
+      - -g
+      - daemon off;
+    container_name: nginx
+    entrypoint:
+      - /docker-entrypoint.sh
+    environment:
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    expose:
+      - 80/tcp
+    image: docker.io/nginx:alpine
+    networks:
+      - nginx-proxy-manager_default
+    volumes:
+      - /var/www/docs.alanjrobertson.co.uk/html:/usr/share/nginx/html
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default
