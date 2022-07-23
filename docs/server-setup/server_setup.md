@@ -96,27 +96,36 @@ Go to https://github.com/aristocratos/btop/releases/latest to check the latest r
 
 
 ### Setup firewall
-!!! quote "Install uncomplicated firewall"
-    ``` bash
-    sudo apt-get install ufw
-    ```
-Enable at boot time and immediately start the service
-!!! quote "ufw setup commands"
-    ``` bash
-    sudo systemctl enable ufw --now
-    sudo ufw allow ssh
-    sudo ufw allow 'WWW Full'
-    sudo ufw default allow outgoing
-    sudo ufw default deny incoming
-    sudo ufw show added [to confirm ssh added]
-    sudo ufw enable
-    sudo ufw status numbered
-    sudo ufw logging on (see /var/log/ufw.log)
-    ```
-!!! tip "To see a list of ports currently listening for open connections"
-    ``` bash
-    sudo ss -atpu
-    ```
+Uncomplicated firewall (ufw) - https://en.wikipedia.org/wiki/Uncomplicated_Firewall
+
+=== "Individual commands"
+    !!! quote "Install uncomplicated firewall"
+        ``` bash
+        sudo apt-get install ufw
+        ```
+    Enable at boot time and immediately start the service
+    !!! quote "ufw setup commands"
+        ``` bash
+        sudo systemctl enable ufw --now
+        sudo ufw allow ssh
+        sudo ufw allow 'WWW Full'
+        sudo ufw default allow outgoing
+        sudo ufw default deny incoming
+        sudo ufw show added [to confirm ssh added]
+        sudo ufw enable
+        sudo ufw status numbered
+        sudo ufw logging on (see /var/log/ufw.log)
+        ```
+    !!! tip "To see a list of ports currently listening for open connections"
+        ``` bash
+        sudo ss -atpu
+        ```
+
+=== "Scripted version (also outputs to `ufw_setup.log`)"
+    ???+ example "ufw-setup.sh - [[DOWNLOAD](../server-setup/ufw-setup.sh)]"
+        ``` bash linenums="1"
+        --8<-- "docs/server-setup/ufw-setup.sh"
+        ```
 
 !!! warning "Issue with Docker overruling ufw settings for opening ports"
     Docker maintains its own `iptables` chain which means that any ports opened externally in Docker will automatically be allowed regardless of ufw settings (see [this](https://stackoverflow.com/questions/30383845/what-is-the-best-practice-of-docker-ufw-under-ubuntu/51741599#51741599) Stack Overflow article).  
