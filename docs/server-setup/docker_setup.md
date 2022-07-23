@@ -88,14 +88,21 @@ Add to nginx proxy manager as usual, but with the addition of `proxy_read_timeou
 ### Export existing container(s) as Docker Compose file(s)
 From https://github.com/Red5d/docker-autocompose this will automatically generate docker compose files for specified containers:
 
-``` bash
-docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/red5d/docker-autocompose <container-name-or-id> <additional-names-or-ids>
-```
+=== "Specific container(s)"
+    ``` bash
+    docker run --rm --pull always \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        ghcr.io/red5d/docker-autocompose \
+        <container-name-or-id> <additional-names-or-ids>
+    ```
 
-Or for all containers:
-``` bash
-docker run --rm -v /var/run/docker.sock:/var/run/docker.sock ghcr.io/red5d/docker-autocompose $(docker ps -aq)
-```
+=== "All containers"
+    ``` bash
+    docker run --rm --pull always \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        ghcr.io/red5d/docker-autocompose \
+        $(docker ps -aq)
+    ```
 
 ### Uptime Kuma monitoring
 A nice status monitoring app - https://github.com/louislam/uptime-kuma
@@ -115,7 +122,7 @@ Install it via docker-compose:
 ### Filebrowser
 A nice GUI file browser - https://github.com/filebrowser/filebrowser
 
-???+ warning "Create the empty db file first"
+!!! warning "Create the empty db file first"
     ``` bash
     mkdir -p $HOME/containers/filebrowser && touch $HOME/containers/filebrowser/filebrowser.db
     ```
@@ -127,7 +134,7 @@ Then install via docker-compose:
     ```
 
 Then setup NPM SSH reverse proxy (remember to include websocket support) and then login:
-???+ info "Default credentials"
+!!! info "Default credentials"
     Username: `admin`  
     Password: `admin`
 
@@ -135,7 +142,7 @@ Then setup NPM SSH reverse proxy (remember to include websocket support) and the
 and add the `logo.svg`  and `favicon.ico` and 16x16 and 32x32 PNGs (if you only do the `.ico`) then the browser will pick the internal higher resolution PNGs.
 ![](../images/2022-07-15-22-06-56.png){ align=right }  
 
-???+ tip "Generating favicons"
+!!! tip "Generating favicons"
     The [favicon generator](https://realfavicongenerator.net/) is a very useful website to generate all the required favicons for different platforms.
 
 Then change the instance name and set the branding directory path in Settings > Global Settings (matching the one set in the docker-compose file above)
@@ -150,12 +157,32 @@ Then install via docker-compose:
     ```
 The setup NPM SSH reverse proxy to https port 443 and navigate to new site to setup login.
 
-???+ info "Setup 2FA"
+!!! info "Setup 2FA"
     After login go to User > Settings > Security (Administration section) > Enforce two-factor authentication.  
     Then go User > Apps > Two-Factor TOTP Provider (https://apps.nextcloud.com/apps/twofactor_totp) *or just click on search icon at the top right and type in TOTP*  
     Then go back to User > Settings > Security (Personal section) > Tick 'Enable TOTP' and verify the code
 
-### Homepage options
+### Glances [OPTIONAL]
+System monitoring tool - https://nicolargo.github.io/glances/
+
+Then install via docker-compose:
+??? example "docker-compose/glances.yml" 
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/glances.yml"
+    ```
+The setup NPM SSH reverse proxy to https port 443 and navigate to new site to setup login.
+
+### Netdata [OPTIONAL]
+System monitoring tool - https://www.netdata.cloud/
+
+Then install via docker-compose:
+??? example "docker-compose/netdata.yml" 
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/netdata.yml"
+    ```
+The setup NPM SSH reverse proxy to https port 443 and navigate to new site to view login. Also option of linking to online account - need to get login token from website and change stack to include this in the environment variables.
+
+### Homepage options [OPTIONAL]
 
 === "Homer"
     https://github.com/bastienwirtz/homer

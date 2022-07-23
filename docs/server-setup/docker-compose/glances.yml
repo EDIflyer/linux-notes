@@ -1,0 +1,23 @@
+version: "3"
+services:
+  glances:
+    container_name: glances
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - "GLANCES_OPT=-w"
+    expose:
+      - 61208/tcp
+    image: nicolargo/glances:latest-full # alpine-latest-full not showing Docker containers as of 20220723
+    networks:
+      - nginx-proxy-manager_default
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /home/alan/containers/glances:/glances/conf
+    restart:
+      unless-stopped
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default

@@ -81,7 +81,8 @@ Next switch on unattended upgrades to ensure the server remains up to date
     !!! danger "Check first!"
           Open new tab and check can still login OK before closing this connection!
 
-### Setup btop (formerly bpytop)
+### Setup btop (formerly bpytop) [OPTIONAL]
+SSH-based system resource overview app - https://github.com/aristocratos/btop
 !!! quote "Install pre-requisites"
     ``` bash
     sudo apt install bzip2 make
@@ -94,6 +95,16 @@ Go to https://github.com/aristocratos/btop/releases/latest to check the latest r
     ./install.sh
     ```
 
+### Setup ctop [OPTIONAL]
+Similar to `htop` but based on viewing container activity instead - https://github.com/bcicen/ctop
+
+Go to https://github.com/bcicen/ctop/releases/latest to check the latest release, right-clock and copy the URL then change section below.
+!!! quote "Download, untar and install"
+    ``` bash hl_lines="1"
+    sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-linux-amd64 -O /usr/local/bin/ctop \
+    && sudo chmod +x /usr/local/bin/ctop
+    ```
+Use `ctop` command to run.
 
 ### Setup firewall
 Uncomplicated firewall (ufw) - https://en.wikipedia.org/wiki/Uncomplicated_Firewall
@@ -159,22 +170,30 @@ Given we are going to set up a reverse proxy manager the easier option is to onl
         `sudo fail2ban-client status`
         `sudo cat /var/log/fail2ban/error.log`
 
-### Bash config (optional!)
-#### Neofetch
+### Bash config
+#### History
+The `history` command in bash shows previously run commands.  
+These can then be run with `!<number>`.  
+The following enhances the stored list.
+!!! quote "Alter ~/.bashrc"
+    ``` bash
+    echo 'PROMPT_COMMAND="history -a; history -c; history -r;"' >> ~/.bashrc
+    ```
+==add more on history plus bits where it adds timestamps==
+
+#### Neofetch [OPTIONAL]
 Neofetch is a command-line system information tool written in bash that displays information about your operating system, software and hardware in an aesthetic and visually pleasing way - https://github.com/dylanaraps/neofetch
 !!! quote "Install neofetch and run on terminal session startup"
     ``` bash
     sudo apt install neofetch -y && nano ~/.bashrc
     ```
-    add `PROMPT_COMMAND="history -a; history -c; history -r;"` to the penultimate line to enable longer history
-    ==add more on history plus bits where it adds timestamps==
     add `neofetch` to the last line
     ``` bash
     nano ~/.config/neofetch/config.conf
     ```
     uncomment and rename IP addresses/add back in desired sections (copy template across from Dropbox)
 https://bashrcgenerator.com/ - useful generator
-#### oh-my-posh
+#### oh-my-posh [OPTIONAL]
 Command line prettifier - handy for git directories - https://ohmyposh.dev/
 !!! quote "Install neofetch and run on terminal session startup"
     ``` bash
