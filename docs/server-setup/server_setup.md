@@ -2,10 +2,10 @@
 title: "1 - Initial server setup"
 ---
 # Initial server setup <!-- Setting an L1 heading title here overrides the title used in the navigation -->
-Spin up server on Linode and SSH in using root commands.
+Spin up server on Linode and SSH in using newly-created root login credentials.
 
 ### Users
-Initially logged in as a root user - we therefore need to add a non-root user & then add them to the sudo group
+Initially logged in as a root user - therefore need to add a non-root user & also add this new account to the sudo group
 !!! quote "user setup"
     ``` bash
     sudo adduser <username> && sudo usermod -aG sudo <username>
@@ -26,20 +26,12 @@ Next switch on unattended upgrades to ensure the server remains up to date
     ```
 
 ### Host details
-!!! quote "Set timezone"
+Set base configuration for the server:
+!!! quote "Set timezone, install ntp service, activate ntp, check settings"
     ``` bash
     sudo timedatectl set-timezone Europe/London
-    ```
-!!! quote "Install ntp service"
-    ``` bash
     sudo apt install systemd-timesyncd
-    ```
-!!! quote "Activate network time protocol"
-    ``` bash
     sudo timedatectl set-ntp true
-    ```
-!!! quote "Check settings"
-    ``` bash
     timedatectl
     ```
 !!! quote "Set hostname"
@@ -98,13 +90,14 @@ Go to https://github.com/aristocratos/btop/releases/latest to check the latest r
 ### Setup ctop [OPTIONAL]
 Similar to `htop` but based on viewing container activity instead - https://github.com/bcicen/ctop
 
-Go to https://github.com/bcicen/ctop/releases/latest to check the latest release, right-clock and copy the URL then change section below.
+Go to https://github.com/bcicen/ctop/releases/latest to check the latest release, right-click and copy the URL then change URL below.
 !!! quote "Download, untar and install"
-    ``` bash hl_lines="1"
-    sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-linux-amd64 -O /usr/local/bin/ctop \
+    ``` bash
+    sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-linux-amd64 \
+    -O /usr/local/bin/ctop \
     && sudo chmod +x /usr/local/bin/ctop
     ```
-Use `ctop` command to run.
+Once installed type `ctop` to run, then press ++h++ to open help menu and see available commands (e.g., to change sort order).
 
 ### Setup firewall
 Uncomplicated firewall (ufw) - https://en.wikipedia.org/wiki/Uncomplicated_Firewall
@@ -192,6 +185,9 @@ Neofetch is a command-line system information tool written in bash that displays
     nano ~/.config/neofetch/config.conf
     ```
     uncomment and rename IP addresses/add back in desired sections (copy template across from Dropbox)
+
+==COPY neofetch config across from server. to linode.==
+
 https://bashrcgenerator.com/ - useful generator
 #### oh-my-posh [OPTIONAL]
 Command line prettifier - handy for git directories - https://ohmyposh.dev/
