@@ -24,16 +24,18 @@ Next switch on unattended upgrades to ensure the server remains up to date
     sudo apt install unattended-upgrades -y
     sudo dpkg-reconfigure --priority=low unattended-upgrades
     ```
-
-### Host details
-Set base configuration for the server:
+### Setup network time protocol
+It is particularly important to do this for Authelia given the use of time-based one-time 2FA passcodes
 !!! quote "Set timezone, install ntp service, activate ntp, check settings"
     ``` bash
     sudo timedatectl set-timezone Europe/London
     sudo apt install systemd-timesyncd
+    read -p "Press [ENTER] to continue" # short pause to allow service to start
     sudo timedatectl set-ntp true
     timedatectl
     ```
+### Host details
+Set base configuration for the server:
 !!! quote "Set hostname"
     ``` bash
     sudo hostnamectl set-hostname <hostname>
