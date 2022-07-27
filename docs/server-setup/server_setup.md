@@ -169,10 +169,11 @@ Given we are going to set up a reverse proxy manager the easier option is to onl
 #### History
 The `history` command in bash shows previously run commands.  
 These can then be run with `!<number>`.  
-The following enhances the stored list.
+The following enhances the stored list by adding commands run in other windows and adding date/time to the list.
 !!! quote "Alter ~/.bashrc"
     ``` bash
     echo 'PROMPT_COMMAND="history -a; history -c; history -r;"' >> ~/.bashrc
+    echo 'HISTTIMEFORMAT="<%Y-%m-%y @ %T> "' >> ~/.bashrc
     ```
 ==add more on history plus bits where it adds timestamps==
 
