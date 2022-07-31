@@ -23,6 +23,7 @@ Increase screen resolution:
 `tar -xzf [filename.tar.gz]`  
 `less` {excellent way to view a file, ++h++ for help, ++q++ to quit, lowercase-++g++ jump to start, uppercase-++g++ jump to end}  
 `env` to print environment variables  
+`watch` to run a command at pre-defined intervals - e.g., `watch -n 5 ls` to print the directory listing every 5s. Can set to exit when change detected, etc.
 
 to find recursively in folders...  
 `find . -name '*.xml'`  

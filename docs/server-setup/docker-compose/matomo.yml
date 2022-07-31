@@ -1,0 +1,36 @@
+version: '3'
+services:
+  app:
+    image: matomo:latest
+    restart: unless-stopped
+    environment:
+      - MATOMO_DATABASE_HOST=db
+      - MATOMO_DATABASE_TABLES_PREFIX=mat_
+      - MATOMO_DATABASE_USERNAME=matomo-CHANGEME
+      - MATOMO_DATABASE_PASSWORD=matomo-CHANGEME
+      - MATOMO_DATABASE_DBNAME=matomo
+      - TZ=Europe/London      
+    volumes:
+      - /home/alan/containers/matomo/app:/var/www/html
+    links:
+      - db:db
+    expose:
+      - 80/tcp
+    networks:
+      - nginx-proxy-manager_default         
+  db:
+    image: yobasystems/alpine-mariadb:latest
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: matomo
+      MYSQL_USER: matomo-CHANGEME
+      MYSQL_PASSWORD: matomo-CHANGEME
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - /home/alan/containers/matomo/db:/var/lib/mysql
+    networks:
+      - nginx-proxy-manager_default
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default

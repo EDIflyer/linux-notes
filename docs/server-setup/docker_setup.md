@@ -227,3 +227,22 @@ The setup NPM SSH reverse proxy to https port 443 and navigate to new site to vi
         ``` yaml linenums="1"
         --8<-- "docs/server-setup/docker-compose/dashy.yml"
         ```    
+
+### Matomo [OPTIONAL]
+Self-hosted analytics platform - https://matomo.org/  
+Install via docker-compose (stack on Portainer):
+??? example "docker-compose/matomo.yml" 
+    ``` yaml linenums="1" hl_lines="9 10 26 27"
+    --8<-- "docs/server-setup/docker-compose/matomo.yml"
+    ```
+Then setup in NPM as usual with SSL and add the usual [Authelia container advanced config](authelia_setup.md#nginx-proxy-manager-setup).  
+Once this is done access Matomo via the new proxy address and follow the click-through setup steps. Database parameters should already be pre-filled (from the environment variables above), the main step is just to setup a superadmin user. After this the setup process will generate the tracking code that has to be placed just before the closing `</head>` tag (or in the relevant Wordpress configuration).  This tracking code needs to be able to access the `matomo.php` and `matomo.js` files without authentication, so the following has to be added to the Authelia configuration:
+
+??? example "add to `access_control` section of ~/containers/authelia/config/configuration.yml"
+    ``` yml
+        - domain: analytics.alanjrobertson.co.uk
+        resources:
+            - "^matomo.php*$"
+            - "^matomo.js*$"
+        policy: bypass
+    ```
