@@ -27,12 +27,12 @@ Then connect using http://localhost:9000
 
 Go to Environments > local and add public IP to allow all the ports links to be clickable
 
-Aim to put volumes in /var/lib/docker/volums/[containername]
+Aim to put volumes in /var/lib/docker/volumes/[containername]
 Use bind for nginx live website so can easily be updated from script
 
 ### Watchtower setup - monitor and update Docker containers
 [Watchtower](https://containrrr.dev/watchtower/) is a container-based solution for automating Docker container base image updates.  
-It can pull from public repositories but to link to a private Docker Hub you need to supply login credentials.  This is best achieved by running a `docker login` command in the terminal, whith will create a file in `$HOME/.docker/config.json` that we can then link as a volume to the Watchtower container.  
+It can pull from public repositories but to link to a private Docker Hub you need to supply login credentials.  This is best achieved by running a `docker login` command in the terminal, which will create a file in `$HOME/.docker/config.json` that we can then link as a volume to the Watchtower container.  
 The configuration below links to this config file and also links to the local time and tells Watchtower to include stopped containers and verbose logging.
 === "docker run"
     ???+ quote "bash"
