@@ -117,11 +117,15 @@ Uncomplicated firewall (ufw) - https://en.wikipedia.org/wiki/Uncomplicated_Firew
         sudo ufw allow 'WWW Full'
         sudo ufw default allow outgoing
         sudo ufw default deny incoming
-        sudo ufw show added [to confirm ssh added]
+        sudo ufw show added # (1)
         sudo ufw enable
         sudo ufw status numbered
-        sudo ufw logging on (see /var/log/ufw.log)
+        sudo ufw logging on # (2)
         ```
+
+        1. [to confirm ssh added]
+        2. [see `/var/log/ufw.log`]
+        
     !!! tip "To see a list of ports currently listening for open connections"
         ``` bash
         sudo ss -atpu

@@ -5,16 +5,17 @@ title: "2 - Docker & Portainer setup"
 !!! info "Container options"
     In general aim to use Alpine Linux-based containers to minimise size/bloat of the underlying container.
 
-See https://docs.docker.com/engine/install/debian/
-`sudo curl -sSL https://get.docker.com/ | sh`
-To enable non-root access to the Docker daemon run `sudo usermod -aG docker <username>` - then logout and back in
+See https://docs.docker.com/engine/install/debian/  
+``` bash
+sudo curl -sSL https://get.docker.com/ | sh
+```
+To enable non-root access to the Docker daemon run `sudo usermod -aG docker <username>` - then logout and back in  
 
 Create Portainer volume and then start Docker container, but for security bind port only to localhost, so that it cannot be access except when an SSH tunnel is active.
 ``` bash
-docker volume create portainer_data
 docker run -d -p 127.0.0.1:8000:8000 -p 127.0.0.1:9000:9000 \
  --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock \
- -v portainer_data:/data portainer/portainer-ce:latest
+ -v /home/alan/containers/portainer:/data portainer/portainer-ce:latest
 ```
 Possible route to use Wireguard https://www.portainer.io/blog/how-to-run-portainer-behind-a-wireguard-vpn
 
