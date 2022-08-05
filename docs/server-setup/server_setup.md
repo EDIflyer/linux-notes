@@ -2,7 +2,7 @@
 title: "1 - Initial server setup"
 ---
 # Initial server setup <!-- Setting an L1 heading title here overrides the title used in the navigation -->
-Spin up server on Linode and SSH in using newly-created root login credentials.
+Spin up a server instance on Linode and SSH in using newly-created root login credentials.
 
 ### Users
 Initially logged in as a root user - therefore need to add a non-root user & also add this new account to the sudo group
@@ -76,12 +76,12 @@ Set base configuration for the server:
           Open new tab and check can still login OK before closing this connection!
 
 ### Setup btop (formerly bpytop) [OPTIONAL]
-SSH-based system resource overview app - https://github.com/aristocratos/btop
+Terminal-based system resource overview app - https://github.com/aristocratos/btop
 !!! quote "Install pre-requisites"
     ``` bash
     sudo apt install bzip2 make
     ```
-Go to https://github.com/aristocratos/btop/releases/latest to check the latest release, right-clock and copy the URL.
+Go to https://github.com/aristocratos/btop/releases/latest to check the latest release, right-click and copy the URL then replace `[filename]` below.
 !!! quote "Download, untar and install"
     ``` bash
     wget [latest x64 version for Linode, armv7l for Pi]
@@ -105,13 +105,9 @@ Once installed type `ctop` to run, then press ++h++ to open help menu and see av
 Uncomplicated firewall (ufw) - https://en.wikipedia.org/wiki/Uncomplicated_Firewall
 
 === "Individual commands"
-    !!! quote "Install uncomplicated firewall"
+    !!! quote "Install & enable uncomplicated firewall"
         ``` bash
-        sudo apt-get install ufw
-        ```
-    Enable at boot time and immediately start the service
-    !!! quote "ufw setup commands"
-        ``` bash
+        sudo apt-get install ufw -y
         sudo systemctl enable ufw --now
         sudo ufw allow ssh
         sudo ufw allow 'WWW Full'
@@ -132,7 +128,7 @@ Uncomplicated firewall (ufw) - https://en.wikipedia.org/wiki/Uncomplicated_Firew
         ```
 
 === "Scripted version (also outputs to `ufw_setup.log`)"
-    ???+ example "ufw-setup.sh - [[DOWNLOAD](../server-setup/ufw-setup.sh)]"
+    ??? example "ufw-setup.sh - [[DOWNLOAD](../server-setup/ufw-setup.sh)]"
         ``` bash linenums="1"
         --8<-- "docs/server-setup/ufw-setup.sh"
         ```
@@ -181,19 +177,21 @@ The following enhances the stored list by adding commands run in other windows a
     ```
 ==add more on history plus bits where it adds timestamps==
 
-#### Neofetch [OPTIONAL]
-Neofetch is a command-line system information tool written in bash that displays information about your operating system, software and hardware in an aesthetic and visually pleasing way - https://github.com/dylanaraps/neofetch
+#### neofetch [OPTIONAL]
+neofetch is a command-line system information tool written in bash that displays information about your operating system, software and hardware in an aesthetic and visually pleasing way - https://github.com/dylanaraps/neofetch
 !!! quote "Install neofetch and run on terminal session startup"
     ``` bash
-    sudo apt install neofetch -y && nano ~/.bashrc
+    sudo apt install neofetch -y
+    echo "neofetch" >> ~/.bashrc
     ```
-    add `neofetch` to the last line
+    Edit neoftech config - e.g. to add disk usage, rename IPv4/v6, etc.
     ``` bash
     nano ~/.config/neofetch/config.conf
     ```
-    uncomment and rename IP addresses/add back in desired sections (copy template across from Dropbox)
-
-==COPY neofetch config across from server. to linode.==
+    ??? example "~/.config/neofetch/config.conf"
+        ``` bat
+        --8<-- "docs/server-setup/config/neofetch/config.conf"
+        ```
 
 https://bashrcgenerator.com/ - useful generator
 #### oh-my-posh [OPTIONAL]
