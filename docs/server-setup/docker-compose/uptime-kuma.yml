@@ -23,7 +23,7 @@ services:
     mac_address: 02:42:ac:11:00:04
     expose:
       - 3001/tcp
-    restart: always
+    restart: unless-stopped
     networks:
       - nginx-proxy-manager_default    
     volumes:

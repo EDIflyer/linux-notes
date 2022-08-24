@@ -34,4 +34,5 @@ services:
       - /home/alan/.docker/config.json:/config.json
       - /etc/localtime:/etc/localtime:ro
     working_dir: /
+    restart: unless-stopped    
 networks: {}

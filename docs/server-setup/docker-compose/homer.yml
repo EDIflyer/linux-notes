@@ -16,6 +16,7 @@ services:
       - TZ=Europe/London
     networks:
       - nginx-proxy-manager_default
+    restart: unless-stopped      
 networks:
   nginx-proxy-manager_default:
     external: true

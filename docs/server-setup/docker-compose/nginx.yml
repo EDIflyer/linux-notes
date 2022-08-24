@@ -17,6 +17,7 @@ services:
       - nginx-proxy-manager_default
     volumes:
       - /var/www/docs.alanjrobertson.co.uk/html:/usr/share/nginx/html
+    restart: unless-stopped         
 networks:
   nginx-proxy-manager_default:
     external: true
