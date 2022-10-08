@@ -31,6 +31,8 @@ to find recursively in folders...
 
 Split commands over multiple lines using ++backslash++ at the end of the line, just ensure no space to the right of it
 
+Handy command list - https://gist.github.com/tuxfight3r/60051ac67c5f0445efee
+
 ## iperf
 `sudo apt install iperf`
 Run server:
