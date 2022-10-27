@@ -12,7 +12,9 @@ To enhance the documentation site plugins are used to extend the functionality o
 - [mkdocs-awesome-pages plugin](https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin)
 
 These need to be installed by `pip` on top of the main `mkdocs-material` image, therefore a custom Dockerfile is needed to add the relevant colour commands and create a custom image before they can be activated in the `mkdocs.yml` configuration file:
+
 ??? example "mkdocs.dockerfile - use in Portainer as Images > Build image"
+    <a name="instructions"></a>
     ``` docker linenums="1"
     FROM squidfunk/mkdocs-material
     RUN pip install mkdocs-git-revision-date-localized-plugin
@@ -57,8 +59,8 @@ However as a custom image is now in use the Watchtower system will not be able t
 
 When a new version is released the following steps need to be undertaken to update the custom image:
 
-1. Rebuild the custom container (see instructions above)
-2. Redeploy the mkdocs-live stack (so that it switches to use this updated container, otherwise it will continue to use the old one)
+1. Rebuild the custom container [(see instructions above)](#instructions) or run [`mkdocs-update.sh`](/docs/server-setup/scripts/mkdocs-update.sh) after ensuring the dockerfile is in the same directory
+2. Redeploy the `mkdocs-live` stack (so that it switches to use this updated container, otherwise it will continue to use the old one) - **do not tick the 're-pull' image option as the image is stored locally, not on dockerhub**.  _NB If the `mkdocs-checkforupdates` container wasn't updated by Watchtower then this will also need to be updated_
 3. Remove the old image (this will now be untagged in the image list as the tag transferred to the new custom image and will also now show as unused. Prior to step #2 this would still be used by the mkdocs-live container)
 
 ### Main build script

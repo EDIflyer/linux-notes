@@ -128,9 +128,9 @@ Uncomplicated firewall (ufw) - https://en.wikipedia.org/wiki/Uncomplicated_Firew
         ```
 
 === "Scripted version (also outputs to `ufw_setup.log`)"
-    ??? example "ufw-setup.sh - [[DOWNLOAD](../server-setup/ufw-setup.sh)]"
+    ??? example "ufw-setup.sh - [[DOWNLOAD](../server-setup/scripts/ufw-setup.sh)]"
         ``` bash linenums="1"
-        --8<-- "docs/server-setup/ufw-setup.sh"
+        --8<-- "docs/server-setup/scripts/ufw-setup.sh"
         ```
 
 !!! warning "Issue with Docker overruling ufw settings for opening ports"
@@ -145,9 +145,7 @@ Given we are going to set up a reverse proxy manager the easier option is to onl
 ### Setup fail2ban ==**CHANGE FOR DOCKER**==
 !!! quote "fail2ban options"
     === "Docker setup"
-        ``` bash
-          crazymax/fail2ban
-        ```
+        https://www.reddit.com/r/selfhosted/comments/srrg7n/fail2ban_and_docker/
     === "Local non-Docker setup"
         ``` bash
         sudo apt install fail2ban -y

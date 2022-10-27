@@ -26,7 +26,7 @@ Add some recommended extensions using the full path:
 ```
 Add some triggerscript:
 ``` bash
---8<-- "docs/triggerscript.sh"
+--8<-- "docs/general-notes/scripts/triggerscript.sh"
 ```
 
 List of markdown options  
