@@ -63,6 +63,7 @@ Set base configuration for the server:
     ``` bash
     PermitRootLogin no
     PermitRootLogin prohibit-password
+    PubkeyAuthentication yes
     ChallengeResponseAuthentication no
     PasswordAuthentication no
     UsePAM no
