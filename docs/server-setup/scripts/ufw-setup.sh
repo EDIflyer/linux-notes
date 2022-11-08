@@ -15,7 +15,7 @@ echo "-->> Install ufw" | tee -a ufw_setup.log; pause_continue
 sudo apt-get install ufw -y | tee -a ufw_setup.log
 
 echo "-->> Enable and start ufw" | tee -a ufw_setup.log; pause_continue
-sudo systemctl enable ufw --now | tee -a ufw_setup.log
+sudo ufw enable ufw | tee -a ufw_setup.log
 
 echo "-->> Add rule to allow SSH (22)" | tee -a ufw_setup.log; pause_continue
 sudo ufw allow ssh | tee -a ufw_setup.log
@@ -44,5 +44,5 @@ sudo ufw logging on | tee -a ufw_setup.log
 echo "-->> Show all ports opened on system" | tee -a ufw_setup.log; pause_continue
 sudo ss -atpu | tee -a ufw_setup.log
 
-echo "-->> ufw setup complete - see $PWD/ufw.setup.log for log file"
+echo "-->> ufw setup complete - see $PWD/ufw_setup.log for log file"
 echo "Script completed: $(date)" >> ufw_setup.log

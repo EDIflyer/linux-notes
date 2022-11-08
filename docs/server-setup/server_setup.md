@@ -15,7 +15,7 @@ Initially logged in as a root user - therefore need to add a non-root user & als
 Update package list and ensure all are the latest versions
 !!! quote "software update"
     ``` bash
-    sudo apt update && sudo apt upgrade
+    sudo apt update && sudo apt upgrade -y
     ```
 
 Next switch on unattended upgrades to ensure the server remains up to date
@@ -30,8 +30,9 @@ It is particularly important to do this for Authelia given the use of time-based
     ``` bash
     sudo timedatectl set-timezone Europe/London
     sudo apt install systemd-timesyncd
-    read -p "Press [ENTER] to continue" # short pause to allow service to start
+    read -p "Wait 2 sec then press [ENTER] to enable ntp" # short pause to allow service to start
     sudo timedatectl set-ntp true
+    read -p "Wait 2 sec then press [ENTER] to check ntp configured OK" # short pause to allow service to start
     timedatectl
     ```
 ### Host details
