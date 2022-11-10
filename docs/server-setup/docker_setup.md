@@ -76,6 +76,10 @@ Apply this docker-compose (based on https://nginxproxymanager.com/setup/#running
     --8<-- "docs/server-setup/docker-compose/nginx-proxy-manager.yml"
     ```
 
+Login to the admin console at `<serverIP>:81` with email `admin@example.com` and password `changeme`. Then change user email/password combo.
+
+Setup new proxy host for NPM itself with scheme `http`, forward hostname of `localhost` and forward port of `81`.
+
 ### Dozzle (log viewer) setup
 Nice logviewer application that lets you monitor all the container logs - https://dozzle.dev/
 
