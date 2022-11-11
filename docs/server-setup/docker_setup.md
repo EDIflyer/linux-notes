@@ -34,6 +34,8 @@ Use bind for nginx live website so can easily be updated from script
 [Watchtower](https://containrrr.dev/watchtower/) is a container-based solution for automating Docker container base image updates.  
 It can pull from public repositories but to link to a private Docker Hub you need to supply login credentials.  This is best achieved by running a `docker login` command in the terminal, which will create a file in `$HOME/.docker/config.json` that we can then link as a volume to the Watchtower container.  
 The configuration below links to this config file and also links to the local time and tells Watchtower to include stopped containers and verbose logging.
+
+**Remember to change the email settings below**
 === "docker run"
     ???+ quote "bash"
         ``` bash
@@ -79,6 +81,8 @@ Apply this docker-compose (based on https://nginxproxymanager.com/setup/#running
 Login to the admin console at `<serverIP>:81` with email `admin@example.com` and password `changeme`. Then change user email/password combo.
 
 Setup new proxy host for NPM itself with scheme `http`, forward hostname of `localhost` and forward port of `81`.
+!!! info "Force SSL access to admin interface"
+    Change NPM stack to comment out port 81 so that access to admin interface is only via SSL.
 
 ### Dozzle (log viewer) setup
 Nice logviewer application that lets you monitor all the container logs - https://dozzle.dev/
@@ -88,26 +92,40 @@ Apply this docker-compose as a stack in Portainer to deploy:
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/dozzle.yml"
     ```
-Add to nginx proxy manager as usual, but with the addition of `proxy_read_timeout 30m;` in the advanced settings tab to minimise the issue of the default 60s proxy timeout causing [repeat log entries](https://github.com/amir20/dozzle/issues/1404).
+Add to nginx proxy manager as usual (forward hostname `dozzle` and port `8080`), but with the addition of `proxy_read_timeout 30m;` in the advanced settings tab to minimise the issue of the default 60s proxy timeout causing [repeat log entries](https://github.com/amir20/dozzle/issues/1404).
 
-### Export existing container(s) as Docker Compose file(s)
-From https://github.com/Red5d/docker-autocompose this will automatically generate docker compose files for specified containers:
+### Filebrowser
+A nice GUI file browser - https://github.com/filebrowser/filebrowser
 
-=== "Specific container(s)"
+!!! warning "Create the empty db first"
     ``` bash
-    docker run --rm --pull always \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        ghcr.io/red5d/docker-autocompose \
-        <container-name-or-id> <additional-names-or-ids>
+    mkdir -p $HOME/containers/filebrowser && touch $HOME/containers/filebrowser/filebrowser.db
     ```
 
-=== "All containers"
-    ``` bash
-    docker run --rm --pull always \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        ghcr.io/red5d/docker-autocompose \
-        $(docker ps -aq)
+??? example "Then create the base settings file in /containers/filebrowser/.filebrowser.json" 
+    ``` json linenums="1"
+    --8<-- "docs/server-setup/config/filebrowser/.filebrowser.json"
+    ```    
+
+Then install via docker-compose:
+??? example "docker-compose/filebrowser.yml" 
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/filebrowser.yml"
     ```
+
+Then setup NPM SSH reverse proxy (remember to include websocket support, with forward hostname `filebrowser` and port `80`) and then login:
+!!! info "Default credentials"
+    Username: `admin`  
+    Password: `admin`
+
+![](../images/2022-07-15-22-05-39.png){ align=right } To customise the appearance create `img` and `img/icons` directories in a subfolder of the `containers/filebrowser` directory (e.g., `customisation` or `branding`)
+and add the `logo.svg`  and `favicon.ico` and 16x16 and 32x32 PNGs (if you only do the `.ico`) then the browser will pick the internal higher resolution PNGs.
+![](../images/2022-07-15-22-06-56.png){ align=right }  
+
+!!! tip "Generating favicons"
+    The [favicon generator](https://realfavicongenerator.net/) is a very useful website to generate all the required favicons for different platforms.
+
+Then change the instance name (e.g., `Deployment server`) and set the branding directory path (e.g., `/branding`) in Settings > Global Settings (matching the one set in the docker-compose file above)
 
 ### Uptime Kuma monitoring
 A nice status monitoring app - https://github.com/louislam/uptime-kuma
@@ -123,34 +141,6 @@ Install it via docker-compose:
     ``` bash
     docker network connect bridge uptime-kuma
     ```
-
-### Filebrowser
-A nice GUI file browser - https://github.com/filebrowser/filebrowser
-
-!!! warning "Create the empty db file first"
-    ``` bash
-    mkdir -p $HOME/containers/filebrowser && touch $HOME/containers/filebrowser/filebrowser.db
-    ```
-
-Then install via docker-compose:
-??? example "docker-compose/filebrowser.yml" 
-    ``` yaml linenums="1"
-    --8<-- "docs/server-setup/docker-compose/filebrowser.yml"
-    ```
-
-Then setup NPM SSH reverse proxy (remember to include websocket support) and then login:
-!!! info "Default credentials"
-    Username: `admin`  
-    Password: `admin`
-
-![](../images/2022-07-15-22-05-39.png){ align=right } To customise the appearance create `img` and `img/icons` directories in a subfolder of the `containers/filebrowser` directory (e.g., `customisation` or `branding`)
-and add the `logo.svg`  and `favicon.ico` and 16x16 and 32x32 PNGs (if you only do the `.ico`) then the browser will pick the internal higher resolution PNGs.
-![](../images/2022-07-15-22-06-56.png){ align=right }  
-
-!!! tip "Generating favicons"
-    The [favicon generator](https://realfavicongenerator.net/) is a very useful website to generate all the required favicons for different platforms.
-
-Then change the instance name and set the branding directory path in Settings > Global Settings (matching the one set in the docker-compose file above)
 
 ### NextCloud
 Cloud-hosted sharing & collaboration server - https://hub.docker.com/r/linuxserver/nextcloud and https://nextcloud.com/
@@ -250,4 +240,24 @@ Once this is done access Matomo via the new proxy address and follow the click-t
             - "^matomo.php*$"
             - "^matomo.js*$"
         policy: bypass
+    ```
+
+
+### Export existing container(s) as Docker Compose file(s)
+From https://github.com/Red5d/docker-autocompose this will automatically generate docker compose files for specified containers:
+
+=== "Specific container(s)"
+    ``` bash
+    docker run --rm --pull always \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        ghcr.io/red5d/docker-autocompose \
+        <container-name-or-id> <additional-names-or-ids>
+    ```
+
+=== "All containers"
+    ``` bash
+    docker run --rm --pull always \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        ghcr.io/red5d/docker-autocompose \
+        $(docker ps -aq)
     ```
