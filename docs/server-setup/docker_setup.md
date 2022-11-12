@@ -32,10 +32,16 @@ Use bind for nginx live website so can easily be updated from script
 
 ### Watchtower setup - monitor and update Docker containers
 [Watchtower](https://containrrr.dev/watchtower/) is a container-based solution for automating Docker container base image updates.  
-It can pull from public repositories but to link to a private Docker Hub you need to supply login credentials.  This is best achieved by running a `docker login` command in the terminal, which will create a file in `$HOME/.docker/config.json` that we can then link as a volume to the Watchtower container.  
-The configuration below links to this config file and also links to the local time and tells Watchtower to include stopped containers and verbose logging.
+!!! tip "Initial docker config setup"
+    Watchtower can pull from public repositories but to link to a private Docker Hub you need to supply login credentials.  This is best achieved by running a `docker login` command in the terminal, which will create a file in `$HOME/.docker/config.json` that we can then link as a volume to the Watchtower container.  If this is not done prior to running the container then Docker will instead create the `config.json` file as a directory!
 
-**Remember to change the email settings below**
+    If 2FA enabled on Docker account then go to https://hub.docker.com/settings/security?generateToken=true to setup the access token
+
+    The configuration below links to this config file and also links to the local time and tells Watchtower to include stopped containers and verbose logging.
+
+!!! warning
+    Remember to change the email settings below
+
 === "docker run"
     ???+ quote "bash"
         ``` bash
@@ -99,13 +105,8 @@ A nice GUI file browser - https://github.com/filebrowser/filebrowser
 
 !!! warning "Create the empty db first"
     ``` bash
-    mkdir -p $HOME/containers/filebrowser && touch $HOME/containers/filebrowser/filebrowser.db
+    mkdir -p $HOME/containers/filebrowser/branding && touch $HOME/containers/filebrowser/filebrowser.db
     ```
-
-??? example "Then create the base settings file in /containers/filebrowser/.filebrowser.json" 
-    ``` json linenums="1"
-    --8<-- "docs/server-setup/config/filebrowser/.filebrowser.json"
-    ```    
 
 Then install via docker-compose:
 ??? example "docker-compose/filebrowser.yml" 
@@ -118,14 +119,11 @@ Then setup NPM SSH reverse proxy (remember to include websocket support, with fo
     Username: `admin`  
     Password: `admin`
 
-![](../images/2022-07-15-22-05-39.png){ align=right } To customise the appearance create `img` and `img/icons` directories in a subfolder of the `containers/filebrowser` directory (e.g., `customisation` or `branding`)
-and add the `logo.svg`  and `favicon.ico` and 16x16 and 32x32 PNGs (if you only do the `.ico`) then the browser will pick the internal higher resolution PNGs.
+![](../images/2022-07-15-22-05-39.png){ align=right } To customise the appearance change the instance name (e.g., `Deployment server`) and set the branding directory path (e.g., `/branding`) in Settings > Global Settings.  Then create `img` and `img/icons` directories in the previously created `containers/filebrowser/branding` directory and add the `logo.svg`  and `favicon.ico` and 16x16 and 32x32 PNGs (if you only do the `.ico`) then the browser will pick the internal higher resolution PNGs.
 ![](../images/2022-07-15-22-06-56.png){ align=right }  
 
 !!! tip "Generating favicons"
     The [favicon generator](https://realfavicongenerator.net/) is a very useful website to generate all the required favicons for different platforms.
-
-Then change the instance name (e.g., `Deployment server`) and set the branding directory path (e.g., `/branding`) in Settings > Global Settings (matching the one set in the docker-compose file above)
 
 ### Uptime Kuma monitoring
 A nice status monitoring app - https://github.com/louislam/uptime-kuma
