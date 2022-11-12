@@ -17,7 +17,7 @@ This setup is using the simple (flat file) method.  Remember to change the `user
 ``` bash
 docker run --rm authelia/authelia:latest authelia hash-password 'yourpassword'
 ```
-??? example "authelia/config/users_database.yml [[DOWNLOAD](../server-setup/config/authelia/configuration.yml)]"
+??? example "authelia/config/users_database.yml"
     ``` yaml linenums="1" hl_lines="10 11 13 14"
     --8<-- "docs/server-setup/config/authelia/users_database.yml"
     ```
@@ -30,8 +30,8 @@ A number of items need to be replaced in the configuration file:
 1. Under `session` set another random 128-bit key for the `secret` and change the `domain` to the main domain name (i.e. no subdomains). Alter `expiration`/`inactivity` as required.  Add a secret for the `redis/password` key and also insert this in the docker-compose file.
 1. Under `storage` set a 512-bit key for the `encryption_key`
 1. Add relevant SMTP credentials under `notifier`
-??? example "authelia/config/configuration.yml [[DOWNLOAD](../server-setup/config/authelia/configuration.yml)]"
-    ``` yaml linenums="1" hl_lines="30 39 45 129-141 153 171 182 208 236-242"
+??? example "authelia/config/configuration.yml"
+    ``` yaml linenums="1" hl_lines="30 39 45 129-141 153 171 182 208 236-242 259-264"
     --8<-- "docs/server-setup/config/authelia/configuration.yml"
     ```
 ### Container setup

@@ -1,0 +1,23 @@
+# NOTES
+# -----
+# Install to systemd folder:
+# sudo cp webhooks.service /etc/systemd/system/webhooks.service
+# sudo systemctl daemon-reload
+#
+# Can then use:
+# sudo systemctl enable webhooks --now
+# sudo systemctl status webhooks
+# sudo systemctl stop webhooks
+#
+[Unit]
+Description=Webhook receiver service
+ConditionPathExists=/usr/bin/webhook
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/webhook -hooks /opt/webhook/hooks.json -verbose -hotreload -port 9001
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
