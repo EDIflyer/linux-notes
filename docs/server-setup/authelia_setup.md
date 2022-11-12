@@ -10,14 +10,14 @@ There is a good guide on Nginx Proxy Manager integration available at [IBRACORP]
     ``` bash
     mkdir -p $HOME/containers/authelia/config
     ```
-There are two key files that then need to be created: `configuration.yml` & `users_database.yml`.  Both of these are placed in this new `config` folder.
+There are two key files that then need to be created: `configuration.yml` & `users_database.yml`.  Both of these are placed in this new `config` folder - example versions are in the following two sections.
 
 ### User database
 This setup is using the simple (flat file) method.  Remember to change the `username` from default and replace the `password` in `users_database.yml` with a hashed version.  The following command makes use of the Authelia conatiner to generate a hashed password:
 ``` bash
 docker run --rm authelia/authelia:latest authelia hash-password 'yourpassword'
 ```
-??? example "authelia/config/users_database.yml"
+??? example "authelia/config/users_database.yml [[DOWNLOAD](../server-setup/config/authelia/configuration.yml)]"
     ``` yaml linenums="1" hl_lines="10 11 13 14"
     --8<-- "docs/server-setup/config/authelia/users_database.yml"
     ```
@@ -30,7 +30,7 @@ A number of items need to be replaced in the configuration file:
 1. Under `session` set another random 128-bit key for the `secret` and change the `domain` to the main domain name (i.e. no subdomains). Alter `expiration`/`inactivity` as required.  Add a secret for the `redis/password` key and also insert this in the docker-compose file.
 1. Under `storage` set a 512-bit key for the `encryption_key`
 1. Add relevant SMTP credentials under `notifier`
-??? example "authelia/config/configuration.yml"
+??? example "authelia/config/configuration.yml [[DOWNLOAD](../server-setup/config/authelia/configuration.yml)]"
     ``` yaml linenums="1" hl_lines="30 39 45 129-141 153 171 182 208 236-242"
     --8<-- "docs/server-setup/config/authelia/configuration.yml"
     ```
