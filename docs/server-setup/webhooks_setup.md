@@ -17,6 +17,7 @@ Then setup reverse proxy to the IP of the bridge network gateway (can confirm IP
 Good guide at https://ansonvandoren.com/posts/deploy-hugo-from-github/ -->
 The components consist of: the `webhook` binary, a hooks file, a trigger script and a system service to keep the binary running in the background.
 
+### Webhook install & configuration
 The hooks file tells `webhook` how to handle incoming requests, and which script it should run if it receives an incoming request that matches the pre-arranged criteria, including a shared 'secret'.  The scripts can include items such as [Telegram notifications](https://ansonvandoren.com/posts/telegram-notification-on-deploy/).
 
 Install the `webhook` binary onto server:
@@ -48,11 +49,9 @@ Now create a script and make it executable once saved:
 Now create the folder from named in `triggerscript.sh` for Github downloads:
 !!! quote "Create download directory"
     ``` bash
-    mkdir $HOME/repositories/<REPOSITORYNAME>
+    mkdir ~/repositories/<REPOSITORYNAME>
     ```    
-!!! warning "Github"
-    Ensure the [Github login process](server_setup.md#install-git-and-connect-to-github) has been completed first before trying to run the trigger script.
-
+### Webhook service creation
 Create a service:
 !!! quote "Create download directory"
     ``` bash
@@ -70,6 +69,7 @@ Copy across, enable and start the webhook service then check status:
     sudo systemctl enable webhooks --now && \
     sudo systemctl status webhooks
     ```
+### Nginx Proxy Manager and firewall setup    
 Create a new webhook site in NPM:
 
 - **Domain Names:** `webhook.(servername).(tld)` (e.g., `webhook.alanjrobertson.co.uk`)
@@ -88,6 +88,7 @@ Create a new webhook site in NPM:
     sudo ufw status
     ```
 
+### Github setup
 Go to the Settings > Webhooks page on Github for the relevant repository and click 'Add webhook'
 
 - **Payload URL:** `https://webhook.(servername).(tld)/hooks/redeploy` (e.g., `https://webhook.alanjrobertson.co.uk/hooks/redeploy`)
@@ -97,10 +98,64 @@ Go to the Settings > Webhooks page on Github for the relevant repository and cli
 - **Which events would you like to trigger this webhook?:** Just the push event
 - **Active:** True
 
-You should receive confirmation of a successful ping and a 200 response.
+You should receive confirmation of a successful ping and a HTTP/200 response.  Note there is a tab called **Recent Deliveries** in the Github webhook management screen that shows the status of recent webhook messages and lets them be resent.
+
+### Install `git` locally and connect to GitHub
+We now need to install `git` on the server and also use an SSH key to connect to our GitHub account.
+!!! quote "Setup SSH key on server and copy to GitHub account"
+    ``` bash
+    cd ~
+    ssh-keygen -t ed25519 -C "<EMAIL ADDRESS>"
+    ```
+    Enter `github_sync` when prompted for filename to save the key. This will then create a private key called `github_sync` and a public key called `github_sync.pub`  
+    Then copy private key to the `.ssh` sub-directory in home directory:
+    ``` bash
+    cp github_sync ~/.ssh/github_sync
+    ```
+    We then need to [add the public key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) to our GitHub account.  The easiest way is to run `cat github_sync.pub` and copy the output to the clipboard the paste into the [Settings > Access > SSH and GPG keys](https://github.com/settings/keys) section of GitHub.
+    !!! warning
+        Remember to backup the Github public/private keypair that has just been created
+!!! quote "Install git and set up syncing"
+    ``` bash
+    sudo apt install git -y
+    mkdir repositories
+    ```
+    Now edit the config file in the `.ssh` directory:
+    ```
+    nano ~/.ssh/config
+    ```
+    and add these lines:
+    ```
+    Host github.com
+    IdentityFile ~/.ssh/github_sync
+    ```
+    Run git configuration
+    ``` bash
+    git config --global user.name "<username>"
+    git config --global user.email "<email>"
+    ```
+    Now test the connection:
+    ``` bash
+    ssh -T git@github.com
+    ```
+    Once the GitHub pulic key fingerprint is accepted there should be a confirmation message of `Hi username! You've successfully authenticated, but GitHub does not provide shell access.`
+
+    We now need to copy these credentials across to the root user as the triggerscript will be accessing via that route.
+    ``` bash
+    sudo cp ~/.ssh/config /root/.ssh && \
+    sudo cp ~/.ssh/github_sync /root/.ssh
+    ```
+### Final triggerscript setup
+A few pre-requisites are required for the triggerscript:
+!!! quote "Install `rsync` and setup backup directory"
+    ``` bash
+    sudo apt install rsync -y && \
+    mkdir -p ~/docs/backup_html
+    ```
 
 You can check webhook status as above or the full journal:
 !!! quote "View logs for webhooks.service"
     ``` bash
     sudo journalctl -u webhooks
     ```
+A push to the repository should now cause Github to send a webhook payload and trigger the script to pull down the repository and rebuild the site.

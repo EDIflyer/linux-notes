@@ -1,36 +1,40 @@
 ---
 title: "2 - Docker & Portainer setup"
 ---
-# Docker & Portainer setup
-!!! info "Container options"
-    In general aim to use Alpine Linux-based containers to minimise size/bloat of the underlying container.
+# Docker setup
+## Install Docker
+!!! quote "From https://docs.docker.com/engine/install/debian/"
+    ``` bash
+    sudo curl -sSL https://get.docker.com/ | sh
+    ```
+!!! quote "Enable non-root access to the Docker daemon"
+    ``` bash
+    sudo usermod -aG docker <username>
+    ```
+    (You need to logout and back in for this to become active)
 
-See https://docs.docker.com/engine/install/debian/  
-``` bash
-sudo curl -sSL https://get.docker.com/ | sh
-```
-To enable non-root access to the Docker daemon run `sudo usermod -aG docker <username>` - then logout and back in  
-
+## Portainer
 Create Portainer volume and then start Docker container, but for security bind port only to localhost, so that it cannot be access except when an SSH tunnel is active.
-``` bash
-docker run -d -p 127.0.0.1:8000:8000 -p 127.0.0.1:9000:9000 \
- --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock \
- -v /home/alan/containers/portainer:/data portainer/portainer-ce:latest
-```
-Possible route to use Wireguard https://www.portainer.io/blog/how-to-run-portainer-behind-a-wireguard-vpn
+!!! quote "Create portainer container"
+    ``` bash
+    docker run -d -p 127.0.0.1:8000:8000 -p 127.0.0.1:9000:9000 \
+    --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock \
+    -v /home/alan/containers/portainer:/data portainer/portainer-ce:latest
+    ```
+<!-- Possible route to use Wireguard https://www.portainer.io/blog/how-to-run-portainer-behind-a-wireguard-vpn -->
 
-SSH tunnel - example SSH connection string
-``` bash
-ssh -L 9000:127.0.0.1:9000 <user>@<server FQDN> -i <PATH TO PRIVATE KEY>
-```
-Then connect using http://localhost:9000
+Setup SSH tunnel - example SSH connection string
+!!! quote "SSH tunnel"
+    ``` bash
+    ssh -L 9000:127.0.0.1:9000 <user>@<server.FQDN> -i <PATH-TO-PRIVATE-KEY>
+    ```
+    Then connect using http://localhost:9000
 
 Go to Environments > local and add public IP to allow all the ports links to be clickable
 
-Aim to put volumes in /var/lib/docker/volumes/[containername]
-Use bind for nginx live website so can easily be updated from script
+Aim to put volumes in `~/containers/[containername]` for consistency.
 
-### Watchtower setup - monitor and update Docker containers
+## Watchtower
 [Watchtower](https://containrrr.dev/watchtower/) is a container-based solution for automating Docker container base image updates.  
 !!! tip "Initial docker config setup"
     Watchtower can pull from public repositories but to link to a private Docker Hub you need to supply login credentials.  This is best achieved by running a `docker login` command in the terminal, which will create a file in `$HOME/.docker/config.json` that we can then link as a volume to the Watchtower container.  If this is not done prior to running the container then Docker will instead create the `config.json` file as a directory!
@@ -77,7 +81,7 @@ Use bind for nginx live website so can easily be updated from script
       - "com.centurylinklabs.watchtower.enable=false"
     ```
 
-### NGINX Proxy Manager install
+## NGINX Proxy Manager
 Apply this docker-compose (based on https://nginxproxymanager.com/setup/#running-the-app) as a stack in Portainer to deploy: 
 ??? example "docker-compose/nginx-proxy-manager.yml"
     ``` yaml linenums="1"
@@ -92,7 +96,7 @@ Setup new proxy host for NPM itself with scheme `http`, forward hostname of `loc
 
 Remember to change the Default Site in NPM settings
 
-### Dozzle (log viewer) setup
+## Dozzle
 Nice logviewer application that lets you monitor all the container logs - https://dozzle.dev/
 
 Apply this docker-compose as a stack in Portainer to deploy:
@@ -102,7 +106,7 @@ Apply this docker-compose as a stack in Portainer to deploy:
     ```
 Add to nginx proxy manager as usual (forward hostname `dozzle` and port `8080`), but with the addition of `proxy_read_timeout 30m;` in the advanced settings tab to minimise the issue of the default 60s proxy timeout causing [repeat log entries](https://github.com/amir20/dozzle/issues/1404).
 
-### Filebrowser
+## Filebrowser
 A nice GUI file browser - https://github.com/filebrowser/filebrowser
 
 !!! warning "Create the empty db first"
@@ -127,6 +131,7 @@ Then setup NPM SSH reverse proxy (remember to include websocket support, with fo
 !!! tip "Generating favicons"
     The [favicon generator](https://realfavicongenerator.net/) is a very useful website to generate all the required favicons for different platforms.
 
+## Optional containers
 ### Uptime Kuma monitoring
 A nice status monitoring app - https://github.com/louislam/uptime-kuma
 
@@ -157,7 +162,7 @@ The setup NPM SSH reverse proxy to https port 443 and navigate to new site to se
     Then go User > Apps > Two-Factor TOTP Provider (https://apps.nextcloud.com/apps/twofactor_totp) *or just click on search icon at the top right and type in TOTP*  
     Then go back to User > Settings > Security (Personal section) > Tick 'Enable TOTP' and verify the code
 
-### Glances [OPTIONAL]
+### Glances 
 System monitoring tool - https://nicolargo.github.io/glances/
 
 Then install via docker-compose:
@@ -167,7 +172,7 @@ Then install via docker-compose:
     ```
 The setup NPM SSH reverse proxy to https port 443 and navigate to new site to setup login.
 
-### Netdata [OPTIONAL]
+### Netdata 
 System monitoring tool - https://www.netdata.cloud/
 
 Then install via docker-compose:
@@ -177,7 +182,7 @@ Then install via docker-compose:
     ```
 The setup NPM SSH reverse proxy to https port 443 and navigate to new site to view login. Also option of linking to online account - need to get login token from website and change stack to include this in the environment variables.
 
-### Homepage options [OPTIONAL]
+### Homepage options 
 
 === "Homer"
     https://github.com/bastienwirtz/homer
@@ -223,7 +228,7 @@ The setup NPM SSH reverse proxy to https port 443 and navigate to new site to vi
         --8<-- "docs/server-setup/docker-compose/dashy.yml"
         ```    
 
-### Matomo [OPTIONAL]
+### Matomo 
 Self-hosted analytics platform - https://matomo.org/  
 Install via docker-compose (stack on Portainer):
 ??? example "docker-compose/matomo.yml" 
@@ -243,8 +248,8 @@ Once this is done access Matomo via the new proxy address and follow the click-t
     ```
 
 
-### Export existing container(s) as Docker Compose file(s)
-From https://github.com/Red5d/docker-autocompose this will automatically generate docker compose files for specified containers:
+## Docker Compose files for existing containers
+It is possible to easily generate a Docker Compose file for a container that has been started via the command line - see https://github.com/Red5d/docker-autocompose
 
 === "Specific container(s)"
     ``` bash

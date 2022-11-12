@@ -3,8 +3,8 @@
 # Original author Annson Van Doren https://ansonvandoren.com/posts/telegram-notification-on-deploy/
 # Adapted by AJR July 2022
 
-# Repo name on GitHub
-REMOTE_REPO=https://github.com/EDIflyer/linux-notes.git
+# Repo name on GitHub - **BE SURE TO USE SSH RATHER THAN HTTPS**
+REMOTE_REPO=git@github.com:EDIflyer/linux-notes.git
 # A place to clone the remote repo so the static site generator can build from it; can't use $HOME as runs as root
 WORKING_DIRECTORY=/home/<user>/repositories/linux-notes
 # Location (server block) where the Nginx container looks for content to serve
@@ -67,7 +67,7 @@ rm -rf $PUBLIC_WWW/*
 # Have mkdocs-material generate the new static HTML directly into the public WWW folder
 # Save the output to send to Telegram
 mkdocs_response=$(docker run --rm -i -v $WORKING_DIRECTORY:/docs custom/mkdocs-material build)
-cp $WORKING_DIRECTORY/site/* $PUBLIC_WWW
+cp -r $WORKING_DIRECTORY/site/* $PUBLIC_WWW
 # Send response to bot as a fenced code block to preserve formatting
 send_msg "<pre>$mkdocs_response</pre>"
 

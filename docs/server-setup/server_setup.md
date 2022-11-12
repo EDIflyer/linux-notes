@@ -4,14 +4,14 @@ title: "1 - Initial server setup"
 # Initial server setup <!-- Setting an L1 heading title here overrides the title used in the navigation -->
 Spin up a server instance on Linode and SSH in using newly-created root login credentials.
 
-### Users
+## Users
 Initially logged in as a root user - therefore need to add a non-root user & also add this new account to the sudo group
 !!! quote "user setup"
     ``` bash
     sudo adduser <username> && sudo usermod -aG sudo <username>
     ```
 
-### Software updates
+## Software updates
 Update package list and ensure all are the latest versions
 !!! quote "software update"
     ``` bash
@@ -24,7 +24,7 @@ Next switch on unattended upgrades to ensure the server remains up to date
     sudo apt install unattended-upgrades -y
     sudo dpkg-reconfigure --priority=low unattended-upgrades
     ```
-### Setup network time protocol
+## Network time protocol
 It is particularly important to do this for Authelia given the use of time-based one-time 2FA passcodes
 !!! quote "Set timezone, install ntp service, activate ntp, check settings"
     ``` bash
@@ -35,7 +35,7 @@ It is particularly important to do this for Authelia given the use of time-based
     read -p "Wait 2 sec then press [ENTER] to check ntp configured OK" # short pause to allow service to start
     timedatectl
     ```
-### Host details
+## Host details
 Set base configuration for the server:
 !!! quote "Set hostname"
     ``` bash
@@ -47,7 +47,7 @@ Set base configuration for the server:
     ```
     add a line with `IP FQDN hostname` - e.g. 1.2.3.4 server.domain.com server
 
-### SSH setup
+## SSH setup
 !!! quote "Create public/private key pair on local machine"
     ``` bash
     ssh-kegen
@@ -77,33 +77,7 @@ Set base configuration for the server:
     !!! danger "Check first!"
           Open new tab and check can still login OK before closing this connection!
 
-### Setup btop (formerly bpytop) [OPTIONAL]
-Terminal-based system resource overview app - https://github.com/aristocratos/btop
-!!! quote "Install pre-requisites"
-    ``` bash
-    sudo apt install bzip2 make
-    ```
-Go to https://github.com/aristocratos/btop/releases/latest to check the latest release, right-click and copy the URL then replace `[filename]` below.
-!!! quote "Download, untar and install"
-    ``` bash
-    wget [latest x64 version for Linode, armv7l for Pi]
-    tar -xjf [filename].tgz
-    ./install.sh
-    ```
-
-### Setup ctop [OPTIONAL]
-Similar to `htop` but based on viewing container activity instead - https://github.com/bcicen/ctop
-
-Go to https://github.com/bcicen/ctop/releases/latest to check the latest release, right-click and copy the URL then change URL below.
-!!! quote "Download, untar and install"
-    ``` bash
-    sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-linux-amd64 \
-    -O /usr/local/bin/ctop \
-    && sudo chmod +x /usr/local/bin/ctop
-    ```
-Once installed type `ctop` to run, then press ++h++ to open help menu and see available commands (e.g., to change sort order).
-
-### Setup firewall
+## Firewall
 Uncomplicated firewall (ufw) - https://en.wikipedia.org/wiki/Uncomplicated_Firewall
 
 === "Individual commands"
@@ -143,7 +117,79 @@ Given we are going to set up a reverse proxy manager the easier option is to onl
     ``` bash
     sudo ufw delete allow 9443
     ```
-### Setup fail2ban ==**CHANGE FOR DOCKER**==
+## Optional items
+### Configure bash
+#### History
+The `history` command in bash shows previously run commands.  
+These can then be run with `!<number>`.  
+The following enhances the stored list by adding commands run in other windows and adding date/time to the list.
+!!! quote "Alter ~/.bashrc"
+    ``` bash
+    echo 'PROMPT_COMMAND="history -a; history -c; history -r;"' >> ~/.bashrc
+    echo 'HISTTIMEFORMAT="<%Y-%m-%y @ %T> "' >> ~/.bashrc
+    ```
+==add more on history plus bits where it adds timestamps==
+
+#### neofetch 
+neofetch is a command-line system information tool written in bash that displays information about your operating system, software and hardware in an aesthetic and visually pleasing way - https://github.com/dylanaraps/neofetch
+!!! quote "Install neofetch and run on terminal session startup"
+    ``` bash
+    sudo apt install neofetch -y
+    echo "neofetch" >> ~/.bashrc
+    ```
+    Edit neoftech config - e.g. to add disk usage, rename IPv4/v6, etc.
+    ``` bash
+    nano ~/.config/neofetch/config.conf
+    ```
+    ??? example "~/.config/neofetch/config.conf"
+        ``` bat
+        --8<-- "docs/server-setup/config/neofetch/config.conf"
+        ```
+
+https://bashrcgenerator.com/ - useful generator
+#### oh-my-posh 
+Command line prettifier - handy for git directories - https://ohmyposh.dev/
+!!! quote "Install neofetch and run on terminal session startup"
+    ``` bash
+    sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
+    sudo chmod +x /usr/local/bin/oh-my-posh
+    mkdir ~/.poshthemes
+    wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -O ~/.poshthemes/themes.zip
+    unzip ~/.poshthemes/themes.zip -d ~/.poshthemes
+    chmod u+rw ~/.poshthemes/*.omp.*
+    rm ~/.poshthemes/themes.zip
+    ```
+Ensure a Nerd Font [https://www.nerdfonts.com/] such as Caskaydia Cove NF is installed and selected in the terminal program  
+Use `eval "$(oh-my-posh init bash --config ~/.poshthemes/[theme_name].omp.json)"` to switch theme
+
+### Monitoring applications
+#### btop 
+Terminal-based system resource overview app - https://github.com/aristocratos/btop (formerly `bpytop`)
+!!! quote "Install pre-requisites"
+    ``` bash
+    sudo apt install bzip2 make
+    ```
+Go to https://github.com/aristocratos/btop/releases/latest to check the latest release, right-click and copy the URL then replace `[filename]` below.
+!!! quote "Download, untar and install"
+    ``` bash
+    wget [latest x64 version for Linode, armv7l for Pi]
+    tar -xjf [filename].tgz
+    ./install.sh
+    ```
+
+#### ctop 
+Similar to `htop` but based on viewing container activity instead - https://github.com/bcicen/ctop
+
+Go to https://github.com/bcicen/ctop/releases/latest to check the latest release, right-click and copy the URL then change URL below.
+!!! quote "Download, untar and install"
+    ``` bash
+    sudo wget https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-linux-amd64 \
+    -O /usr/local/bin/ctop \
+    && sudo chmod +x /usr/local/bin/ctop
+    ```
+Once installed type `ctop` to run, then press ++h++ to open help menu and see available commands (e.g., to change sort order).
+
+## Setup fail2ban ==**CHANGE FOR DOCKER**==
 !!! quote "fail2ban options"
     === "Docker setup"
         https://www.reddit.com/r/selfhosted/comments/srrg7n/fail2ban_and_docker/
@@ -163,88 +209,3 @@ Given we are going to set up a reverse proxy manager the easier option is to onl
         check active jails (specific jails can only be activated once relevant service installed - eg nginx)
         `sudo fail2ban-client status`
         `sudo cat /var/log/fail2ban/error.log`
-
-### Bash config
-#### History
-The `history` command in bash shows previously run commands.  
-These can then be run with `!<number>`.  
-The following enhances the stored list by adding commands run in other windows and adding date/time to the list.
-!!! quote "Alter ~/.bashrc"
-    ``` bash
-    echo 'PROMPT_COMMAND="history -a; history -c; history -r;"' >> ~/.bashrc
-    echo 'HISTTIMEFORMAT="<%Y-%m-%y @ %T> "' >> ~/.bashrc
-    ```
-==add more on history plus bits where it adds timestamps==
-
-#### neofetch [OPTIONAL]
-neofetch is a command-line system information tool written in bash that displays information about your operating system, software and hardware in an aesthetic and visually pleasing way - https://github.com/dylanaraps/neofetch
-!!! quote "Install neofetch and run on terminal session startup"
-    ``` bash
-    sudo apt install neofetch -y
-    echo "neofetch" >> ~/.bashrc
-    ```
-    Edit neoftech config - e.g. to add disk usage, rename IPv4/v6, etc.
-    ``` bash
-    nano ~/.config/neofetch/config.conf
-    ```
-    ??? example "~/.config/neofetch/config.conf"
-        ``` bat
-        --8<-- "docs/server-setup/config/neofetch/config.conf"
-        ```
-
-https://bashrcgenerator.com/ - useful generator
-#### oh-my-posh [OPTIONAL]
-Command line prettifier - handy for git directories - https://ohmyposh.dev/
-!!! quote "Install neofetch and run on terminal session startup"
-    ``` bash
-    sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
-    sudo chmod +x /usr/local/bin/oh-my-posh
-    mkdir ~/.poshthemes
-    wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -O ~/.poshthemes/themes.zip
-    unzip ~/.poshthemes/themes.zip -d ~/.poshthemes
-    chmod u+rw ~/.poshthemes/*.omp.*
-    rm ~/.poshthemes/themes.zip
-    ```
-Ensure a Nerd Font [https://www.nerdfonts.com/] such as Caskaydia Cove NF is installed and selected in the terminal program  
-Use `eval "$(oh-my-posh init bash --config ~/.poshthemes/[theme_name].omp.json)"` to switch theme
-
-### Install git and connect to GitHub
-We now need to install git on the server and also use an SSH key to connect to our GitHub account.
-!!! quote "Setup SSH key on server and copy to GitHub account"
-    ``` bash
-    cd ~
-    ssh-keygen -t ed25519 -C "your_email@example.com"
-    ```
-    Enter `github_sync` when prompted for filename to save the key. This will then create a private key called `github_sync` and a public key called `github_sync.pub`  
-    Then copy private key to the `.ssh` sub-directory in home directory:
-    ``` bash
-    cp github_sync ~/.ssh/github_sync
-    ```
-    We then need to [add the public key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) to our GitHub account.  The easiest way is to run `cat github_sync.pub` and copy the output to the clipboard the paste into the [Settings > Access > SSH and GPG keys](https://github.com/settings/keys) section of GitHub.
-!!! quote "Install git and set up syncing"
-    ``` bash
-    sudo apt install git -y
-    mkdir repositories
-    ```
-    Now edit the config file in the `.ssh` directory:
-    ```
-    nano ~/.ssh/config
-    ```
-    and add these lines:
-    ```
-    Host github.com
-    IdentityFile ~/.ssh/github_sync
-    ```
-    Run git configuration
-    ``` bash
-    git config --global user.name "<username>"
-    git config --global user.email "<email>"
-    ```
-    Now test the connection:
-    ``` bash
-    ssh -T git@github.com
-    ```
-    Once the GitHub pulic key fingerprint is accepted there should be a confirmation message of `Hi username! You've successfully authenticated, but GitHub does not provide shell access.`
-Backup the GitHub sync private/public keypair.  
-Usage:
-`git clone <enter SSH details for repository>`
