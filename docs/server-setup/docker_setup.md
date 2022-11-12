@@ -90,6 +90,8 @@ Setup new proxy host for NPM itself with scheme `http`, forward hostname of `loc
 !!! info "Force SSL access to admin interface"
     Change NPM stack to comment out port 81 so that access to admin interface is only via SSL.
 
+Remember to change the Default Site in NPM settings
+
 ### Dozzle (log viewer) setup
 Nice logviewer application that lets you monitor all the container logs - https://dozzle.dev/
 

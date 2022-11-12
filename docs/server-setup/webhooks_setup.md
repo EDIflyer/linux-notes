@@ -17,32 +17,73 @@ Then setup reverse proxy to the IP of the bridge network gateway (can confirm IP
 Good guide at https://ansonvandoren.com/posts/deploy-hugo-from-github/ -->
 The components consist of: the `webhook` binary, a hooks file, a trigger script and a system service to keep the binary running in the background.
 
-The hooks file tells `webhook` how to handle incoming requests, and which script it should run if it receives an incoming request that matches the pre-arranged criteria, including a shared 'secret'.
+The hooks file tells `webhook` how to handle incoming requests, and which script it should run if it receives an incoming request that matches the pre-arranged criteria, including a shared 'secret'.  The scripts can include items such as [Telegram notifications](https://ansonvandoren.com/posts/telegram-notification-on-deploy/).
 
-1. Install the `webhook` binary onto server using `sudo apt install webhook` command.
+Install the `webhook` binary onto server:
+!!! quote "Install webhook"
+    ``` bash
+    sudo apt install webhook
+    ```
 
-2. Create a webhooks directory on the system: `sudo mkdir /opt/webhook`
-
-3. Create a JSON file for the hooks: `sudo nano /opt/webhook/hooks.json` and set relevant trigger rules (such as the branch being pushed to).  A v4 UUID is used as a 'secret' and can be generated at https://www.uuidgenerator.net/
-
+Create a webhooks directory on the system and create a JSON file for the hooks:
+!!! quote "Setup hooks"
+    ``` bash
+    sudo mkdir /opt/webhook && sudo nano /opt/webhook/hooks.json
+    ```
+ 
+Set relevant trigger rules (such as the branch being pushed to).  A v4 UUID is used as a 'secret' and can be generated at https://www.uuidgenerator.net/
 ??? example "/opt/webhook/hooks.json"
     ``` json linenums="1" hl_lines="29"
     --8<-- "docs/server-setup/hooks.json"
     ```
-4. Now create a script: `nano /opt/webhook/triggerscript.sh` and then make it executable `chmod +x /opt/webhook/triggerscript.sh`
+Now create a script and make it executable once saved:
+!!! quote "Install webhook"
+    ``` bash
+    sudo nano /opt/webhook/triggerscript.sh && sudo chmod +x /opt/webhook/triggerscript.sh
+    ```
 ??? example "/opt/webhook/triggerscript.sh"
     ``` bash linenums="1" hl_lines="7 9 11 13 15 18 19"
     --8<-- "docs/server-setup/scripts/triggerscript.sh"
     ```
+Now create the folder from named in `triggerscript.sh` for Github downloads:
+!!! quote "Create download directory"
+    ``` bash
+    mkdir $HOME/repositories/<REPOSITORYNAME>
+    ```    
+!!! warning "Github"
+    Ensure the [Github login process](server_setup.md#install-git-and-connect-to-github) has been completed first before trying to run the trigger script.
 
-5. Create a service with `sudo nano /opt/webhook/webhooks.service`
-??? example "/etc/systemd/system/webhooks.service"
-    ``` bash linenums="1"
-    --8<-- "docs/server-setup/config/webhooks.service"
+Create a service:
+!!! quote "Create download directory"
+    ``` bash
+    sudo nano /opt/webhook/webhooks.service
+    ```    
+    ??? example "/etc/systemd/system/webhooks.service"
+        ``` bash linenums="1"
+        --8<-- "docs/server-setup/config/webhooks/webhooks.service"
+        ```
+Copy across, enable and start the webhook service then check status:
+!!! quote "Enable & start webhook.service"
+    ``` bash
+    sudo cp /opt/webhook/webhooks.service /etc/systemd/system/webhooks.service && \
+    sudo systemctl daemon-reload && \
+    sudo systemctl enable webhooks --now && \
+    sudo systemctl status webhooks
     ```
-Enable and start the webhook service then check status (commands above)
+Create a new webhook site in NPM:
 
-### Telegram notifcation
-See excellent guide at https://ansonvandoren.com/posts/telegram-notification-on-deploy/
+- **Domain Names:** `webhook.(servername).(tld)` (e.g., `webhook.alanjrobertson.co.uk`)
+- **Scheme:** http
+- **Forward Hostname/IP:** 172.17.0.1 (this is the Docker host, ie the server itself)
+- **Forward Port:** 9001
+- **Block Common Exploits:** True
+- Request a new SSL certificate with Force SSL, HTTP/2 Support, HSTS Enabled, HSTS Subdomains all checked
 
-Copy across trigger script.
+Go to the Settings > Webhooks page on Github for the relevant repository and click 'Add webhook'
+
+- **Payload URL:** `https://webhook.(servername).(tld)/hooks/redeploy` (e.g., `https://webhook.alanjrobertson.co.uk/hooks/redeploy`)
+- **Content type:** application/json
+- **Secret:** *the UUID previously generated and placed in the webhooks.json file*
+- **Enable SSL verification:** True
+- **Which events would you like to trigger this webhook?:** Just the push event
+- **Active:** True
