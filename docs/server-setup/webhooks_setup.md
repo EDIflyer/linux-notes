@@ -63,7 +63,7 @@ Create a service:
         --8<-- "docs/server-setup/config/webhooks/webhooks.service"
         ```
 Copy across, enable and start the webhook service then check status:
-!!! quote "Enable & start webhook.service"
+!!! quote "Enable & start webhooks.service"
     ``` bash
     sudo cp /opt/webhook/webhooks.service /etc/systemd/system/webhooks.service && \
     sudo systemctl daemon-reload && \
@@ -79,6 +79,15 @@ Create a new webhook site in NPM:
 - **Block Common Exploits:** True
 - Request a new SSL certificate with Force SSL, HTTP/2 Support, HSTS Enabled, HSTS Subdomains all checked
 
+!!! danger "Reconfigure firewall"
+    `ufw` must be reconfigured to allow communication from Docker to the host, otherwise the incoming webhook requests will just time out:
+!!! quote "Enable & start webhook.service"
+    ``` bash
+    sudo ufw allow from 172.19.0.0/16 to any && \
+    sudo ufw reload && \
+    sudo ufw status
+    ```
+
 Go to the Settings > Webhooks page on Github for the relevant repository and click 'Add webhook'
 
 - **Payload URL:** `https://webhook.(servername).(tld)/hooks/redeploy` (e.g., `https://webhook.alanjrobertson.co.uk/hooks/redeploy`)
@@ -87,3 +96,11 @@ Go to the Settings > Webhooks page on Github for the relevant repository and cli
 - **Enable SSL verification:** True
 - **Which events would you like to trigger this webhook?:** Just the push event
 - **Active:** True
+
+You should receive confirmation of a successful ping and a 200 response.
+
+You can check webhook status as above or the full journal:
+!!! quote "View logs for webhooks.service"
+    ``` bash
+    sudo journalctl -u webhooks
+    ```

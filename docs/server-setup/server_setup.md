@@ -112,13 +112,12 @@ Uncomplicated firewall (ufw) - https://en.wikipedia.org/wiki/Uncomplicated_Firew
         sudo apt-get install ufw -y
         sudo systemctl enable ufw --now
         sudo ufw allow ssh
-        sudo ufw allow 'WWW Full'
         sudo ufw default allow outgoing
         sudo ufw default deny incoming
-        sudo ufw show added # (1)
+        sudo ufw show added #(1)
         sudo ufw enable
         sudo ufw status numbered
-        sudo ufw logging on # (2)
+        sudo ufw logging on #(2)
         ```
 
         1. [to confirm ssh added]

@@ -33,6 +33,9 @@ Split commands over multiple lines using ++backslash++ at the end of the line, j
 
 Handy command list - https://gist.github.com/tuxfight3r/60051ac67c5f0445efee
 
+## View full service logs
+sudo journalctl -u service-name
+
 ## iperf
 `sudo apt install iperf`
 Run server:
