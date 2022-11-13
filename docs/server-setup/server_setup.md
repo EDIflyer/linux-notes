@@ -128,7 +128,6 @@ The following enhances the stored list by adding commands run in other windows a
     echo 'PROMPT_COMMAND="history -a; history -c; history -r;"' >> ~/.bashrc
     echo 'HISTTIMEFORMAT="<%Y-%m-%y @ %T> "' >> ~/.bashrc
     ```
-==add more on history plus bits where it adds timestamps==
 
 #### neofetch 
 neofetch is a command-line system information tool written in bash that displays information about your operating system, software and hardware in an aesthetic and visually pleasing way - https://github.com/dylanaraps/neofetch

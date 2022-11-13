@@ -12,12 +12,12 @@ title: "2 - Docker setup"
     ``` bash
     sudo usermod -aG docker <username>
     ```
-    (You need to logout and back in for this to become active)
+    (need to logout and back in for this to become active)
 
 ## Portainer
 [Portainer](https://www.portainer.io/) is a powerful GUI for managing Docker containers.
 
-Create Portainer volume and then start Docker container, but for security bind port only to localhost, so that it cannot be access except when an SSH tunnel is active.
+Create Portainer volume and then start Docker container, but for security bind port only to localhost, so that it cannot be accessed remotely except via an SSH tunnel.
 !!! quote "Create portainer container"
     ``` bash
     docker run -d -p 127.0.0.1:8000:8000 -p 127.0.0.1:9000:9000 \
@@ -97,9 +97,9 @@ Login to the admin console at `<serverIP>:81` with email `admin@example.com` and
 
 Setup new proxy host for NPM itself with scheme `http`, forward hostname of `localhost` and forward port of `81`.
 !!! info "Force SSL access to admin interface"
-    Change NPM stack to comment out port 81 so that access to admin interface is only via SSL.
+    Once initial setup is completed, change & reload the NPM stack in Portainer to comment out port 81 so that access to admin interface is only via SSL.
 
-Remember to change the Default Site in NPM settings
+Remember to change the Default Site in NPM settings for appropriate redirections for invalid subdomain requests.
 
 ## Dozzle
 Nice logviewer application that lets you monitor all the container logs - https://dozzle.dev/
