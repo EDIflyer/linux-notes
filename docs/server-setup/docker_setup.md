@@ -1,8 +1,9 @@
 ---
-title: "2 - Docker & Portainer setup"
+title: "2 - Docker setup"
 ---
 # Docker setup
-## Install Docker
+## Docker
+[Docker](https://www.docker.com/) is the definitive containerisation system for running applications.
 !!! quote "From https://docs.docker.com/engine/install/debian/"
     ``` bash
     sudo curl -sSL https://get.docker.com/ | sh
@@ -14,6 +15,8 @@ title: "2 - Docker & Portainer setup"
     (You need to logout and back in for this to become active)
 
 ## Portainer
+[Portainer](https://www.portainer.io/) is a powerful GUI for managing Docker containers.
+
 Create Portainer volume and then start Docker container, but for security bind port only to localhost, so that it cannot be access except when an SSH tunnel is active.
 !!! quote "Create portainer container"
     ``` bash
@@ -81,7 +84,9 @@ Aim to put volumes in `~/containers/[containername]` for consistency.
       - "com.centurylinklabs.watchtower.enable=false"
     ```
 
-## NGINX Proxy Manager
+## Nginx Proxy Manager
+[Nginx Proxy Manager](https://nginxproxymanager.com) lets private containerised applications run via secure HTTPS proxies (including free Let's Encrypt SSL certificates).
+
 Apply this docker-compose (based on https://nginxproxymanager.com/setup/#running-the-app) as a stack in Portainer to deploy: 
 ??? example "docker-compose/nginx-proxy-manager.yml"
     ``` yaml linenums="1"

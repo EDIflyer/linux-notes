@@ -8,12 +8,12 @@ Authelia is an open-source authentication and authorization server providing two
 There is a good guide on Nginx Proxy Manager integration available at [IBRACORP](https://docs.ibracorp.io/authelia/) and simple setup (without Redis and MariaDB) is covered by [Techno Tim](https://docs.technotim.live/posts/authelia-traefik/).  The below guide combines both of these for a simple setup running with Nginx Proxy Manager but still using Redis to enable session persistence even with Authelia configuration reloads (if not required then just comment out the `redis` section of the Authelia configuration file).
 !!! quote "Create folder structure"
     ``` bash
-    mkdir -p $HOME/containers/authelia/config
+    mkdir -p ~/containers/authelia/config
     ```
 There are two key files that then need to be created: `configuration.yml` & `users_database.yml`.  Both of these are placed in this new `config` folder - example versions are in the following two sections.
 
 ### User database
-This setup is using the simple (flat file) method.  Remember to change the `username` from default and replace the `password` in `users_database.yml` with a hashed version.  The following command makes use of the Authelia conatiner to generate a hashed password:
+This setup is using the simple (flat file) method.  Remember to change the `username` from default and replace the `password` in `users_database.yml` with a hashed version.  The following command makes use of the Authelia container to generate a hashed password:
 ``` bash
 docker run --rm authelia/authelia:latest authelia hash-password 'yourpassword'
 ```

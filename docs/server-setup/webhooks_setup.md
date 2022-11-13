@@ -2,7 +2,7 @@
 title: "5 - Webhooks setup"
 ---
 # Webhooks setup
-[Original project](https://github.com/adnanh/webhook) by Adnan Hajdarević.
+Utilising [webhook](https://github.com/adnanh/webhook) by [Adnan Hajdarević](https://github.com/adnanh) and inspired by [blogs](https://ansonvandoren.com/tags/webhooks/) by [Anson Vandoren](https://github.com/anson-vandoren/).
 
 <!-- >Dockerised version: https://github.com/almir/docker-webhook
 >Runs on port 9000 - can use NPM to reverse proxy this, however need to add an appropriate firewall rule otherwise the nginx container won't be able to access that service on the host localhost (see https://superuser.com/questions/1709013/enable-access-to-host-service-with-ubuntu-firewall-from-docker-container)
