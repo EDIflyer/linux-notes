@@ -17,6 +17,7 @@ These need to be installed by `pip` on top of the main `mkdocs-material` image, 
     <a name="instructions"></a>
     ``` docker linenums="1"
     FROM squidfunk/mkdocs-material
+    RUN /usr/local/bin/python -m pip install --upgrade pip
     RUN pip install mkdocs-git-revision-date-localized-plugin
     RUN pip install mkdocs-glightbox
     RUN pip install mkdocs-awesome-pages-plugin
