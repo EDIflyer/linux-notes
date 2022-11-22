@@ -36,6 +36,14 @@ Handy command list - https://gist.github.com/tuxfight3r/60051ac67c5f0445efee
 ## View full service logs
 sudo journalctl -u service-name
 
+## tldr
+Useful alternative to `man`  
+Install then run update to cache locally.  
+``` bash
+sudo apt get install tldr && tldr -u
+
+```
+
 ## iperf
 `sudo apt install iperf`
 Run server:
