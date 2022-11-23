@@ -173,6 +173,7 @@ Go to https://github.com/aristocratos/btop/releases/latest to check the latest r
     ``` bash
     wget [latest x64 version for Linode, armv7l for Pi]
     tar -xjf [filename].tgz
+    cd btop
     ./install.sh
     ```
 
