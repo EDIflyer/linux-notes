@@ -41,8 +41,14 @@ Useful alternative to `man`
 Install then run update to cache locally.  
 ``` bash
 sudo apt get install tldr && tldr -u
-
 ```
+
+## xdg-open
+Open current folder in graphical explorer  
+``` bash
+xdg-open .
+```
+Can replace the `.` with another folder name or a URL.
 
 ## iperf
 `sudo apt install iperf`
