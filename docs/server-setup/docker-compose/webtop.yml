@@ -11,7 +11,7 @@ services:
       - PGID=1000
       - TZ=Europe/London
       - SUBFOLDER=/ #optional
-      - KEYBOARD=en-us-qwerty #optional
+      - KEYBOARD=en-gb-qwerty #optional
     volumes:
       - /home/alan/webtop:/config
       #- /var/run/docker.sock:/var/run/docker.sock #optional
