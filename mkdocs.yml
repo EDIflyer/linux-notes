@@ -10,6 +10,7 @@ theme:
   features:
     - content.code.annotate
     - navigation.top
+    - content.code.copy
   palette:
     # Palette toggle for light mode
     - scheme: default

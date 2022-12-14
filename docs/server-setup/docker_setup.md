@@ -101,6 +101,17 @@ Setup new proxy host for NPM itself with scheme `http`, forward hostname of `loc
 
 Remember to change the Default Site in NPM settings for appropriate redirections for invalid subdomain requests.
 
+??? info "Certbot errors on certificate renewal"
+    If there is an error re a duplicate instance, check whether there are .certbot.lock files in your system.
+    ``` bash
+    find / -type f -name ".certbot.lock"
+    ```
+    If there are, you can remove them:
+    ``` bash
+    find / -type f -name ".certbot.lock" -exec rm {} \;
+    ```
+    From https://community.letsencrypt.org/t/solved-another-instance-of-certbot-is-already-running/44690/2
+
 ## Dozzle
 Nice logviewer application that lets you monitor all the container logs - https://dozzle.dev/
 
