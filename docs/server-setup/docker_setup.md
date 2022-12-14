@@ -151,7 +151,7 @@ Then setup NPM SSH reverse proxy (remember to include websocket support, with fo
 ### Uptime Kuma monitoring
 A nice status monitoring app - https://github.com/louislam/uptime-kuma
 
-Install it via docker-compose:
+Install via docker-compose:
 ??? example "docker-compose/uptime-kuma.yml" 
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/uptime-kuma.yml"
@@ -166,7 +166,7 @@ Install it via docker-compose:
 ### NextCloud
 Cloud-hosted sharing & collaboration server - https://hub.docker.com/r/linuxserver/nextcloud and https://nextcloud.com/
 
-Then install via docker-compose:
+Install via docker-compose:
 ??? example "docker-compose/nextcloud.yml - remember to change host directories if required" 
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/nextcloud.yml"
@@ -181,17 +181,27 @@ The setup NPM SSH reverse proxy to https port 443 and navigate to new site to se
 ### Glances 
 System monitoring tool - https://nicolargo.github.io/glances/
 
-Then install via docker-compose:
+Install via docker-compose:
 ??? example "docker-compose/glances.yml" 
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/glances.yml"
     ```
-The setup NPM SSH reverse proxy to https port 443 and navigate to new site to setup login.
+Then setup NPM SSH reverse proxy to https port 443 and navigate to the new site to setup login.
+
+### Webtop
+'Linux in a web browser' https://github.com/linuxserver/docker-webtop
+
+Install via docker-compose:
+??? example "docker-compose/webtop.yml" 
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/webtop.yml"
+    ```
+Then setup NPM SSH reverse proxy to port 3000 and navigate to the new site.
 
 ### Netdata 
 System monitoring tool - https://www.netdata.cloud/
 
-Then install via docker-compose:
+Install via docker-compose:
 ??? example "docker-compose/netdata.yml" 
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/netdata.yml"
@@ -207,7 +217,7 @@ The setup NPM SSH reverse proxy to https port 443 and navigate to new site to vi
         mkdir -p $HOME/containers/homer/assets
         ```
 
-    Then install via docker-compose (stack on Portainer):
+    Install via docker-compose (stack on Portainer):
     ??? example "docker-compose/homer.yml" 
         ``` yaml linenums="1"
         --8<-- "docs/server-setup/docker-compose/homer.yml"

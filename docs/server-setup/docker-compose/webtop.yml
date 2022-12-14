@@ -13,13 +13,19 @@ services:
       - SUBFOLDER=/ #optional
       - KEYBOARD=en-us-qwerty #optional
     volumes:
-      - /home/alan/containers/webtop:/config
+      - /home/alan/webtop:/config
       #- /var/run/docker.sock:/var/run/docker.sock #optional
     ports:
       - 3000:3000
     labels:
-      - "com.centurylinklabs.watchtower.enable=false" #to prevent watchtower trying to update the image
+      - "com.centurylinklabs.watchtower.enable=false"
     devices:
       - /dev/dri:/dev/dri #optional
     #shm_size: "1gb" #optional
     restart: "no"
+    networks:
+      - nginx-proxy-manager_default
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default    
