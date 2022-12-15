@@ -198,6 +198,40 @@ Install via docker-compose:
     ```
 Then setup NPM SSH reverse proxy to port 3000 and navigate to the new site.
 
+### MeshCentral
+Self-hosted remote access client - https://github.com/Ylianst/MeshCentral & https://meshcentral.com/info/
+
+See NGINX section of the [user guide](https://info.meshcentral.com/downloads/MeshCentral2/MeshCentral2UserGuide.pdf) (p34 onwards)
+
+Install via docker-compose:
+??? example "docker-compose/meshcentral.yml" 
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/meshcentral.yml"
+    ```
+Edit `~/containers/meshcentral/data/config.json` to replace with the following:
+??? example "config.json - remember to edit highlighted lines to correct FQDN and NPM host" 
+    ``` json linenums="1" hl_lines="4 13 25"
+    --8<-- "docs/server-setup/config/meshcentral/config.json"
+    ```
+Then setup NPM SSH reverse proxy to port 4430 (**remember to switch on websocket support**) and navigate to the new site.
+
+If running with Authelia then add new entries into the configuration file there too so that both the agent and (for remote control) the meshrelay can bypass the authentication but that the main web UI is under two factor:  
+``` yaml
+    - domain: remote.alanjrobertson.co.uk
+      resources:
+        - "^/agent.ashx([?].*)?$"
+        - "^/meshrelay.ashx([?].*)?$"
+      policy: bypass
+    - domain: remote.alanjrobertson.co.uk
+      policy: two_factor
+```      
+See [Authelia documentation](https://www.authelia.com/configuration/security/access-control/#resources) for more on regex string (and use [Regex 101](https://regex101.com/) with `Golang` option)
+
+Login to Mesh Central and set up an initial account. Then add a new group and download and install the agent.  Once installed you will see it show up in Mesh Central and will be able to control/access remotely.
+
+!!! warning "Add AV exception"
+    It is like an exception needs to be added to AV software for `C:\Program Files\Mesh Agent` on the local machine (certainly is the case with Avast).
+
 ### Netdata 
 System monitoring tool - https://www.netdata.cloud/
 

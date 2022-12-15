@@ -1,0 +1,35 @@
+{
+    "$schema": "http://info.meshcentral.com/downloads/meshcentral-config-schema.json",
+    "settings": {
+      "cert": "remote.alanjrobertson.co.uk",
+      "WANonly": true,
+      "_LANonly": true,
+      "_sessionKey": "MyReallySecretPassword1",
+      "port": 4430,
+      "aliasPort": 443,
+      "redirPort": 800,
+      "_redirAliasPort": 80,
+      "AgentPong": 300,
+      "TLSOffload": "172.19.0.9",
+      "SelfUpdate": false,
+      "AllowFraming": "false",
+      "WebRTC": "false"
+    },
+    "domains": {
+          "": {
+          "_title": "MyServer",
+      "_title2": "Servername",
+      "_minify": true,
+      "NewAccounts": "true",
+          "_userNameIsEmail": true,
+      "certUrl": "https://172.19.0.9:443/"
+          }
+    },
+    "_letsencrypt": {
+      "__comment__": "Requires NodeJS 8.x or better, Go to https://letsdebug.net/ first before>",
+      "_email": "myemail@mydomain.com",
+      "_names": "myserver.mydomain.com",
+          "production": false
+    }
+  }
+  
