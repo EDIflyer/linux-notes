@@ -198,7 +198,7 @@ Install via docker-compose:
     ```
 Then setup NPM SSH reverse proxy to port 3000 and navigate to the new site.
 
-### MeshCentral
+### Mesh Central
 Self-hosted remote access client - https://github.com/Ylianst/MeshCentral & https://meshcentral.com/info/
 
 See NGINX section of the [user guide](https://info.meshcentral.com/downloads/MeshCentral2/MeshCentral2UserGuide.pdf) (p34 onwards)
@@ -215,12 +215,14 @@ Edit `~/containers/meshcentral/data/config.json` to replace with the following:
     ```
 Then setup NPM SSH reverse proxy to port 4430 (**remember to switch on websocket support**) and navigate to the new site.
 
-If running with Authelia then add new entries into the configuration file there too so that both the agent and (for remote control) the meshrelay can bypass the authentication but that the main web UI is under two factor:  
+If running with Authelia then add new entries into the configuration file there too so that the agent and (for remote control) the meshrelay and (for setup the agents and settings) can bypass the authentication but that the main web UI is under two factor:  
 ``` yaml
     - domain: remote.alanjrobertson.co.uk
       resources:
         - "^/agent.ashx([?].*)?$"
         - "^/meshrelay.ashx([?].*)?$"
+        - "^/meshagents([?].*)?$"
+        - "^/meshsettings([?].*)?$"
       policy: bypass
     - domain: remote.alanjrobertson.co.uk
       policy: two_factor
