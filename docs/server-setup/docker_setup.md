@@ -198,7 +198,7 @@ Install via docker-compose:
     ```
 Then setup NPM SSH reverse proxy to port 3000 and navigate to the new site.
 
-### Mesh Central
+### MeshCentral
 Self-hosted remote access client - https://github.com/Ylianst/MeshCentral & https://meshcentral.com/info/
 
 See NGINX section of the [user guide](https://info.meshcentral.com/downloads/MeshCentral2/MeshCentral2UserGuide.pdf) (p34 onwards)
@@ -208,28 +208,37 @@ Install via docker-compose:
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/meshcentral.yml"
     ```
-Edit `~/containers/meshcentral/data/config.json` to replace with the following:
+Edit `~/containers/meshcentral/data/config.json` to replace with the following. Remember that items beginning with an underscore are ignored.
 ??? example "config.json - remember to edit highlighted lines to correct FQDN and NPM host" 
-    ``` json linenums="1" hl_lines="4 13 25"
+    ``` json linenums="1" hl_lines="4 12 21"
     --8<-- "docs/server-setup/config/meshcentral/config.json"
     ```
 Then setup NPM SSH reverse proxy to port 4430 (**remember to switch on websocket support**) and navigate to the new site.
 
-If running with Authelia then add new entries into the configuration file there too so that the agent and (for remote control) the meshrelay and (for setup the agents and settings) can bypass the authentication but that the main web UI is under two factor:  
+If running with Authelia then add new entries into the configuration file there too so that the agent and (for remote control) the meshrelay and (for setup of the agents and settings) the invite download page can all bypass the authentication but that the main web UI is under two factor:  
 ``` yaml
     - domain: remote.alanjrobertson.co.uk
       resources:
+        # allow agent & agent invites to bypass
         - "^/agent.ashx([?].*)?$"
+        - "^/agentinvite([?].*)?$"
+        # allow mesh relay to bypass (for remote control, console, files) and agents to connect/obtain settings
         - "^/meshrelay.ashx([?].*)?$"
         - "^/meshagents([?].*)?$"
         - "^/meshsettings([?].*)?$"
+        # allow files to be downloaded
+        - "^/devicefile.ashx([?].*)?$"
+        # allow invite page for agent download to be displayed
+        - "^/images([/].*)?$"
+        - "^/scripts([/].*)?$"
+        - "^/styles([/].*)?$"
       policy: bypass
     - domain: remote.alanjrobertson.co.uk
       policy: two_factor
 ```      
 See [Authelia documentation](https://www.authelia.com/configuration/security/access-control/#resources) for more on regex string (and use [Regex 101](https://regex101.com/) with `Golang` option)
 
-Login to Mesh Central and set up an initial account. Then add a new group and download and install the agent.  Once installed you will see it show up in Mesh Central and will be able to control/access remotely.
+Login to MeshCentral and set up an initial account. Then add a new group and download and install the agent.  Once installed you will see it show up in MeshCentral and will be able to control/access remotely.  There is also the option to download an Assistant (that can be branded) that users can then run once (doesn't require elevated privileges; also can run the Assistant with `-debug` flag to log if any issues).
 
 !!! warning "Add AV exception"
     It is like an exception needs to be added to AV software for `C:\Program Files\Mesh Agent` on the local machine (certainly is the case with Avast).
