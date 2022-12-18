@@ -17,6 +17,7 @@ services:
       - WATCHTOWER_NOTIFICATION_EMAIL_SERVER=<mailserver>
       - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=587
       - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=<maillogin>
+      - WATCHTOWER_CLEANUP=true
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
       - TZ=Europe/London
     expose:
