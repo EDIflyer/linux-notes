@@ -240,6 +240,14 @@ See [Authelia documentation](https://www.authelia.com/configuration/security/acc
 
 Login to MeshCentral and set up an initial account. Then add a new group and download and install the agent.  Once installed you will see it show up in MeshCentral and will be able to control/access remotely.  There is also the option to download an Assistant (that can be branded) that users can then run once (doesn't require elevated privileges; also can run the Assistant with `-debug` flag to log if any issues).
 
+To setup custom images for hosts, run the following commands:
+``` bash
+docker exec -it meshcentral /bin/bash
+cp -r public/ /opt/meshcentral/meshcentral-web/
+cp -r views/ /opt/meshcentral/meshcentral-web/
+```
+Then change the relevant icons - create a 256x256 PNG with a transparent background and replace some existing icons. This will change the large icons but not the small ones (see [Github bug](https://github.com/Ylianst/MeshCentral/issues/448#issuecomment-1364731041))
+
 !!! warning "Add AV exception"
     It is like an exception needs to be added to AV software for `C:\Program Files\Mesh Agent` on the local machine (certainly is the case with Avast).
 
