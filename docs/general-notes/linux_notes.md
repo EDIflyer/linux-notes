@@ -33,8 +33,10 @@ Split commands over multiple lines using ++backslash++ at the end of the line, j
 
 Handy command list - https://gist.github.com/tuxfight3r/60051ac67c5f0445efee
 
-## View full service logs
-sudo journalctl -u service-name
+## View logs
+`sudo journalctl -u service-name`  
+`last -adF`  logged in user details
+`sudo lastb -adF`  failed (bad) logins
 
 ## tldr
 Useful alternative to `man`  

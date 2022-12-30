@@ -36,4 +36,10 @@ services:
       - /etc/localtime:/etc/localtime:ro
     working_dir: /
     restart: unless-stopped    
-networks: {}
+#This section only required if wanting to be able to ping it from Uptime Kuma
+#    networks:
+#      - nginx-proxy-manager_default    
+#networks:
+#  nginx-proxy-manager_default:
+#    external: true
+#    name: nginx-proxy-manager_default
