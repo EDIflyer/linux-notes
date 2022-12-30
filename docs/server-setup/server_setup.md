@@ -194,7 +194,7 @@ Once installed type `ctop` to run, then press ++h++ to open help menu and see av
     === "Bare metal setup (monitor SSH)"
         Logfiles for access attempts can be viewed as follows:
         ``` bash
-        sudo lastb -adF
+        sudo lastb -adF -20 #will show last 20 entries
         ```
         Given the multiple attempts normally seen on cloud-hosted private virtual servers is worth considering fail2ban to ban IPs that make repeated attempts.  
         Installation instructions are as follows:
@@ -205,14 +205,16 @@ Once installed type `ctop` to run, then press ++h++ to open help menu and see av
         sudo cp jail.conf jail.local
         sudo nano jail.local
         ```
-        uncomment `bantime.increment` (line 49)
-        uncomment `ignoreip` (line 92) and add the main IPs you will connect from
-        add `enabled = true` for jails you want to activate (see `JAILS` section - normally want `sshd`, starting at line 279)
-        `sudo systemctl restart fail2ban`
+        Then make the following changes:  
 
-        check active jails (specific jails can only be activated once relevant service installed - eg nginx)
-        `sudo fail2ban-client status`
-        `sudo cat /var/log/fail2ban/error.log`
+        - uncomment `bantime.increment` (line 49)  
+        - uncomment `ignoreip` (line 92) and add the main IPs you will connect from  
+        - add `enabled = true` for jails you want to activate (see `JAILS` section - normally want `sshd`, starting at line 279)  
+        - restart the service: `sudo systemctl restart fail2ban`  
+        - check active jails (specific jails can only be activated once relevant service installed - eg nginx) `sudo fail2ban-client status`  
+        - view overall status of a jail (e.g., SSH) `sudo fail2ban-client status sshd`
+        - to view the service logs: `sudo cat /var/log/fail2ban.log` or `sudo tail -f /var/log/fail2ban.log`
+        - to view the authorisation logs: `sudo cat /var/log/auth.log` or `sudo tail -f /var/log/auth.log`
     === "Docker setup"
         **Work in progress** - would probably only need to monitor the Authelia logs?
         https://www.reddit.com/r/selfhosted/comments/srrg7n/fail2ban_and_docker/
