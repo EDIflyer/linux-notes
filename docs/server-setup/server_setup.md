@@ -189,11 +189,15 @@ Go to https://github.com/bcicen/ctop/releases/latest to check the latest release
     ```
 Once installed type `ctop` to run, then press ++h++ to open help menu and see available commands (e.g., to change sort order).
 
-## Setup fail2ban ==**CHANGE FOR DOCKER**==
+## Setup fail2ban
 !!! quote "fail2ban options"
-    === "Docker setup"
-        https://www.reddit.com/r/selfhosted/comments/srrg7n/fail2ban_and_docker/
-    === "Local non-Docker setup"
+    === "Bare metal setup (monitor SSH)"
+        Logfiles for access attempts can be viewed as follows:
+        ``` bash
+        sudo lastb -adF
+        ```
+        Given the multiple attempts normally seen on cloud-hosted private virtual servers is worth considering fail2ban to ban IPs that make repeated attempts.  
+        Installation instructions are as follows:
         ``` bash
         sudo apt install fail2ban -y
         cd /etc/fail2ban
@@ -203,9 +207,12 @@ Once installed type `ctop` to run, then press ++h++ to open help menu and see av
         ```
         uncomment `bantime.increment` (line 49)
         uncomment `ignoreip` (line 92) and add the main IPs you will connect from
-        add `enabled = true` for jails you want to activate
+        add `enabled = true` for jails you want to activate (see `JAILS` section - normally want `sshd`, starting at line 279)
         `sudo systemctl restart fail2ban`
 
         check active jails (specific jails can only be activated once relevant service installed - eg nginx)
         `sudo fail2ban-client status`
         `sudo cat /var/log/fail2ban/error.log`
+    === "Docker setup"
+        **Work in progress** - would probably only need to monitor the Authelia logs?
+        https://www.reddit.com/r/selfhosted/comments/srrg7n/fail2ban_and_docker/
