@@ -23,6 +23,7 @@ Turn on English (GB) by changing "cSpell.language": "en" to "cSpell.language": "
 ## Wakatime
 https://wakatime.com/
 Tracks coding work
+Remember to also install on the remote host if doing SSH remote work
 
 ## Test items
 
