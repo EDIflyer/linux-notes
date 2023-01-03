@@ -20,6 +20,10 @@ date: 2022-07-09T18:32:03+01:00
 https://github.com/streetsidesoftware/vscode-spell-checker
 Turn on English (GB) by changing "cSpell.language": "en" to "cSpell.language": "en-GB"
 
+## Wakatime
+https://wakatime.com/
+Tracks coding work
+
 ## Test items
 
 EKORA(r) by Clinical IT(c)
