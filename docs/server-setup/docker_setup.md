@@ -210,7 +210,7 @@ Install via docker-compose:
     ```
 
 Note that an IP address is specified in the docker-compose file - change this to a free IP on the npm network and then update the MeshCentral configuration file below accordingly. This is important as otherwise you will find the container will be auto-allocated a new IP when it is re-created (e.g., for when there is an update) and then will run into SSL errors...
-??? info Log error with IP mismatch with configuration.
+??? info "Log error with IP mismatch with configuration."
     ```
     02/25/2023 2:52:11 PM
     Installing otplib@10.2.3...
