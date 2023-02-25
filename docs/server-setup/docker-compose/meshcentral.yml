@@ -13,9 +13,8 @@ services:
       - /home/alan/containers/meshcentral/web:/opt/meshcentral/meshcentral-web    #to replace image files 
       - /home/alan/containers/meshcentral/user_files:/opt/meshcentral/meshcentral-files    #where file uploads for users live
     networks:
-      nginx-proxy-manager_default:
-        ipv4_address: 172.19.0.3  # change to free IP address on npm network; if not set then will cause issues with SSL when it changes
+      - nginx-proxy-manager_default
 networks:
   nginx-proxy-manager_default:
     external: true
-    name: nginx-proxy-manager_default     
+    name: nginx-proxy-manager_default

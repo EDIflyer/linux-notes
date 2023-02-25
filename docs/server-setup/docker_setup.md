@@ -201,15 +201,13 @@ Then setup NPM SSH reverse proxy to port 3000 and navigate to the new site.
 ### MeshCentral
 Self-hosted remote access client - https://github.com/Ylianst/MeshCentral & https://meshcentral.com/info/
 
-See NGINX section of the [user guide](https://info.meshcentral.com/downloads/MeshCentral2/MeshCentral2UserGuide.pdf) (p34 onwards)
-
 Install via docker-compose:
 ??? example "docker-compose/meshcentral.yml" 
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/meshcentral.yml"
     ```
 
-Note that an IP address is specified in the docker-compose file - change this to a free IP on the npm network and then update the MeshCentral configuration file below accordingly. This is important as otherwise you will find the container will be auto-allocated a new IP when it is re-created (e.g., for when there is an update) and then will run into SSL errors...
+See NGINX section of the [user guide](https://meshcentral.com/info/docs/MeshCentral2UserGuide.pdf) (p34 onwards) for more information about configuring to run alongside NPM, however the key thing to note that **a fixed IP address needs to be specified in the docker-compose file for NPM** - as an example in the docker-compose example is set to `172.19.0.100`.  The MeshCentral configuration file needs to reflect this accordingly. If this is not done the NPM container will be auto-allocated a new IP when it is re-created (e.g., for when there is an update) and MeshCentral then will run into SSL errors as it can't validate the certificate that has been passed through...
 ??? info "Log error with IP mismatch with configuration."
     ```
     02/25/2023 2:52:11 PM
@@ -245,7 +243,7 @@ Note that an IP address is specified in the docker-compose file - change this to
     ```
 
 Edit `~/containers/meshcentral/data/config.json` to replace with the following. Remember that items beginning with an underscore are ignored.
-??? example "config.json - remember to edit highlighted lines to correct FQDN and NPM host" 
+??? example "config.json - remember to edit highlighted lines to ensure the correct FQDN and NPM host are specified" 
     ``` json linenums="1" hl_lines="4 12 21"
     --8<-- "docs/server-setup/config/meshcentral/config.json"
     ```
