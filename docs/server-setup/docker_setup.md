@@ -208,6 +208,42 @@ Install via docker-compose:
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/meshcentral.yml"
     ```
+
+Note that an IP address is specified in the docker-compose file - change this to a free IP on the npm network and then update the MeshCentral configuration file below accordingly. This is important as otherwise you will find the container will be auto-allocated a new IP when it is re-created (e.g., for when there is an update) and then will run into SSL errors...
+??? info Log error with IP mismatch with configuration.
+    ```
+    02/25/2023 2:52:11 PM
+    Installing otplib@10.2.3...
+    02/25/2023 2:52:25 PM
+    MeshCentral HTTP redirection server running on port 80.
+    02/25/2023 2:52:25 PM
+    MeshCentral v1.1.4, WAN mode, Production mode.
+    02/25/2023 2:52:27 PM
+    MeshCentral Intel(R) AMT server running on remote.alanjrobertson.co.uk:4433.
+    02/25/2023 2:52:27 PM
+    Failed to load web certificate at: "https://172.19.0.14:443/", host: "remote.alanjrobertson.co.uk"
+    02/25/2023 2:52:27 PM
+    MeshCentral HTTP server running on port 4430, alias port 443.
+    02/25/2023 2:52:48 PM
+    Agent bad web cert hash (Agent:68db80180d != Server:c68725feb5 or 9259b83292), holding connection (172.19.0.11:44332).
+    02/25/2023 2:52:48 PM
+    Agent reported web cert hash:68db80180d05fce0032a326259b825c76f036593c62a8be0346365eb5540a395dbfae31d8cade3f2a4370c29c2563c27.
+    02/25/2023 2:52:48 PM
+    Failed to load web certificate at: "https://172.19.0.14:443/", host: "remote.alanjrobertson.co.uk"
+    02/25/2023 2:52:48 PM
+    Agent bad web cert hash (Agent:68db80180d != Server:c68725feb5 or 9259b83292), holding connection (172.19.0.11:44344).
+    02/25/2023 2:52:48 PM
+    Agent reported web cert hash:68db80180d05fce0032a326259b825c76f036593c62a8be0346365eb5540a395dbfae31d8cade3f2a4370c29c2563c27.
+    02/25/2023 2:53:18 PM
+    Agent bad web cert hash (Agent:68db80180d != Server:c68725feb5 or 9259b83292), holding connection (172.19.0.11:52098).
+    02/25/2023 2:53:18 PM
+    Agent reported web cert hash:68db80180d05fce0032a326259b825c76f036593c62a8be0346365eb5540a395dbfae31d8cade3f2a4370c29c2563c27.
+    02/25/2023 2:54:03 PM
+    Agent bad web cert hash (Agent:68db80180d != Server:c68725feb5 or 9259b83292), holding connection (172.19.0.11:53218).
+    02/25/2023 2:54:03 PM
+    Agent reported web cert hash:68db80180d05fce0032a326259b825c76f036593c62a8be0346365eb5540a395dbfae31d8cade3f2a4370c29c2563c27.
+    ```
+
 Edit `~/containers/meshcentral/data/config.json` to replace with the following. Remember that items beginning with an underscore are ignored.
 ??? example "config.json - remember to edit highlighted lines to correct FQDN and NPM host" 
     ``` json linenums="1" hl_lines="4 12 21"
