@@ -207,7 +207,7 @@ Install via docker-compose:
     --8<-- "docs/server-setup/docker-compose/meshcentral.yml"
     ```
 
-See NGINX section of the [user guide](https://meshcentral.com/info/docs/MeshCentral2UserGuide.pdf) (p34 onwards) for more information about configuring to run alongside NPM, however the key thing to note that **a fixed IP address needs to be specified in the docker-compose file for NPM** - as an example in the docker-compose example is set to `172.19.0.100`.  The MeshCentral configuration file needs to reflect this accordingly. If this is not done the NPM container will be auto-allocated a new IP when it is re-created (e.g., for when there is an update) and MeshCentral then will run into SSL errors as it can't validate the certificate that has been passed through...
+See NGINX section of the [user guide](https://meshcentral.com/info/docs/MeshCentral2UserGuide.pdf) (p34 onwards) for more information about configuring to run alongside NPM, however the key thing to note that **a fixed IP address needs to be specified in the docker-compose file for NPM** - as an example in the docker-compose sample file on this site is set to `172.19.0.100`.  The MeshCentral configuration file needs to reflect this accordingly. If this is not done the NPM container will be auto-allocated a new IP when it is re-created (e.g., for when there is an update) and MeshCentral then will run into SSL errors as it can't validate the certificate that has been passed through...
 ??? info "Log error with IP mismatch with configuration."
     ```
     02/25/2023 2:52:11 PM
