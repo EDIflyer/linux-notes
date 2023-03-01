@@ -295,6 +295,18 @@ Install via docker-compose:
     ```
 The setup NPM SSH reverse proxy to https port 443 and navigate to new site to view login. Also option of linking to online account - need to get login token from website and change stack to include this in the environment variables.
 
+### YOURLS
+Link shortner tool with personal tracking - https://yourls.org
+
+Install via docker-compose:
+??? example "docker-compose/yourls.yml" 
+    ``` yaml linenums="11 13 29-31"
+    --8<-- "docs/server-setup/docker-compose/yourls.yml"
+    ```
+
+Note that after installation the root directory will just show an error - this is by design. Go to `/admin` to access the admin interface. Click to setup database then login using the credentials included in the docker-compose file.
+![](../images/2023-03-01-00-27-37.png)
+
 ### Homepage options 
 
 === "Homer"

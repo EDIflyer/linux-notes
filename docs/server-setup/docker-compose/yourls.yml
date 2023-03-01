@@ -1,0 +1,41 @@
+version: '3'
+services:
+  yourls_db:
+    container_name: yourls_db
+    image: mysql
+    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
+    # (this is just an example, not intended to be a production configuration)
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - /home/alan/containers/yourls:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: setarandomrootpasswordhere
+      MYSQL_DATABASE: yourls    # don't change these
+      MYSQL_USER: yourls        # don't change these
+      MYSQL_PASSWORD: yourls    # don't change these
+    networks:
+      - nginx-proxy-manager_default  
+      
+  yourls:
+    container_name: yourls
+    links:
+      - yourls_db
+    depends_on:
+      - yourls_db
+    expose:
+      - 80
+    environment:
+      - YOURLS_SITE=https://ajr.mobi
+      - YOURLS_USER=setadminusernamehere
+      - YOURLS_PASS=setadminpasswordhere
+      - YOURLS_DB_HOST=yourls_db
+      - YOURLS_DB_USER=yourls
+      - YOURLS_DB_PASS=yourls    
+    image: yourls
+    networks:
+      - nginx-proxy-manager_default    
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default 
