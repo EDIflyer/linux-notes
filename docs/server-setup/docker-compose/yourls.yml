@@ -2,10 +2,7 @@ version: '3'
 services:
   yourls_db:
     container_name: yourls_db
-    image: mysql
-    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
-    # (this is just an example, not intended to be a production configuration)
-    command: --default-authentication-plugin=mysql_native_password
+    image: mariadb
     restart: always
     volumes:
       - /home/alan/containers/yourls:/var/lib/mysql
