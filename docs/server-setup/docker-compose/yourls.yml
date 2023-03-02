@@ -6,6 +6,7 @@ services:
     restart: always
     volumes:
       - /home/alan/containers/yourls:/var/lib/mysql
+      - /home/alan/containers/yourls/my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
       MYSQL_ROOT_PASSWORD: setarandomrootpasswordhere
       MYSQL_DATABASE: yourls    # don't change these
