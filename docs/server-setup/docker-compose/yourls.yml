@@ -23,6 +23,8 @@ services:
       - yourls_db
     expose:
       - 80
+    volumes:
+      - /home/alan/containers/yourls/plugins:/var/www/html/user/plugins      
     environment:
       - YOURLS_SITE=https://ajr.mobi
       - YOURLS_USER=setadminusernamehere

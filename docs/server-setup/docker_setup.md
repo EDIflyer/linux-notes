@@ -310,6 +310,8 @@ Copy my.cnf file contents to `~/containers/yourls/my.cnf` - this reduces RAM usa
     --8<-- "docs/server-setup/config/yourls/my.cnf"
     ```
 
+Add any plugins to subdirectories within `~/containers/yourls/plugins` - see https://yourls.org/docs/development/examples/preview and https://yourls.org/docs/development/examples/qrcode as examples.
+
 Note that after installation the root directory will just show an error - this is by design. Go to `/admin` to access the admin interface. Click to setup database then login using the credentials included in the docker-compose file.
 ![](../images/2023-03-01-00-27-37.png)
 
