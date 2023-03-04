@@ -300,7 +300,7 @@ Link shortner tool with personal tracking - https://yourls.org
 
 Install via docker-compose:
 ??? example "docker-compose/yourls.yml" 
-    ``` yaml linenums="1" hl_lines="11 13 29-31"
+    ``` yaml linenums="1" hl_lines="8 9 11 27 28 30-32"
     --8<-- "docs/server-setup/docker-compose/yourls.yml"
     ```
 
