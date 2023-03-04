@@ -24,7 +24,8 @@ services:
     expose:
       - 80
     volumes:
-      - /home/alan/containers/yourls/plugins:/var/www/html/user/plugins      
+      - /home/alan/containers/yourls/plugins:/var/www/html/user/plugins
+      - /home/alan/containers/yourls/html:/var/www/html
     environment:
       - YOURLS_SITE=https://ajr.mobi
       - YOURLS_USER=setadminusernamehere

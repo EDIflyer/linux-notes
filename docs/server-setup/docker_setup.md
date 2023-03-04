@@ -312,6 +312,15 @@ Copy my.cnf file contents to `~/containers/yourls/my.cnf` - this reduces RAM usa
 
 Add any plugins to subdirectories within `~/containers/yourls/plugins` - see https://yourls.org/docs/development/examples/preview and https://yourls.org/docs/development/examples/qrcode as examples (although https://github.com/DennyDai/yourls-preview-url-with-qrcode is a better option that the preview one)
 
+??? example "index.html" 
+    ``` html
+    --8<-- "docs/server-setup/config/yourls/index.html"
+    ```
+
+By default accessing the root directory (`domain.tld`) or an incorrect shortcode will display a 403 error page. Place an index.(html|php) file in the `~/containers/yourls/html` directory of the host (volume is mapped in the docker-compose file) to replace this.  Some examples for a centred image are at https://css-tricks.com/perfect-full-page-background-image/. 
+
+You can change the favourites icon in the browser tab by adding `favicon.ico` to `~/containers/yourls/html` - a nice generator for these is at https://gauger.io/fonticon/.
+
 Note that after installation the root directory will just show an error - this is by design. Go to `/admin` to access the admin interface. Click to setup database then login using the credentials included in the docker-compose file.
 ![](../images/2023-03-01-00-27-37.png)
 
