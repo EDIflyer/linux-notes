@@ -310,9 +310,14 @@ Copy my.cnf file contents to `~/containers/yourls/my.cnf` - this reduces RAM usa
     --8<-- "docs/server-setup/config/yourls/my.cnf"
     ```
 
-Add any plugins to subdirectories within `~/containers/yourls/plugins` - see [preview](https://yourls.org/docs/development/examples/preview) and [qrcode](https://yourls.org/docs/development/examples/qrcode) as examples (although [Preview URL with QR code](https://github.com/DennyDai/yourls-preview-url-with-qrcode) is a nicer option than the preview only one).  Then go to the admin interface (`domain.tld/admin`) and on the plugins page activate the newly installed plugins.
+Note that after installation the root directory will just show an error - this is by design!
+![](../images/2023-03-01-00-27-37.png)
 
-By default accessing the root directory (`domain.tld`) or an incorrect shortcode will display a 403 error page. Place an index.(html|php) file in the `~/containers/yourls/html` directory of the host (volume is already mapped in the stack/docker-compose file) to replace this. 
+Instead you need to go to `domain.tld/admin` to access the admin interface. On first run click to setup the database then login using the credentials that were pre-specified in the docker-compose file.
+
+YOURLS has an extensible architecture - any plugins should be downloaded and added to subdirectories within `~/containers/yourls/plugins` - see [preview](https://yourls.org/docs/development/examples/preview) and [qrcode](https://yourls.org/docs/development/examples/qrcode) as examples with setup instructions (although [Preview URL with QR code](https://github.com/DennyDai/yourls-preview-url-with-qrcode) is actually a nicer combination option to install that those separate ones - one installed just append a `~` to the shortcode to see the preview).  Once plugins have been copied into place, go to the admin interface to activate them.
+
+As mentioned, by default accessing the root directory (`domain.tld`) or an incorrect shortcode will display a 403 error page (as the latter just redirects to the root). Place an index.(html|php) file in the `~/containers/yourls/html` directory of the host (volume is already mapped in the stack/docker-compose file) to replace this.
 
 ??? example "example index.html with background image and centred text" 
     ``` html
@@ -322,8 +327,7 @@ By default accessing the root directory (`domain.tld`) or an incorrect shortcode
 
 You can change the favourites icon in the browser tab by adding `favicon.ico` to `~/containers/yourls/html` - a nice generator for these is at https://gauger.io/fonticon/.
 
-Note that after installation the root directory will just show an error - this is by design. Go to `/admin` to access the admin interface. Click to setup database then login using the credentials included in the docker-compose file.
-![](../images/2023-03-01-00-27-37.png)
+You can also insert PHP pages into the `/pages` directory to create pages accessible via shortcode - see the YOURLS [documentation](https://yourls.org/docs/guide/extend/pages) for more information.
 
 ### Homepage options 
 
