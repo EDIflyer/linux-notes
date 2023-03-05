@@ -336,6 +336,15 @@ As mentioned, by default accessing the root directory (`domain.tld`) or an incor
     ```
     (image-centering CCS from https://css-tricks.com/perfect-full-page-background-image/)
 
+If a simple redirect to another page is required then instead just create an `index.php` with the following code:
+??? example "example `~/containers/yourls/html/index.php` redirect"
+    ``` php
+    <?php
+        header("Location: http://www.example.com/another-page.php");
+        exit();
+    ?>
+    ```
+
 You can change the favourites icon in the browser tab by adding `favicon.ico` to `~/containers/yourls/html` - a nice generator for these is at https://gauger.io/fonticon/.
 
 You can also insert PHP pages into the `/pages` directory to create pages accessible via shortcode - see the YOURLS [documentation](https://yourls.org/docs/guide/extend/pages) for more information.
