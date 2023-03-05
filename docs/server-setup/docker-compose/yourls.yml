@@ -8,7 +8,7 @@ services:
       - /home/alan/containers/yourls:/var/lib/mysql
       - /home/alan/containers/yourls/my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
-      MYSQL_ROOT_PASSWORD: "setarandomrootpasswordhere"
+      MYSQL_ROOT_PASSWORD: setarandomrootpasswordhere
       MYSQL_DATABASE: yourls    # don't change these
       MYSQL_USER: yourls        # don't change these
       MYSQL_PASSWORD: yourls    # don't change these
@@ -28,8 +28,8 @@ services:
       - /home/alan/containers/yourls/html:/var/www/html
     environment:
       - YOURLS_SITE=https://ajr.mobi
-      - YOURLS_USER="setadminusernamehere"
-      - YOURLS_PASS="setadminpasswordhere" #quotes important to avoid password being truncated depending on characters used
+      - YOURLS_USER=setadminusernamehere
+      - YOURLS_PASS=setadminpasswordhere
       - YOURLS_DB_HOST=yourls_db
       - YOURLS_DB_USER=yourls
       - YOURLS_DB_PASS=yourls    
