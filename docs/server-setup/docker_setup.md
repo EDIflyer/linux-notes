@@ -298,6 +298,13 @@ The setup NPM SSH reverse proxy to https port 443 and navigate to new site to vi
 ### YOURLS
 Link shortner tool with personal tracking - https://yourls.org
 
+Setup structure prior to deploying stack/docker compose to avoid directories having root ownership or files being set as directories:
+??? example "setup commands" 
+    ``` bash linenums="1"
+    mkdir -p ~/containers/yourls/plugins ~/containers/yourls/html & /
+    touch ~/containers/yourls/my.cnf
+    ```
+
 Install via docker-compose:
 ??? example "docker-compose/yourls.yml" 
     ``` yaml linenums="1" hl_lines="8 9 11 27 28 30-32"
