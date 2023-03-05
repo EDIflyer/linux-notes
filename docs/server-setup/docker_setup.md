@@ -299,8 +299,8 @@ The setup NPM SSH reverse proxy to https port 443 and navigate to new site to vi
 Link shortner tool with personal tracking - https://yourls.org
 
 Setup structure prior to deploying stack/docker compose to avoid directories having root ownership or files being set as directories:
-??? example "setup commands" 
-    ``` bash linenums="1"
+!!! quote "setup commands" 
+    ``` bash
     mkdir -p ~/containers/yourls/plugins ~/containers/yourls/html
     touch ~/containers/yourls/my.cnf
     ```
@@ -323,8 +323,7 @@ Note that after installation the root directory will just show an error - this i
 Instead you need to go to `domain.tld/admin` to access the admin interface. On first run click to setup the database then login using the credentials that were pre-specified in the docker-compose file.
 
 !!! warning "invalid username/password issues"
-    Note that when parsing the password from the stack to pass in an environment variable there can be issues with special characters (esp `$`).  Although these can be escaped it is best to avoid them.  
-    You can check what has been passed as a parsed environment variable by looking at the container details in Portainer.  
+    Note that when parsing the password from the stack to pass in an environment variable there can be issues with special characters (mainly `$`).  You can check what has been passed as a parsed environment variable by looking at the container details in Portainer.  
     It is also possible to check in `~/containers/yourls/users/config.php` - before logging into the admin console this will show in cleartext at line 75 (press ++alt++-++n++ in nano to show line numbers). After login it will be encrypted
 
 YOURLS has an extensible architecture - any plugins should be downloaded and added to subdirectories within `~/containers/yourls/plugins` - see [preview](https://yourls.org/docs/development/examples/preview) and [qrcode](https://yourls.org/docs/development/examples/qrcode) as examples with setup instructions (although [Preview URL with QR code](https://github.com/DennyDai/yourls-preview-url-with-qrcode) is actually a nicer combination option to install that those separate ones - one installed just append a `~` to the shortcode to see the preview).  Once plugins have been copied into place, go to the admin interface to activate them.
