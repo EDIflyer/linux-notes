@@ -1,0 +1,42 @@
+version: '3'
+services:
+  yourls_db:
+    container_name: yourls_db
+    image: mariadb
+    restart: always
+    volumes:
+      - /home/alan/containers/yourls:/var/lib/mysql
+      - /home/alan/containers/yourls/my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: setarandomrootpasswordhere
+      MYSQL_DATABASE: yourls    # don't change these
+      MYSQL_USER: yourls        # don't change these
+      MYSQL_PASSWORD: yourls    # don't change these
+    networks:
+      - nginx-proxy-manager_default  
+      
+  yourls:
+    container_name: yourls
+    links:
+      - yourls_db
+    depends_on:
+      - yourls_db
+    expose:
+      - 80
+    volumes:
+      - /home/alan/containers/yourls/plugins:/var/www/html/user/plugins
+      - /home/alan/containers/yourls/html:/var/www/html
+    environment:
+      - YOURLS_SITE=https://ajr.mobi
+      - YOURLS_USER=setadminusernamehere
+      - YOURLS_PASS=setadminpasswordhere
+      - YOURLS_DB_HOST=yourls_db
+      - YOURLS_DB_USER=yourls
+      - YOURLS_DB_PASS=yourls    
+    image: yourls
+    networks:
+      - nginx-proxy-manager_default    
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default 

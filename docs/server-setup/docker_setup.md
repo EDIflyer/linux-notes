@@ -201,15 +201,49 @@ Then setup NPM SSH reverse proxy to port 3000 and navigate to the new site.
 ### MeshCentral
 Self-hosted remote access client - https://github.com/Ylianst/MeshCentral & https://meshcentral.com/info/
 
-See NGINX section of the [user guide](https://info.meshcentral.com/downloads/MeshCentral2/MeshCentral2UserGuide.pdf) (p34 onwards)
-
 Install via docker-compose:
 ??? example "docker-compose/meshcentral.yml" 
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/meshcentral.yml"
     ```
+
+See NGINX section of the [user guide](https://meshcentral.com/info/docs/MeshCentral2UserGuide.pdf) (p34 onwards) for more information about configuring to run alongside NPM, however the key thing to note that **a fixed IP address needs to be specified in the docker-compose file for NPM** - as an example in the docker-compose sample file on this site is set to `172.19.0.100`.  The MeshCentral configuration file needs to reflect this accordingly. If this is not done the NPM container will be auto-allocated a new IP when it is re-created (e.g., for when there is an update) and MeshCentral then will run into SSL errors as it can't validate the certificate that has been passed through...
+??? info "Log error with IP mismatch with configuration."
+    ```
+    02/25/2023 2:52:11 PM
+    Installing otplib@10.2.3...
+    02/25/2023 2:52:25 PM
+    MeshCentral HTTP redirection server running on port 80.
+    02/25/2023 2:52:25 PM
+    MeshCentral v1.1.4, WAN mode, Production mode.
+    02/25/2023 2:52:27 PM
+    MeshCentral Intel(R) AMT server running on remote.alanjrobertson.co.uk:4433.
+    02/25/2023 2:52:27 PM
+    Failed to load web certificate at: "https://172.19.0.14:443/", host: "remote.alanjrobertson.co.uk"
+    02/25/2023 2:52:27 PM
+    MeshCentral HTTP server running on port 4430, alias port 443.
+    02/25/2023 2:52:48 PM
+    Agent bad web cert hash (Agent:68db80180d != Server:c68725feb5 or 9259b83292), holding connection (172.19.0.11:44332).
+    02/25/2023 2:52:48 PM
+    Agent reported web cert hash:68db80180d05fce0032a326259b825c76f036593c62a8be0346365eb5540a395dbfae31d8cade3f2a4370c29c2563c27.
+    02/25/2023 2:52:48 PM
+    Failed to load web certificate at: "https://172.19.0.14:443/", host: "remote.alanjrobertson.co.uk"
+    02/25/2023 2:52:48 PM
+    Agent bad web cert hash (Agent:68db80180d != Server:c68725feb5 or 9259b83292), holding connection (172.19.0.11:44344).
+    02/25/2023 2:52:48 PM
+    Agent reported web cert hash:68db80180d05fce0032a326259b825c76f036593c62a8be0346365eb5540a395dbfae31d8cade3f2a4370c29c2563c27.
+    02/25/2023 2:53:18 PM
+    Agent bad web cert hash (Agent:68db80180d != Server:c68725feb5 or 9259b83292), holding connection (172.19.0.11:52098).
+    02/25/2023 2:53:18 PM
+    Agent reported web cert hash:68db80180d05fce0032a326259b825c76f036593c62a8be0346365eb5540a395dbfae31d8cade3f2a4370c29c2563c27.
+    02/25/2023 2:54:03 PM
+    Agent bad web cert hash (Agent:68db80180d != Server:c68725feb5 or 9259b83292), holding connection (172.19.0.11:53218).
+    02/25/2023 2:54:03 PM
+    Agent reported web cert hash:68db80180d05fce0032a326259b825c76f036593c62a8be0346365eb5540a395dbfae31d8cade3f2a4370c29c2563c27.
+    ```
+
 Edit `~/containers/meshcentral/data/config.json` to replace with the following. Remember that items beginning with an underscore are ignored.
-??? example "config.json - remember to edit highlighted lines to correct FQDN and NPM host" 
+??? example "config.json - remember to edit highlighted lines to ensure the correct FQDN and NPM host are specified" 
     ``` json linenums="1" hl_lines="4 12 21"
     --8<-- "docs/server-setup/config/meshcentral/config.json"
     ```
@@ -260,6 +294,60 @@ Install via docker-compose:
     --8<-- "docs/server-setup/docker-compose/netdata.yml"
     ```
 The setup NPM SSH reverse proxy to https port 443 and navigate to new site to view login. Also option of linking to online account - need to get login token from website and change stack to include this in the environment variables.
+
+### YOURLS
+Link shortner tool with personal tracking - https://yourls.org
+
+Setup structure prior to deploying stack/docker compose to avoid directories having root ownership or files being set as directories:
+!!! quote "setup commands" 
+    ``` bash
+    mkdir -p ~/containers/yourls/plugins ~/containers/yourls/html
+    touch ~/containers/yourls/my.cnf
+    ```
+
+Copy my.cnf file contents to `~/containers/yourls/my.cnf` - this reduces RAM usage from ~233MB down to 44MB
+??? example "~/containers/yourls/my.cnf" 
+    ``` config
+    --8<-- "docs/server-setup/config/yourls/my.cnf"
+    ```
+
+Install via docker-compose:
+??? example "docker-compose/yourls.yml" 
+    ``` yaml linenums="1" hl_lines="8 9 11 27 28 30-32"
+    --8<-- "docs/server-setup/docker-compose/yourls.yml"
+    ```
+
+Note that after installation the root directory will just show an error - this is by design!
+![](../images/2023-03-01-00-27-37.png)
+
+Instead you need to go to `domain.tld/admin` to access the admin interface. On first run click to setup the database then login using the credentials that were pre-specified in the docker-compose file.
+
+!!! warning "invalid username/password issues"
+    Note that when parsing the password from the stack to pass in an environment variable there can be issues with special characters (mainly `$`).  You can check what has been passed as a parsed environment variable by looking at the container details in Portainer.  
+    It is also possible to check in `~/containers/yourls/users/config.php` - before logging into the admin console this will show in cleartext at line 75 (press ++alt++-++n++ in nano to show line numbers). After login it will be encrypted
+
+YOURLS has an extensible architecture - any plugins should be downloaded and added to subdirectories within `~/containers/yourls/plugins` - see [preview](https://yourls.org/docs/development/examples/preview) and [qrcode](https://yourls.org/docs/development/examples/qrcode) as examples with setup instructions (although [Preview URL with QR code](https://github.com/DennyDai/yourls-preview-url-with-qrcode) is actually a nicer combination option to install that those separate ones - one installed just append a `~` to the shortcode to see the preview).  Once plugins have been copied into place, go to the admin interface to activate them.
+
+As mentioned, by default accessing the root directory (`domain.tld`) or an incorrect shortcode will display a 403 error page (as the latter just redirects to the root). Place an index.(html|php) file in the `~/containers/yourls/html` directory of the host (volume is already mapped in the stack/docker-compose file) to replace this.
+
+??? example "example index.html with background image and centred text" 
+    ``` html
+    --8<-- "docs/server-setup/config/yourls/index.html"
+    ```
+    (image-centering CCS from https://css-tricks.com/perfect-full-page-background-image/)
+
+If a simple redirect to another page is required then instead just create an `index.php` with the following code:
+??? example "example `~/containers/yourls/html/index.php` redirect"
+    ``` php
+    <?php
+        header("Location: http://www.example.com/another-page.php");
+        exit();
+    ?>
+    ```
+
+You can change the favourites icon in the browser tab by adding `favicon.ico` to `~/containers/yourls/html` - a nice generator for these is at https://gauger.io/fonticon/.
+
+You can also insert PHP pages into the `/pages` directory to create pages accessible via shortcode - see the YOURLS [documentation](https://yourls.org/docs/guide/extend/pages) for more information.
 
 ### Homepage options 
 

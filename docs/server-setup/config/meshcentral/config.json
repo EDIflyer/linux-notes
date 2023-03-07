@@ -1,4 +1,4 @@
-GNU nano 5.4                                           config.json                                                    {
+{
   "$schema": "http://info.meshcentral.com/downloads/meshcentral-config-schema.json",
   "settings": {
     "cert": "remote.alanjrobertson.co.uk",
@@ -9,7 +9,7 @@ GNU nano 5.4                                           config.json              
     "_redirPort": 800,
     "_redirAliasPort": 80,
     "AgentPong": 200,
-    "TLSOffload": "172.19.0.9",
+    "TLSOffload": "172.19.0.100",
     "SelfUpdate": false,
     "AllowFraming": "false",
     "WebRTC": "false"
@@ -18,7 +18,7 @@ GNU nano 5.4                                           config.json              
     "": {
       "_title": "MyServer",
       "NewAccounts": "false",
-      "certUrl": "https://172.19.0.9:443/"
+      "certUrl": "https://172.19.0.100:443/"
     }
   }
 }
