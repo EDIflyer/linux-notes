@@ -313,7 +313,7 @@ Copy my.cnf file contents to `~/containers/yourls/my.cnf` - this reduces RAM usa
 
 Install via docker-compose:
 ??? example "docker-compose/yourls.yml" 
-    ``` yaml linenums="1" hl_lines="8 9 11 27 28 30-32"
+    ``` yaml linenums="1" hl_lines="8 9 11 27-29 31-33"
     --8<-- "docs/server-setup/docker-compose/yourls.yml"
     ```
 
@@ -322,7 +322,7 @@ Note that after installation the root directory will just show an error - this i
 
 Instead you need to go to `domain.tld/admin` to access the admin interface. On first run click to setup the database then login using the credentials that were pre-specified in the docker-compose file.
 
-!!! warning "invalid username/password issues"
+!!! warning "Invalid username/password issues"
     Note that when parsing the password from the stack to pass in an environment variable there can be issues with special characters (mainly `$`).  You can check what has been passed as a parsed environment variable by looking at the container details in Portainer.  
     It is also possible to check in `~/containers/yourls/users/config.php` - before logging into the admin console this will show in cleartext at line 75 (press ++alt++-++n++ in nano to show line numbers). After login it will be encrypted
 
