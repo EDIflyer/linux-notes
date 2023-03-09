@@ -25,7 +25,8 @@ services:
       - 80
     volumes:
       - /home/alan/containers/yourls/plugins:/var/www/html/user/plugins
-      - /home/alan/containers/yourls/html:/var/www/html
+      - /home/alan/containers/yourls/index.html:/var/www/html/index.html
+      - /home/alan/containers/yourls/bg.jpg:/var/www/html/bg.jpg
     environment:
       - YOURLS_SITE=https://ajr.mobi
       - YOURLS_USER=setadminusernamehere

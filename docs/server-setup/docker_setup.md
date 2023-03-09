@@ -336,6 +336,9 @@ As mentioned, by default accessing the root directory (`domain.tld`) or an incor
     ```
     (image-centering CCS from https://css-tricks.com/perfect-full-page-background-image/)
 
+!!! warning "Don't map the whole `/html` directory as a Docker volume"
+    If the whole `/html` directory is mapped then when a new YOURLS Docker image is released it will not be able to update correctly - any file in the mapped volume `/var/www/html` takes precedence to new application file, to avoid any unexpected override. Thus, the previous version's files are still used.  The solution is to only map the plugins directly (which will be empty anyway) and the `index.html` +/- background image.
+
 If a simple redirect to another page is required then instead just create an `index.php` with the following code:
 ??? example "example `~/containers/yourls/html/index.php` redirect"
     ``` php
