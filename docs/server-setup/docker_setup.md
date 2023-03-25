@@ -112,6 +112,8 @@ Remember to change the Default Site in NPM settings for appropriate redirections
     ```
     From https://community.letsencrypt.org/t/solved-another-instance-of-certbot-is-already-running/44690/2
 
+(If looking at (Traefik)[https://traefik.io/traefik/] instead then there's a reasonably helpful (config guide)[https://spad.uk/practical-configuration-of-traefik-as-a-reverse-proxy-for-docker/] that's worth looking at).
+
 ## Dozzle
 Nice logviewer application that lets you monitor all the container logs - https://dozzle.dev/
 
