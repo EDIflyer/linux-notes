@@ -315,7 +315,7 @@ Copy my.cnf file contents to `~/containers/yourls/my.cnf` - this reduces RAM usa
 
 Install via docker-compose:
 ??? example "docker-compose/yourls.yml" 
-    ``` yaml linenums="1" hl_lines="8 9 11 27-29 31-33"
+    ``` yaml linenums="1" hl_lines="8 9 11 27-30 32-34"
     --8<-- "docs/server-setup/docker-compose/yourls.yml"
     ```
 
@@ -350,7 +350,7 @@ If a simple redirect to another page is required then instead just create an `in
     ?>
     ```
 
-You can change the favourites icon in the browser tab by adding `favicon.ico` to `~/containers/yourls/html` - a nice generator for these is at https://gauger.io/fonticon/.
+You can change the favourites icon shown in the browser tab for the index - there are nice generators for these from [text/emoji](https://favicon.io/) or from [Font Awesome icons](https://gauger.io/fonticon/).  Place the newly generatored favicon files in `~/containers/yourls/favicon` - the Docker compose file above maps the contents of this to the `/var/www/html` directory within the container.
 
 You can also insert PHP pages into the `/pages` directory to create pages accessible via shortcode - see the YOURLS [documentation](https://yourls.org/docs/guide/extend/pages) for more information.
 

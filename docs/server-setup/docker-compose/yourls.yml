@@ -27,6 +27,7 @@ services:
       - /home/alan/containers/yourls/plugins:/var/www/html/user/plugins
       - /home/alan/containers/yourls/index.html:/var/www/html/index.html
       - /home/alan/containers/yourls/bg.jpg:/var/www/html/bg.jpg
+      - /home/alan/containers/yourls/favicon:/var/www/html
     environment:
       - YOURLS_SITE=https://ajr.mobi
       - YOURLS_USER=setadminusernamehere
