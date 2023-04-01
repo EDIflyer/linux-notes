@@ -83,6 +83,7 @@ Aim to put volumes in `~/containers/[containername]` for consistency.
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
     ```
+To compare images with those on Docker Hub use `docker images --digests` to show the sha2566 hash.
 
 ## Nginx Proxy Manager
 [Nginx Proxy Manager](https://nginxproxymanager.com) lets private containerised applications run via secure HTTPS proxies (including free Let's Encrypt SSL certificates).
