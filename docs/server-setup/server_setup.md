@@ -162,6 +162,38 @@ Ensure a Nerd Font [https://www.nerdfonts.com/] such as Caskaydia Cove NF is ins
 Use `eval "$(oh-my-posh init bash --config ~/.poshthemes/[theme_name].omp.json)"` to switch theme
 
 ### Monitoring applications
+#### Setup disk monitoring
+Given potential disk space limits on a VPS it is important to be made aware of any impending issues of running out of space (the first symptom is often Authelia stopping working as redis is no longer able to log entries).
+
+To do this the following are required:  
+
+1. A mail sending program (`msmtp` has been chosen here)
+1. A script that will use the `df` command to check free space and send an email if the limit has been reached
+1. A crontab entry to regularly run the above script
+
+!!! example "Install `msmtp` and edit config"
+    ``` bash
+    sudo apt install msmtp -y
+    sudo nano /etc/msmtprc
+    ```
+
+??? example "Sample `/etc/msmtprc` configuration file"
+    ``` config linenums="1" hl_lines="11 12 14 15"
+    --8<-- "docs/server-setup/config/msmtp/msmtprc"
+    ```
+
+??? example "Sample `~/diskspace.sh` configuration file"
+    ``` bash linenums="1" hl_lines="7 8"
+    --8<-- "docs/server-setup/scripts/diskspace.sh"
+    ```
+
+!!! tip "Remember to `chmod +x` the new script file after creation!"
+
+!!! example "Sample crontab entry to run at 5am daily"
+    ``` crontab
+    0 5 * * * /home/alan/diskmonitor.sh
+    ```
+
 #### btop 
 Terminal-based system resource overview app - https://github.com/aristocratos/btop (formerly `bpytop`)
 !!! quote "Install pre-requisites"
