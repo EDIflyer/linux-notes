@@ -45,6 +45,11 @@ Install then run update to cache locally.
 sudo apt get install tldr && tldr -u
 ```
 
+## Easily view large folders
+Install `duc` (http://duc.zevv.nl/) - `sudo apt install duc -y`  
+`sudo duc index /` - to index the entire disk (can change to just a subdirectory, which is quicker)
+`sudo duc ui /` - to view in an easily navigable form
+
 ## xdg-open
 Open current folder in graphical explorer  
 ``` bash
