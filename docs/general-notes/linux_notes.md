@@ -38,17 +38,28 @@ Handy command list - https://gist.github.com/tuxfight3r/60051ac67c5f0445efee
 `last -adF`  logged in user details
 `sudo lastb -adF`  failed (bad) logins
 
+## Easily view large folders
+Install `duc` (http://duc.zevv.nl/) - `sudo apt install duc -y`  
+`sudo duc index /` - to index the entire disk (can change to just a subdirectory, which is quicker)
+`sudo duc ui /` - to view in an easily navigable form
+
+## Log size
+Find out how much disk space `/var/log/journal` is consuming with `journalctl --disk-usage`
+
+Shrink/Reduce the folder size instantly/immediately (e.g. Delete old log files form /var/log/journal folder, reduce the folder size to 100MB)  
+`sudo journalctl --vacuum-size=100M`
+
+Control/Limit the disk space `/var/log/journal` can use by manually editing the configuration file `/etc/systemd/journald.conf`  
+`sudo nano /etc/systemd/journald.conf`
+
+Uncomment the following line in the configuration file and add the desired sized (e.g., 500MB): `SystemMaxUse=500M`
+
 ## tldr
 Useful alternative to `man`  
 Install then run update to cache locally.  
 ``` bash
 sudo apt get install tldr && tldr -u
 ```
-
-## Easily view large folders
-Install `duc` (http://duc.zevv.nl/) - `sudo apt install duc -y`  
-`sudo duc index /` - to index the entire disk (can change to just a subdirectory, which is quicker)
-`sudo duc ui /` - to view in an easily navigable form
 
 ## xdg-open
 Open current folder in graphical explorer  
