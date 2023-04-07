@@ -5,7 +5,7 @@
 # Edited by: Alan J Robertson
 
 printf "diskmonitor.sh run on $(date) - " >> /home/alan/disk.log
-ALERT=75 # alert level
+ALERT=80 # alert level
 ADMIN="ajr@alanjrobertson.co.uk" # dev/sysadmin email ID
 df -H /dev/sda | grep sda | awk '{ print $5 " " $1 }' | while read -r output;
 do
