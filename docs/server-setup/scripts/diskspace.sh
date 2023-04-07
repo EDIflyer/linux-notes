@@ -13,7 +13,7 @@ do
   echo "currently used percentage = $usep% (warning limit set to $ALERT%)." >> /home/alan/disk.log
   partition=$(echo "$output" | awk '{ print $2 }' )
   if [ $usep -ge $ALERT ]; then
-    echo "Warning email sent $(date) as running out of space \"$partition ($usep%)\" on $(hostname)" >> /home/alan/disk.log
-    printf "Subject: Disk space warning\n\nAlert: Almost out of disk space on Linode server - $usep%% used (warning limit set to $ALERT%%)." | msmtp -d -a default "$ADMIN"
+    echo "Warning email sent $(date) as running out of space on $partition ($usep%)" >> /home/alan/disk.log
+    printf "Subject: Disk space warning\n\nAlert: Almost out of disk space on Linode server - $usep%% used (warning limit set to $ALERT%%).\n[Sent: $(date)]" | msmtp -d -a default "$ADMIN"
   fi
 done
