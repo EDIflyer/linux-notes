@@ -10,10 +10,10 @@ ADMIN="ajr@alanjrobertson.co.uk" # dev/sysadmin email ID
 df -H /dev/sda | grep sda | awk '{ print $5 " " $1 }' | while read -r output;
 do
   usep=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1 )
-  echo "currently used percentage = $usep%." >> /home/alan/disk.log
+  echo "currently used percentage = $usep% (warning limit set to $ALERT%)." >> /home/alan/disk.log
   partition=$(echo "$output" | awk '{ print $2 }' )
   if [ $usep -ge $ALERT ]; then
     echo "Warning email sent $(date) as running out of space \"$partition ($usep%)\" on $(hostname)" >> /home/alan/disk.log
-    printf "Subject: Disk space warning\n\nAlert: Almost out of disk space on Linode server - $usep%% used" | msmtp -d -a default "$ADMIN"
+    printf "Subject: Disk space warning\n\nAlert: Almost out of disk space on Linode server - $usep%% used (warning limit set to $ALERT%%)." | msmtp -d -a default "$ADMIN"
   fi
 done
