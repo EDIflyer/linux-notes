@@ -44,10 +44,10 @@ Install `duc` (http://duc.zevv.nl/) - `sudo apt install duc -y`
 `sudo duc ui /` - to view in an easily navigable form
 
 ## Log size
-Find out how much disk space `/var/log/journal` is consuming with `journalctl --disk-usage`
+Find out how much disk space `/var/log/journal` is consuming with `sudo journalctl --disk-usage`
 
-Shrink/Reduce the folder size instantly/immediately (e.g. Delete old log files form /var/log/journal folder, reduce the folder size to 100MB)  
-`sudo journalctl --vacuum-size=100M`
+Shrink/Reduce the folder size instantly/immediately (e.g. Delete old log files form /var/log/journal folder, reduce the folder size to 500MB)  
+`sudo journalctl --vacuum-size=500M`
 
 Control/Limit the disk space `/var/log/journal` can use by manually editing the configuration file `/etc/systemd/journald.conf`  
 `sudo nano /etc/systemd/journald.conf`
