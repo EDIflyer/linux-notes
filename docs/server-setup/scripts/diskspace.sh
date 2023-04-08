@@ -6,7 +6,9 @@
 
 printf "diskmonitor.sh run on $(date) - " >> /home/alan/disk.log
 ALERT=80 # alert level
-ADMIN="ajr@alanjrobertson.co.uk" # dev/sysadmin email ID
+TONAME="Alan Robertson"
+TOEMAIL="ajr@alanjrobertson.co.uk" # dev/sysadmin email ID
+FROMEMAIL="webmaster@alanjrobertson.co.uk"
 df -H /dev/sda | grep sda | awk '{ print $5 " " $1 }' | while read -r output;
 do
   usep=$(echo "$output" | awk '{ print $1}' | cut -d'%' -f1 )
@@ -14,6 +16,6 @@ do
   partition=$(echo "$output" | awk '{ print $2 }' )
   if [ $usep -ge $ALERT ]; then
     echo "Warning email sent $(date) as running out of space on $partition ($usep%)" >> /home/alan/disk.log
-    printf "Subject: Disk space warning\n\nAlert: Almost out of disk space on Linode server - $usep%% used (warning limit set to $ALERT%%).\n[Sent: $(date)]" | msmtp -d -a default "$ADMIN"
+    printf "To: $TONAME <$TOEMAIL>\nFrom: Linode Server <$FROMEMAIL>\nSubject: Disk space warning\n\nAlert: Running out of disk space on Linode server - $usep%% used (warning limit set to $ALERT%%).\n[Sent: $(date)]" | msmtp -d -t
   fi
 done
