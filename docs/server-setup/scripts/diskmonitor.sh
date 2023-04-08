@@ -4,7 +4,7 @@
 # Original script: https://www.cyberciti.biz/tips/shell-script-to-watch-the-disk-space.html
 # Edited by: Alan J Robertson
 
-ALERT=80 # alert level
+ALERT=75 # alert level
 TONAME="Alan Robertson"
 TOEMAIL="ajr@alanjrobertson.co.uk"
 FROMNAME="Linode Server"
