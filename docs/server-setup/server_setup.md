@@ -182,16 +182,17 @@ To do this the following are required:
     --8<-- "docs/server-setup/config/msmtp/msmtprc"
     ```
 
-??? example "Sample `~/scripts/diskmonitor.sh` configuration file"
-    ``` bash linenums="1" hl_lines="7 8"
+??? example "Sample `~/scripts/diskmonitor.sh` script"
+    ``` bash linenums="1" hl_lines="8-12"
     --8<-- "docs/server-setup/scripts/diskmonitor.sh"
     ```
 
 !!! tip "Remember to `chmod +x` the new script file after creation!"
 
-!!! example "Sample crontab entry to run at 5am daily"
+!!! example "Sample crontab entry to run at 5am daily and then weekly at 3am on a Monday morning for log email/cleanup"
     ``` crontab
     0 5 * * * /home/alan/scripts/diskmonitor.sh
+    0 3 * * 1 /home/alan/scripts/diskmonitor.sh weekly
     ```
 
 #### btop 
