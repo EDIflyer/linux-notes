@@ -1,0 +1,27 @@
+version: "3.5"
+# from https://github.com/koush/scrypted/blob/main/install/docker/docker-compose.yml
+services:
+    scrypted:
+        image: koush/scrypted
+        environment:
+            - SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION=7e14d241-65a3-4e49-a84e-848f03046683 # set as random text
+            - SCRYPTED_WEBHOOK_UPDATE=http://localhost:10444/v1/update
+        container_name: scrypted
+        restart: unless-stopped
+        network_mode: host
+        volumes:
+            - ~/.scrypted/volume:/server/volume
+            # modify and add the additional volume for Scrypted NVR
+            # the following example would mount the /mnt/sda/video path on the host
+            # to the /nvr path inside the docker container.
+            # - /mnt/sda/video:/nvr
+            # or use a network mount from one of the examples above
+            # - type: volume
+            #   source: nvr
+            #   target: /nvr
+            #   volume:
+            #     nocopy: true
+            # uncomment the following lines to expose Avahi, an mDNS advertiser.
+            # make sure Avahi is running on the host machine, otherwise this will not work.
+            # - /var/run/dbus:/var/run/dbus
+            # - /var/run/avahi-daemon/socket:/var/run/avahi-daemon/socket
