@@ -111,7 +111,11 @@ Remember to change the Default Site in NPM settings for appropriate redirections
     ``` bash
     find / -type f -name ".certbot.lock" -exec rm {} \;
     ```
-    From https://community.letsencrypt.org/t/solved-another-instance-of-certbot-is-already-running/44690/2
+    (from https://community.letsencrypt.org/t/solved-another-instance-of-certbot-is-already-running/44690/2)  
+
+    After clearing the certbot lock, go through site by site and 1) disable SSL, 2) renew cert then 3) re-enable SSL (and all sub-options)
+
+    If mistakenly delete an old certificate first and get stuck with file not found error messages - then copy and existing known good folder across (e.g. `cp -r /etc/letsencrypt/live/npm-1 /etc/letsencrypt/live/npm-7`).
 
 (If looking at [Traefik](https://traefik.io/traefik/) instead then there's a reasonably helpful [config guide](https://spad.uk/practical-configuration-of-traefik-as-a-reverse-proxy-for-docker/) that's worth looking at).
 
