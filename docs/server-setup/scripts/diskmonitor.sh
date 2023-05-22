@@ -19,7 +19,7 @@ if [ "$1" == "weekly" ]; then
   printf "To: $TONAME <$TOEMAIL>\nFrom: $FROMNAME <$FROMEMAIL>\nSubject: Disk monitor weekly update\n\n" > /tmp/weeklyemail.msg
   cat $LOGFILE >> /tmp/weeklyemail.msg
   printf "\n[Sent: $(date)]" >> /tmp/weeklyemail.msg
-  cat /tmp/weeklyemail.msg | msmtp -d -t ; rm /tmp/weeklyemail.msg
+  cat /tmp/weeklyemail.msg | msmtp -d -t > /tmp/email.out ; rm /tmp/weeklyemail.msg
   rm $LOGFILE; echo "Logfile reset [$(date)]" >> $LOGFILE
 else
   # routine daily check
