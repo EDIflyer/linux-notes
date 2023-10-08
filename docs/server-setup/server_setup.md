@@ -136,13 +136,13 @@ neofetch is a command-line system information tool written in bash that displays
     sudo apt install neofetch -y
     echo "neofetch" >> ~/.bashrc
     ```
-    Edit neoftech config - e.g. to add disk usage, rename IPv4/v6, etc.
+    Run neofetch once to create a config file then edit this as required - e.g. to add disk usage, rename IPv4/v6, etc.
     ``` bash
     nano ~/.config/neofetch/config.conf
     ```
     ??? example "~/.config/neofetch/config.conf"
         ``` bat
-        --8<-- "docs/server-setup/config/neofetch/config.conf"
+        --8<-- "docs/documentation-server-setup/config/neofetch/config.conf"
         ```
 
 https://bashrcgenerator.com/ - useful generator
