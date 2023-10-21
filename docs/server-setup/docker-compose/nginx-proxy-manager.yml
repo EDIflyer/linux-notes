@@ -24,10 +24,13 @@ services:
     volumes:
       - /home/alan/containers/nginx-proxy-manager/data:/data
       - ./letsencrypt:/etc/letsencrypt
-    networks:
-      nginx-proxy-manager_default:
-        ipv4_address: 172.19.0.100 # set fixed IP for NPM - this is especially important for MeshCentral and SSL cert passthrough
-networks:
-  nginx-proxy-manager_default:
-    external: true
-    name: nginx-proxy-manager_default
+
+
+# The below is something to consider if issues with needing a fixed IP, however in this case need to setup the NPM network and then specify it as external here.
+#     networks:
+#       nginx-proxy-manager_default:
+#         ipv4_address: 172.19.0.100 # set fixed IP for NPM - this is especially important for MeshCentral and SSL cert passthrough
+# networks:
+#   nginx-proxy-manager_default:
+#     external: true
+#     name: nginx-proxy-manager_default
