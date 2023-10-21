@@ -103,6 +103,8 @@ Setup new proxy host for NPM itself with scheme `http`, forward hostname of `loc
 Remember to change the Default Site in NPM settings for appropriate redirections for invalid subdomain requests.
 
 ??? info "Certbot errors on certificate renewal"
+    **In general using the custom image I created at `image: 'jc21/nginx-proxy-manager:github-pr-3121'` should resolve this issue.**
+    
     If there is an error re a duplicate instance, check whether there are .certbot.lock files in your system.
     ``` bash
     find / -type f -name ".certbot.lock"
