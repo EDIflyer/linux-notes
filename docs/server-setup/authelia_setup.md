@@ -41,12 +41,12 @@ Once these two files are in place the container can now be started.  Install via
     --8<-- "docs/server-setup/docker-compose/authelia.yml"
     ```
 ### Nginx Proxy Manager setup
-Create a new proxy host, pointing to the new `authelia` container on port `9091`.  Switch on all SSL options and generate a new SSL certificate. The following text then needs to be added under advanced settings for this new auth proxy host:
+Create a new proxy host (in the format `auth.domain.tld`), pointing to the new `authelia` container on port `9091`.  Switch on all SSL options and generate a new SSL certificate. The following text then needs to be added under advanced settings for this new auth proxy host:
 ??? abstract "host proxy advanced settings"
     ``` yaml linenums="1" hl_lines="2"
     --8<-- "docs/server-setup/config/authelia/nginx-config-authelia_container.txt"
     ```
-Then **for each proxy that you wish to be protected** add the following text to advanced settings.  For ease/consistency it is best to add this to every proxy and then set bypass rules in the Authelia configuration file, although omitting this advanced setup from a host will have the same effect.  Be sure to alter the highlighted lines for the server in question.
+Then **for each proxy that you wish to be protected** add the following text to advanced settings.  For ease/consistency it is best to add this to every proxy and then set bypass rules in the Authelia configuration file, although omitting this advanced setup from a host will have the same effect.  Be sure to alter the highlighted lines (**esp line 45**) for the server in question.
 ??? abstract "endpoint proxy advanced settings"
     ``` yaml linenums="1" hl_lines="3 45"
     --8<-- "docs/server-setup/config/authelia/nginx-config-endpoints.txt"
