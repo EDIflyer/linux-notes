@@ -24,7 +24,7 @@ docker run --rm authelia/authelia:latest authelia hash-password 'yourpassword'
 ### Authelia configuration file
 A number of items need to be replaced in the configuration file:
 
-1. Set the `jwt_secret` with a 128-bit key (e.g. from https://www.allkeysgenerator.com/Random/Security-Encryption-Key-Generator.aspx)
+1. Set the `jwt_secret` with a 128-bit key (e.g. from https://generate-random.org/encryption-key-generator)
 1. Set the `default_redirection_url` with the one for this domain
 1. Under `access_control` set the policy for different subdomains (options: bypass/one_factor/two_factor). Useful IBRACORP [guide](https://docs.ibracorp.io/authelia/authelia/rules) and [video](https://youtu.be/IWNypK2WxB0?t=1244) to rules
 1. Under `session` set another random 128-bit key for the `secret` and change the `domain` to the main domain name (i.e. no subdomains). Alter `expiration`/`inactivity` as required.  Add a secret for the `redis/password` key and also insert this in the docker-compose file.
@@ -37,7 +37,7 @@ A number of items need to be replaced in the configuration file:
 ### Container setup
 Once these two files are in place the container can now be started.  Install via docker-compose or as a Portainer stack using the following file (remember to set the Redis password environment variable):
 ??? example "docker-compose/authelia.yml"
-    ``` yaml linenums="1" hl_lines="9 22 26"
+    ``` yaml linenums="1" hl_lines="9 21"
     --8<-- "docs/server-setup/docker-compose/authelia.yml"
     ```
 ### Nginx Proxy Manager setup
