@@ -142,11 +142,11 @@ We now need to install `git` on the server and also use an SSH key to connect to
     Once the GitHub pulic key fingerprint is accepted there should be a confirmation message of `Hi username! You've successfully authenticated, but GitHub does not provide shell access.`
 
     !!! danger "Root vs standard user"
-    Remember the triggerscript will be run as `root` user, therefore in addition to the above you need to copy these credentials across to the root user otherwise you will get an authentication error from Github when trying to pull down the repository.
-    ``` bash
-    sudo cp ~/.ssh/config /root/.ssh && \
-    sudo cp ~/.ssh/github_sync /root/.ssh
-    ```
+        Remember the triggerscript will be run as `root` user, therefore in addition to the above you need to copy these credentials across to the root user otherwise you will get an authentication error from Github when trying to pull down the repository.
+        ``` bash
+        sudo cp ~/.ssh/config /root/.ssh && \
+        sudo cp ~/.ssh/github_sync /root/.ssh
+        ```
 ### Final triggerscript setup
 A few pre-requisites are required for the triggerscript:
 !!! quote "Install `rsync` and setup backup directory"
