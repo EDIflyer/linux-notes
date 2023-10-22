@@ -115,6 +115,7 @@ We now need to install `git` on the server and also use an SSH key to connect to
     We then need to [add the public key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) to our GitHub account.  The easiest way is to run `cat github_sync.pub` and copy the output to the clipboard the paste into the [Settings > Access > SSH and GPG keys](https://github.com/settings/keys) section of GitHub.
     !!! warning
         Remember to backup the Github public/private keypair that has just been created
+
 !!! quote "Install git and set up syncing"
     ``` bash
     sudo apt install git -y
@@ -140,7 +141,8 @@ We now need to install `git` on the server and also use an SSH key to connect to
     ```
     Once the GitHub pulic key fingerprint is accepted there should be a confirmation message of `Hi username! You've successfully authenticated, but GitHub does not provide shell access.`
 
-    We now need to copy these credentials across to the root user as the triggerscript will be accessing via that route.
+    !!! danger "Root vs standard user"
+    Remember the triggerscript will be run as `root` user, therefore in addition to the above you need to copy these credentials across to the root user otherwise you will get an authentication error from Github when trying to pull down the repository.
     ``` bash
     sudo cp ~/.ssh/config /root/.ssh && \
     sudo cp ~/.ssh/github_sync /root/.ssh
