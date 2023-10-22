@@ -52,7 +52,8 @@ trap cleanup EXIT
 # Clear out the working directory
 rm -rf $WORKING_DIRECTORY
 # Make a backup copy of current website version
-rsync -aqz $PUBLIC_WWW/ $BACKUP_WWW
+# --mkpath flag causes destination directories to be created
+rsync -avz --mkpath $PUBLIC_WWW/ $BACKUP_WWW
 
 # Clone the new version from GitHub
 git clone $REMOTE_REPO $WORKING_DIRECTORY
