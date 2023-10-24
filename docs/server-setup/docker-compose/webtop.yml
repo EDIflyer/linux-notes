@@ -21,7 +21,7 @@ services:
       - "com.centurylinklabs.watchtower.enable=false"
     devices:
       - /dev/dri:/dev/dri #optional
-    #shm_size: "1gb" #optional
+    shm_size: "1gb" #required otherwise web browsers will crash
     restart: "no"
     networks:
       - nginx-proxy-manager_default
