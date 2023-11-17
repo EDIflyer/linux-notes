@@ -17,6 +17,10 @@ This setup is using the simple (flat file) method.  Remember to change the `user
 ``` bash
 docker run --rm authelia/authelia:latest authelia hash-password 'yourpassword'
 ```
+!!! warning "tabs vs spaces"
+    Do not use tabs to layout the user database - instead use spaces otherwise you will receive an error message
+    _Failure running the user provider startup check: error reading the authentication database: could not parse the YAML database: yaml: line xx: found character that cannot start any token_
+
 ??? example "authelia/config/users_database.yml"
     ``` yaml linenums="1" hl_lines="10 11 13 14"
     --8<-- "docs/server-setup/config/authelia/users_database.yml"
@@ -37,7 +41,7 @@ A number of items need to be replaced in the configuration file:
 ### Container setup
 Once these two files are in place the container can now be started.  Install via docker-compose or as a Portainer stack using the following file (remember to set the Redis password environment variable):
 ??? example "docker-compose/authelia.yml"
-    ``` yaml linenums="1" hl_lines="9 21"
+    ``` yaml linenums="1" hl_lines="9 21 23"
     --8<-- "docs/server-setup/docker-compose/authelia.yml"
     ```
 ### Nginx Proxy Manager setup
