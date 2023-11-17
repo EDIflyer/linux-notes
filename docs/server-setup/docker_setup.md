@@ -133,7 +133,7 @@ Add to nginx proxy manager as usual (forward hostname `dozzle` and port `8080`),
 
 To view log files that are written to disk create an `alpine` container and `tail` the log file to a shared volume [Dozzle documentaiton](https://dozzle.dev/guide/log-files-on-disk):
 ??? example "docker-compose/dozzle-from-file.yml"
-    ``` yaml linenums="4, 7"
+    ``` yaml linenums="1" hl_lines="4 7"
     --8<-- "docs/server-setup/docker-compose/dozzle-from-file.yml"
     ```
 

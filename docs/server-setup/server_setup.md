@@ -142,7 +142,7 @@ neofetch is a command-line system information tool written in bash that displays
     ```
     ??? example "~/.config/neofetch/config.conf"
         ``` bat
-        --8<-- "docs/documentation-server-setup/config/neofetch/config.conf"
+        --8<-- "docs/server-setup/config/neofetch/config.conf"
         ```
 
 https://bashrcgenerator.com/ - useful generator

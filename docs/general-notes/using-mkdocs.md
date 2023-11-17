@@ -41,9 +41,9 @@ Section names are based on the folder names and individual pages on the markdown
 For sections with only one page you can also show only the page without the section by setting `collapse: true` in the `.pages` file for that folder.  If you want to hide a directory from the navigation structure but still have it available to link to then `hide: true`.  There are lots of other potential tweaks outlined in the [Awesome Pages readme](https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin#readme).
 
 ## Links
-Links in general are made by putting the link text in square brackets and the target URL in round brackets afterways - if this is to other documents within the documentation site just a relative link to the markdown file is required - e.g., `[server notes](../documentation-server-setup/server_setup.md)` creates a link to [server notes](documentation-server-setup/server_setup.md).
+Links in general are made by putting the link text in square brackets and the target URL in round brackets afterways - if this is to other documents within the documentation site just a relative link to the markdown file is required - e.g., `[server notes](../server-setup/server_setup.md)` creates a link to [server notes](server-setup/server_setup.md).
 
-For internal links within a page or on another markdown page, just use `#` and the relevant title/sub-title, replacing spaces with hyphens (e.g., [`documentation-server-setup/webhooks_setup/#github-setup`](documentation-server-setup/webhooks_setup/#github-setup))
+For internal links within a page or on another markdown page, just use `#` and the relevant title/sub-title, replacing spaces with hyphens (e.g., [`server-setup/webhooks_setup/#github-setup`](server-setup/webhooks_setup/#github-setup))
 
 !!! tip "Quick internal links in VS Code"
     In VS Code if you type the `../` after the round bracket it will bring up a pop-up to make it easier to navigate to file for internal link...  
@@ -52,7 +52,7 @@ For internal links within a page or on another markdown page, just use `#` and t
 If it is to a page elsewhere then provide a full URL, for Github there is a shorthand - to link to an issue or pull request in the current  repository just enter `!<issue/PR number>` and the Github URL elements will be automatically added - e.g., !33 or !624.  If it is in a different repository then you can specify that too as `!<username/repo!number>` - e.g., EDIflyerrepo2/linux-notes!1
 
 ## Markdown options
-A complete explanation of the different markdown options within MkDocs-Material is [available](https://squidfunk.github.io/mkdocs-material/reference/), although a reasonable number are also used to create the [documentation server setup pages](documentation-server-setup/server_setup.md) within this site so feel free to have a look at the markdown there.
+A complete explanation of the different markdown options within MkDocs-Material is [available](https://squidfunk.github.io/mkdocs-material/reference/), although a reasonable number are also used to create the [documentation server setup pages](server-setup/server_setup.md) within this site so feel free to have a look at the markdown there.
 
 !!! warning "Carriage returns"
     Merely pressing ++enter++ at the end of a line will not create a new one!  
