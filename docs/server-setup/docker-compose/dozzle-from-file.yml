@@ -4,7 +4,7 @@ services:
     container_name: dozzle-from-file-diskmonitor
     image: alpine
     volumes:
-      - ~/scripts/diskmonitor.log:/var/log/stream.log
+      - /home/alan/scripts/diskmonitor.log:/var/log/stream.log
     command:
       - tail
       - -f
