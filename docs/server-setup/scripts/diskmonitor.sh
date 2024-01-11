@@ -21,6 +21,9 @@ if [ "$1" == "weekly" ]; then
   printf "\n[Sent: $(date)]" >> /tmp/weeklyemail.msg
   cat /tmp/weeklyemail.msg | msmtp -d -t > /tmp/email.out ; rm /tmp/weeklyemail.msg
   rm $LOGFILE; echo "Logfile reset [$(date)]" >> $LOGFILE
+  docker stop dozzle-from-file-diskmonitor
+  docker rm dozzle-from-file-diskmonitor
+  docker compose -f /home/alan/scripts/diskmonitor_stream.yaml up --detach  
 else
   # routine daily check
   df -H /dev/sda | grep sda | awk '{ print $5 " " $1 }' | while read -r output;
