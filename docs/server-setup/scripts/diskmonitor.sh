@@ -10,6 +10,7 @@ TOEMAIL="ajr@alanjrobertson.co.uk"
 FROMNAME="Linode Server"
 FROMEMAIL="webmaster@alanjrobertson.co.uk"
 LOGFILE="/home/alan/scripts/diskmonitor.log"
+COMPOSEFILE="/home/alan/scripts/diskmonitor_stream.yml"
 
 printf "diskmonitor.sh run on $(date) - " >> $LOGFILE
 
@@ -23,7 +24,7 @@ if [ "$1" == "weekly" ]; then
   rm $LOGFILE; echo "Logfile reset [$(date)]" >> $LOGFILE
   docker stop dozzle-from-file-diskmonitor
   docker rm dozzle-from-file-diskmonitor
-  docker compose -f /home/alan/scripts/diskmonitor_stream.yml up --detach  
+  docker compose -f $COMPOSEFILE up --detach  
 else
   # routine daily check
   df -H /dev/sda | grep sda | awk '{ print $5 " " $1 }' | while read -r output;

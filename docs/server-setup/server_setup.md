@@ -183,7 +183,7 @@ To do this the following are required:
     ```
 
 ??? example "Sample `~/scripts/diskmonitor.sh` script"
-    ``` bash linenums="1" hl_lines="8-12"
+    ``` bash linenums="1" hl_lines="8-13"
     --8<-- "docs/server-setup/scripts/diskmonitor.sh"
     ```
 
