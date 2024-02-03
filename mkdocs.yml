@@ -31,6 +31,9 @@ theme:
       quote: fontawesome/solid/terminal
       tip: fontawesome/solid/lightbulb
 
+extra_css:
+  - stylesheets/extra.css
+
 plugins:
   - search
   - git-revision-date-localized:
