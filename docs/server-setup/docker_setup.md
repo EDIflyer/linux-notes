@@ -443,8 +443,8 @@ Install via docker-compose (stack on Portainer):
     ```
 Then create an npm certificate/reverse proxy redirect.
 
-We then need to fix permission issues.  Normally the commands are as follows:
-!!! quote "Fix directory permission"
+!!! warning "Fix directory permission issues"
+    By default the new folder is owned by root, however even if created by the logged in user prior to creating the container the web application is still unable to write to the directory - we need to change this as follows:
     ``` bash
     sudo chown -R nobody:82 privatebin/
     sudo chmod 700 privatebin/
