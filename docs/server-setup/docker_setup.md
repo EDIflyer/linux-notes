@@ -433,6 +433,32 @@ Once this is done access Matomo via the new proxy address and follow the click-t
     ```
 
 
+### PrivateBin
+A minimalist, open source online pastebin where the server has zero knowledge of pasted data - https://privatebin.info/
+
+Manually create the `containers/privatebin` folder (to ensure correct ownership) and then run docker-compose.
+
+Install via docker-compose (stack on Portainer):
+??? example "docker-compose/privatebin.yml" 
+    ``` yaml linenums="1" hl_lines="10"
+    --8<-- "docs/server-setup/docker-compose/privatebin.yml"
+    ```
+Then create an npm certificate/reverse proxy redirect.
+
+We then need to [fix permission issues](https://ppfeufer.de/privatebin-your-self-hosted-pastebin-instance/).  Normally the commands are as follows:
+!!! quote "Fix directory permission"
+    ``` bash
+    sudo chown -R nobody:82 privatebin/
+    sudo chown -R nobody:82 privatebin/
+    ```
+
+!!! info "If having an issue this is how to work it out"
+    1. First make the `privatebin` directory globally writeable with `sudo chmod 777 privatebin-data/`
+    1. Now open PrivateBin and create a paste.  If you then do `ls -lh` this will show the user - normally user `nobody` and group `82`:
+    ![](../images/2024-02-07-14-15-43.png)
+    1. Now change directory ownership with `sudo chown -R nobody:82 privatebin/`
+    1. Now revert directory restrictions with `sudo chown -R nobody:82 privatebin/`
+
 ## Docker Compose files for existing containers
 It is possible to easily generate a Docker Compose file for a container that has been started via the command line - see https://github.com/Red5d/docker-autocompose
 

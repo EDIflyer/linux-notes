@@ -1,0 +1,20 @@
+services:
+  privatebin:
+    container_name: privatebin
+    image: privatebin/nginx-fpm-alpine
+    restart: always
+    read_only: true
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    expose:
+      - "8080"    
+    volumes:
+      - /home/alan/containers/privatebin:/srv/data
+    networks:
+      - nginx-proxy-manager_default      
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default      
