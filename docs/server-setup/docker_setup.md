@@ -454,10 +454,7 @@ Then create an npm certificate/reverse proxy redirect.
     From https://ppfeufer.de/privatebin-your-self-hosted-pastebin-instance/
 
     1. First make the `privatebin` directory globally writeable with `sudo chmod 777 privatebin-data/`
-    2. Now open PrivateBin and create a paste.  If you then do `ls -lh` this will show the user - normally user `nobody` and group `82`:
-
-    ![](../images/2024-02-07-14-15-43.png)
-
+    2. Now open PrivateBin and create a paste.  If you then do `ls -lh` this will show the user - normally user `nobody` and group `82` (see screenshot)![](../images/2024-02-07-14-15-43.png)
     3. Now change directory ownership with `sudo chown -R nobody:82 privatebin/`
     4. Now revert directory restrictions with `sudo chmod 700 privatebin/`
 
