@@ -458,6 +458,16 @@ Then create an npm certificate/reverse proxy redirect.
     3. Now change directory ownership with `sudo chown -R nobody:82 privatebin/`
     4. Now revert directory restrictions with `sudo chmod 700 privatebin/`
 
+!!! info "Administration commands"
+    There is an administration capability built-in to PrivateBin.
+    
+    This can be accessed by opening a terminal into the container and then `cd /bin` followed by:
+
+    - `administration --help` display help info
+    - `administration --statistics` show stats
+    - `administration --purge` purge expired pastes
+    - `administration --delete <pasteID>` delete specified paste 
+
 ## Docker Compose files for existing containers
 It is possible to easily generate a Docker Compose file for a container that has been started via the command line - see https://github.com/Red5d/docker-autocompose
 
