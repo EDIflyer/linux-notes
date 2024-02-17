@@ -33,6 +33,15 @@ Split commands over multiple lines using ++backslash++ at the end of the line, j
 
 Handy command list - https://gist.github.com/tuxfight3r/60051ac67c5f0445efee
 
+## Terminal colours
+If terminal reverts to non-coloured then try copying skeleton files back again
+!!! quote "Restore skeleton files"
+    ``` bash
+    cd ~
+    cp /etc/skel/.profile .profile
+    cp /etc/skel/.bashrc .bashrc
+    ```
+
 ## View logs
 `sudo journalctl -u service-name`  
 `last -adF`  logged in user details
