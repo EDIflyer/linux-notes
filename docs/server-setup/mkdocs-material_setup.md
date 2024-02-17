@@ -60,7 +60,7 @@ However as a custom image is now in use the Watchtower system will not be able t
 
 When a new version is released the following steps need to be undertaken to update the custom image:
 
-1. Rebuild the custom container [(see instructions above)](#instructions) or run [`mkdocs-update.sh`](/docs/server-setup/scripts/mkdocs-update.sh) after ensuring the dockerfile is in the same directory
+1. Rebuild the custom container [(see instructions above)](#instructions) or run [`mkdocs-update.sh`](../server-setup/scripts/mkdocs-update.sh) after ensuring the dockerfile is in the same directory
 2. Redeploy the `mkdocs-live` stack (so that it switches to use this updated container, otherwise it will continue to use the old one) - **do not tick the 're-pull' image option as the image is stored locally, not on dockerhub**.  _NB If the `mkdocs-checkforupdates` container wasn't updated by Watchtower then this will also need to be updated_
 3. Remove the old image (this will now be untagged in the image list as the tag transferred to the new custom image and will also now show as unused. Prior to step #2 this would still be used by the mkdocs-live container)
 
