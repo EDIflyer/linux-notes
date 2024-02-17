@@ -43,7 +43,7 @@ For sections with only one page you can also show only the page without the sect
 ## Links
 Links in general are made by putting the link text in square brackets and the target URL in round brackets afterways - if this is to other documents within the documentation site just a relative link to the markdown file is required - e.g., `[server notes](../server-setup/server_setup.md)` creates a link to [server notes](../server-setup/server_setup.md).
 
-For internal links within a page or on another markdown page, just use `#` and the relevant title/sub-title, replacing spaces with hyphens (e.g., [`server-setup/webhooks_setup/#github-setup`](../server-setup/webhooks_setup/#github-setup))
+For internal links within a page or on another markdown page, just use `#` and the relevant title/sub-title, replacing spaces with hyphens (e.g., [`server-setup/webhooks_setup/#github-setup`](../server-setup/webhooks_setup.md/#github-setup))
 
 !!! tip "Quick internal links in VS Code"
     In VS Code if you type the `../` after the round bracket it will bring up a pop-up to make it easier to navigate to file for internal link...  
