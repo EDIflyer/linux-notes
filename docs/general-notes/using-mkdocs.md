@@ -8,9 +8,9 @@ The documentation is built using markdown files - basically plaintext with some 
     Please do not edit the `mkdocs.yml` file in the root of the `docs` directory unless you are sure of what you are doing as it risks breaking the site and stopping it from building!
 
 [Microsoft Visual Studio Code](https://code.visualstudio.com/) is the recommended editor as it is lightweight, handles markdown files well as well and has good Github integration.  It also has a markdown preview function that, although it doesn't cover all the features of Material for MkDocs does cover the basics...
-![](images/vscodepreview.png)
+![](../images/vscodepreview.png)
 
-![](images/edit.png){ align=right }
+![](../images/edit.png){ align=right }
 After a push to Github the documentation site will be rebuilt (usually takes ~5s).  The navigation and search indices are automatically generated based on contents (including heading levels used in the markdown files). 
 
 If just making a quick edit then this can be done directly on Github by just clicking the 'edit' button at the top of the page:  
@@ -36,23 +36,23 @@ Section names are based on the folder names and individual pages on the markdown
 
 !!! danger "Warning when making changes"
     An invalid `.pages` file will stop the site from building!  If you see the below error then in the first instance I would revert the change just made to the `.pages` file and see if that resolves.  
-    ![](images/502.png)
+    ![](../images/502.png)
 
 For sections with only one page you can also show only the page without the section by setting `collapse: true` in the `.pages` file for that folder.  If you want to hide a directory from the navigation structure but still have it available to link to then `hide: true`.  There are lots of other potential tweaks outlined in the [Awesome Pages readme](https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin#readme).
 
 ## Links
-Links in general are made by putting the link text in square brackets and the target URL in round brackets afterways - if this is to other documents within the documentation site just a relative link to the markdown file is required - e.g., `[server notes](../server-setup/server_setup.md)` creates a link to [server notes](server-setup/server_setup.md).
+Links in general are made by putting the link text in square brackets and the target URL in round brackets afterways - if this is to other documents within the documentation site just a relative link to the markdown file is required - e.g., `[server notes](../server-setup/server_setup.md)` creates a link to [server notes](../server-setup/server_setup.md).
 
-For internal links within a page or on another markdown page, just use `#` and the relevant title/sub-title, replacing spaces with hyphens (e.g., [`server-setup/webhooks_setup/#github-setup`](server-setup/webhooks_setup/#github-setup))
+For internal links within a page or on another markdown page, just use `#` and the relevant title/sub-title, replacing spaces with hyphens (e.g., [`server-setup/webhooks_setup/#github-setup`](../server-setup/webhooks_setup.md/#github-setup))
 
 !!! tip "Quick internal links in VS Code"
     In VS Code if you type the `../` after the round bracket it will bring up a pop-up to make it easier to navigate to file for internal link...  
-    ![](images/2022-07-13-01-02-58.png)
+    ![](../images/2022-07-13-01-02-58.png)
 
 If it is to a page elsewhere then provide a full URL, for Github there is a shorthand - to link to an issue or pull request in the current  repository just enter `!<issue/PR number>` and the Github URL elements will be automatically added - e.g., !33 or !624.  If it is in a different repository then you can specify that too as `!<username/repo!number>` - e.g., EDIflyerrepo2/linux-notes!1
 
 ## Markdown options
-A complete explanation of the different markdown options within MkDocs-Material is [available](https://squidfunk.github.io/mkdocs-material/reference/), although a reasonable number are also used to create the [documentation server setup pages](server-setup/server_setup.md) within this site so feel free to have a look at the markdown there.
+A complete explanation of the different markdown options within MkDocs-Material is [available](https://squidfunk.github.io/mkdocs-material/reference/), although a reasonable number are also used to create the [documentation server setup pages](../server-setup/server_setup.md) within this site so feel free to have a look at the markdown there.
 
 !!! warning "Carriage returns"
     Merely pressing ++enter++ at the end of a line will not create a new one!  
@@ -61,9 +61,9 @@ A complete explanation of the different markdown options within MkDocs-Material 
     For a space as well (equivalent of `<P>`) press ++enter++ twice.
 
 If taking an existing document then a regex search and replace in [Notepad++](https://notepad-plus-plus.org/downloads/) is an easy way to add two spaces to the end of each line (the replace box as two spaces in it):  
-![](images/regex-end-of-line.png)  
+![](../images/regex-end-of-line.png)  
 Or to add a `-` to the start of each line:  
-![](images/regex-start-of-line.png)  
+![](../images/regex-start-of-line.png)  
 
 Handy markdown cheatsheet: https://yakworks.github.io/docmark/cheat-sheet/  
 Markdown tutorial: https://commonmark.org/help/tutorial/
@@ -105,7 +105,7 @@ Remember for lists to add a blank line **before and after** starting the list.  
 
 ## Paste Image plugin
 This plugin is very useful for adding images to documentation.  Install it from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=mushan.vscode-paste-image) and set `Paste Image: path` to `images` so they go into a subdirectory:
-![](images/2022-07-09-18-34-46.png)
+![](../images/2022-07-09-18-34-46.png)
 
 !!! info "Usage of Paste Image"
     Use ++ctrl+alt+v++ to paste. 
