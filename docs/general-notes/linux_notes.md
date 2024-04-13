@@ -43,6 +43,11 @@ Install `duc` (http://duc.zevv.nl/) - `sudo apt install duc -y`
 `sudo duc index /` - to index the entire disk (can change to just a subdirectory, which is quicker)
 `sudo duc ui /` - to view in an easily navigable form
 
+## Remove large docker elements
+`docker image prune`  
+`docker system prune -a`  
+(note will need to recreate the mkdocs-checkforupdates container after that)
+
 ## Log size
 Find out how much disk space `/var/log/journal` is consuming with `sudo journalctl --disk-usage`
 
