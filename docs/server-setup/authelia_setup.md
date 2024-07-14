@@ -15,7 +15,7 @@ There are two key files that then need to be created: `configuration.yml` & `use
 ### User database
 This setup is using the simple (flat file) method.  Remember to change the `username` from default and replace the `password` in `users_database.yml` with a hashed version.  The following command makes use of the Authelia container to generate a hashed password:
 ``` bash
-docker run --rm authelia/authelia:latest authelia hash-password 'yourpassword'
+docker run --rm authelia/authelia:latest authelia crypto hash generate argon2 --password 'test'
 ```
 !!! warning "tabs vs spaces"
     Do not use tabs to layout the user database - instead use spaces otherwise you will receive an error message
