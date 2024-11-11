@@ -1,0 +1,22 @@
+services:
+  stirling-pdf:
+    container_name: stirling-pdf
+    image: frooodle/s-pdf:latest
+    expose:
+      - 8080
+    volumes:
+      - /home/alan/containers/StirlingPDF/trainingData:/usr/share/tessdata # Required for extra OCR languages
+      - /home/alan/containers/StirlingPDF/extraConfigs:/configs
+      - /home/alan/containers/StirlingPDF/customFiles:/customFiles/
+      - /home/alan/containers/StirlingPDF/logs:/logs/
+      - /home/alan/containers/StirlingPDF/pipeline:/pipeline/
+    environment:
+      - DOCKER_ENABLE_SECURITY=false
+      - INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
+      - LANGS=en_GB
+    networks:
+      - nginx-proxy-manager_default
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default
