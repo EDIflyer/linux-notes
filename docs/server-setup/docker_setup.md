@@ -168,8 +168,8 @@ A Swiss army knife for interacting with PDFs - https://www.stirlingpdf.com/
 
 Install via docker-compose:
 ??? example "docker-compose/stirling-pdf.yml" 
-    ``` yaml linenums="8-12"
-    --8<-- "docs/documentation-server-setup/docker-compose/stirling-pdf.yml"
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/stirling-pdf.yml"
     ```
     
 ### Uptime Kuma monitoring
