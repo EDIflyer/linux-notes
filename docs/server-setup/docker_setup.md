@@ -169,7 +169,7 @@ A handy site for storing code snippets - https://github.com/jordan-dalby/ByteSta
 Install via docker-compose:
 ??? example "docker-compose/bytestash.yml" 
     ``` yaml linenums="1"
-    --8<-- "docs/documentation-server-setup/docker-compose/bytestash.yml"
+    --8<-- "docs/server-setup/docker-compose/bytestash.yml"
     ```
     
 ### Stirling PDF
