@@ -163,6 +163,15 @@ Then setup NPM SSH reverse proxy (remember to include websocket support, with fo
     The [favicon generator](https://realfavicongenerator.net/) is a very useful website to generate all the required favicons for different platforms.
 
 ## Optional containers
+### Bytestash
+A handy site for storing code snippets - https://github.com/jordan-dalby/ByteStash
+
+Install via docker-compose:
+??? example "docker-compose/bytestash.yml" 
+    ``` yaml linenums="1"
+    --8<-- "docs/documentation-server-setup/docker-compose/bytestash.yml"
+    ```
+    
 ### Stirling PDF
 A Swiss army knife for interacting with PDFs - https://www.stirlingpdf.com/
 
