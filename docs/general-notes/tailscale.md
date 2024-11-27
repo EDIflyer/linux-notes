@@ -1,6 +1,8 @@
 # Tailscale
 
-Mesh VPN service based on the WireGuard protocol - https://www.tailscale.com
+Tailscale is a Mesh VPN service based on the WireGuard protocol - https://www.tailscale.com.
+
+Any items logged into the same Tailnet are accessible form each other.
 
 ## Taildrop
 For Linux machines any files received are pulled down as `root` into the Tailscale directory.
