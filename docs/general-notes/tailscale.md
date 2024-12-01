@@ -4,14 +4,16 @@ Tailscale is a Mesh VPN service based on the WireGuard protocol - https://www.ta
 
 Any devices logged into the same Tailnet are accessible form each other.
 
-## Setting up in Linux LXC
+## Setting up in Proxmox (within a Linux LXC)
 
 1. At the Proxmox command line create a new LXC container based on Debian to run Tailscale use the Helper Script:
 
-``` bash
-bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/misc/add-tailscale-lxc.sh)"
-```
+!!! quote "Proxmox helper script"
+    ``` bash
+    bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/misc/add-tailscale-lxc.sh)"
+    ```
 
+Remember if trying to subsequently SSH into this container that by default SSH is disabled for root - either need to setup another user or use `nano /etc/ssh/sshd_config` and replace `PermitRootLogin prohibit-password` with `PermitRootLogin yes` then do `systemctl restart sshd`
 
 ## Taildrop
 For Linux machines any files received are pulled down as `root` into the Tailscale directory.
