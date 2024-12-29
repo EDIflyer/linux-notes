@@ -55,4 +55,6 @@ To move ISOs, backups, container images to the new pool, go to the existing fold
     mv /var/lib/vz/dump /pool/dump
     ```
 
+For info VM disks these are generally stored in `/dev/pve` although it is best to move these using the GUI - Hardware > Hard Disk > Disk Action > Move Storage within the VM.
+
 A full list is at https://pve.proxmox.com/wiki/Storage:_Directory
