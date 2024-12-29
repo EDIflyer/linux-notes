@@ -142,6 +142,10 @@ can also install as a docker container
 https://www.digitalocean.com/community/tutorials/how-to-use-bash-history-commands-and-expansions-on-a-linux-vps
 space before command to stop it going into history
 
+## Bash debugging
+Start your bash script with bash -x ./script.sh or add in your script set -x to see debug output.
+https://unix.stackexchange.com/questions/155551/how-to-debug-a-bash-script
+
 ## export PuTtY settings & sessions
 `regedit /e "%userprofile%\desktop\putty-registry.reg" HKEY_CURRENT_USER\Software\Simontatham`
 
