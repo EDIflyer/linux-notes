@@ -34,3 +34,25 @@ The official guidance is at https://pve.proxmox.com/wiki/Migrate_to_Proxmox_VE#M
 1. Once the import is done it will show up as `unusedX` disk in the hardware panel fo the VM
 1. Double-click on this (or select and click Edit) to then attach it to a bus - this will need to be *IDE* or *SATA*, but after migration and QEMU guest tools are installed this can be switched to *[VirtIO](https://pve.proxmox.com/wiki/Paravirtualized_Block_Drivers_for_Windows)*.
 1. If the disk image is the boot disk, enable it and choose the correct boot order in the Options → Boot Order panel of the VM.
+
+## Moving images, etc. to new disks
+When a new ZFS pool is created by default there is a link to it in the root directory, e.g., `/pool`
+
+ZFS natively only supports disk images and containers.  A Directory can be created (Datacenter > Storage > Add > Directory) on the ZFS pool for storing other filetypes (VZDump backup files, Import, ISO images, Snippets, Containers).
+
+To move ISOs, backups, container images to the new pool, go to the existing folders then do `mv` command to the matching locations - e.g.,  
+
+!!! quote "ISO Images"
+    ``` bash
+    mv /var/lib/vz/template/iso /pool/template/iso
+    ```
+!!! quote "CT templates"
+    ``` bash
+    mv /var/lib/vz/template/cache /pool/template/cache
+    ```
+!!! quote "Backups"
+    ``` bash
+    mv /var/lib/vz/dump /pool/dump
+    ```
+
+A full list is at https://pve.proxmox.com/wiki/Storage:_Directory
