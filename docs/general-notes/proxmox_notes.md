@@ -1,3 +1,13 @@
+## New setup
+1. Install Proxmox VE from ISO - https://www.proxmox.com/en/downloads/proxmox-virtual-environment
+1. Run Proxmox VE Post Install helper script - https://community-scripts.github.io/ProxmoxVE/scripts?id=post-pve-install
+1. Run Proxmox VE Processor Microcode script - https://community-scripts.github.io/ProxmoxVE/scripts?id=microcode
+1. Run [node] > updates > refresh then upgrade
+1. Setup custom domain (see below)
+1. Setup 2FA for login
+1. [node] > Disks > ZFS > Create: ZFS to create a new ZFS pool.  (If no disks showing as available then go up one level to Disks and wipe those that are not empty that should be or initialize new disks.)  Resulting pool will be available in the root directory of the node (e.g., `/mainpool`).  RAID level RAIDZ allows for one disk to fail (Z2 and Z3 allow 2 or 3 disks respectively).  Compression should be left as `on` (defaults to lz4).  Leave `Add Storage` checked - this will add the resulting pool to the main Datacenter.
+1. It is recommended that no files should be stored in the root of the new main ZFS pool.  We need to create datasets within the pool - this is achieved by going to Datacenter > Storage > Add > ZFS (for Disk images and Containers) and Add > Directory (for other file types).  The former is the equivalent of using the `zfs create` command (e.g., `zfs create mainpool/vmdata`) on the command line - they can also be created via that route but then Directories will also need created within Proxmox using the new dataset as a location.
+
 ## Custom domain to have SSL certificate without warning
 1. Purchase domain
 1. Setup Cloudflare as DNS servers & wait for them to propagate
