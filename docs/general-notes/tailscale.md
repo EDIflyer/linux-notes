@@ -35,7 +35,7 @@ Android, iOS, macOS, tvOS, and Windows automatically pick up your new subnet rou
 
 By default, Linux devices only discover Tailscale IP addresses. To enable automatic discovery of new subnet routes on Linux devices, add the --accept-routes flag when you start Tailscale
 
-!!! example "To share local IP range as well as accept routes and enable SSH"
+!!! quote "To share local IP range as well as accept routes and enable SSH"
     === "sudo"
         ``` bash
         sudo tailscale up --advertise-routes=192.168.1.0/24 --ssh --accept-routes
@@ -74,9 +74,10 @@ There's an issue with the interface metric being set to auto on Windows which ca
 
 To fix this, set the interface metric to manual and a high numbers
 
-``` powershell
-Set-NetIPInterface -InterfaceAlias Tailscale -AddressFamily IPv4 -InterfaceMetric 5000
-```
+!!! quote "Run as Powershell Admin"
+    ``` powershell
+    Set-NetIPInterface -InterfaceAlias Tailscale -AddressFamily IPv4 -InterfaceMetric 5000
+    ```
 
 or follow the instructions at https://github.com/tailscale/tailscale/issues/1227#issuecomment-1049136141 (see Tailscale windows metric settings.png)
 

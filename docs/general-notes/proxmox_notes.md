@@ -6,7 +6,14 @@
 1. Setup custom domain (see below)
 1. Setup 2FA for login
 1. [node] > Disks > ZFS > Create: ZFS to create a new ZFS pool.  (If no disks showing as available then go up one level to Disks and wipe those that are not empty that should be or initialize new disks.)  Resulting pool will be available in the root directory of the node (e.g., `/mainpool`).  RAID level RAIDZ allows for one disk to fail (Z2 and Z3 allow 2 or 3 disks respectively).  Compression should be left as `on` (defaults to lz4).  Leave `Add Storage` checked - this will add the resulting pool to the main Datacenter.
-1. It is recommended that no files should be stored in the root of the new main ZFS pool.  We need to create datasets within the pool - this is achieved by going to Datacenter > Storage > Add > ZFS (for Disk images and Containers) and Add > Directory (for other file types).  The former is the equivalent of using the `zfs create` command (e.g., `zfs create mainpool/vmdata`) on the command line - they can also be created via that route but then Directories will also need created within Proxmox using the new dataset as a location.
+1. It is recommended that no files should be stored in the root of the new main ZFS pool.  We need to create datasets within the pool - this is achieved by going to Datacenter > Storage > Add > ZFS (for Disk images and Containers) and Add > Directory (for other file types).  The former is the equivalent of using the `zfs create` command (e.g., `zfs create mainpool/vmdata`) on the command line - they can also be created via that route but then Directories will also need created within Proxmox using the new dataset as a location.  If it is a directory that is not going to be used within Proxmox then there is no need to add a directory.
+1. You can disable (under Datacenter > Storage) unused locations such as `local` and `local-lvm` if you don't use them and don't want them to show up in the options.
+
+## Bindmount to local folder
+Change ownership - 100000 + LXC UID https://www.itsembedded.com/sysadmin/proxmox_bind_unprivileged_lxc/
+`chown -R 10000:100000 /mainpool/media/`
+
+`pct set 302 -mp0 /mainpool/media,mp=/media`
 
 ## Custom domain to have SSL certificate without warning
 1. Purchase domain
@@ -68,3 +75,22 @@ To move ISOs, backups, container images to the new pool, go to the existing fold
 For info VM disks these are generally stored in `/dev/pve` although it is best to move these using the GUI - Hardware > Hard Disk > Disk Action > Move Storage within the VM.
 
 A full list is at https://pve.proxmox.com/wiki/Storage:_Directory
+
+## Moving files
+`pct push 302 plex.zip /var/lib/plexmediaserver/Library/`
+
+## Entering container
+`pct enter 100`
+
+## Plex
+`sudo systemctl start plexmediaserver`
+`sudo systemctl stop plexmediaserver`
+`sudo systemctl restart plexmediaserver`
+
+Unzip files from previous installation into:
+`/var/lib/plexmediaserver/Library/Application Support/Plex Media Server`
+Need to ensure that all are owned by `plex`
+`sudo chown -R plex:plex /var/lib/plexmediaserver/`
+
+For shared folders need to ensure adequate permissions - normally 755 for directories and 644 for media files.
+`find /mainpool/media -type d -exec chmod 755 {} \;; find /mainpool/media -type f -exec chmod 644 {} \;`
