@@ -9,6 +9,11 @@
 1. It is recommended that no files should be stored in the root of the new main ZFS pool.  We need to create datasets within the pool - this is achieved by going to Datacenter > Storage > Add > ZFS (for Disk images and Containers) and Add > Directory (for other file types).  The former is the equivalent of using the `zfs create` command (e.g., `zfs create mainpool/vmdata`) on the command line - they can also be created via that route but then Directories will also need created within Proxmox using the new dataset as a location.  If it is a directory that is not going to be used within Proxmox then there is no need to add a directory.
 1. You can disable (under Datacenter > Storage) unused locations such as `local` and `local-lvm` if you don't use them and don't want them to show up in the options.
 
+## ZFS commands
+`zpool list` to see ZFS pool information  
+`zfs list` to see ZFS mount information  
+
+
 ## Bindmount to local folder
 Change ownership - 100000 + LXC UID https://www.itsembedded.com/sysadmin/proxmox_bind_unprivileged_lxc/
 `chown -R 10000:100000 /mainpool/media/`
