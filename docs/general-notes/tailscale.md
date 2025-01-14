@@ -81,6 +81,11 @@ To fix this, set the interface metric to manual and a high numbers
 
 or follow the instructions at https://github.com/tailscale/tailscale/issues/1227#issuecomment-1049136141 (see Tailscale windows metric settings.png)
 
+Then create a Scheduled Task in Windows (remembering to select 'Run with highest privileges') to run at login:
+
+- **Action:** Start a program
+- **Program/script:** PowerShell
+- **Add arguments:** `-File "D:\Dropbox\Linux & Programming\tailscale_metric.ps1"` (alter as required)
 
 ## Funnel & Serve
 `tailscale funnel --bg c:\Users\alanj\Desktop`
