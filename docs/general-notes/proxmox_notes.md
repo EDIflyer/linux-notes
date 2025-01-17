@@ -99,3 +99,15 @@ Need to ensure that all are owned by `plex`
 
 For shared folders need to ensure adequate permissions - normally 755 for directories and 644 for media files.
 `find /mainpool/media -type d -exec chmod 755 {} \;; find /mainpool/media -type f -exec chmod 644 {} \;`
+
+## Home Assistant
+Sonoff Zigbee setup:
+- Stop HA VM in Proxmox
+- Node > VM > Hardware > Add > USB Device > Use USB Vendor/Device ID > pick the Sonoff dongle > Add
+- Start HA VM
+- Go to HA dashboard
+- Click on **Ignore** for the discovered Sonoff Zigbee 3.0 USB Dongle Plus on the integrations page
+- Follow the Zigbee2MQTT installation [instructions](https://github.com/zigbee2mqtt/hassio-zigbee2mqtt#installation) and add their repository to the add-on store.
+- Navigate away from then back to the Add-on Store and click on Zigbee2MQTT
+- Install & also ensure start on boot, watchdog, auto update and show in sidebar all ticked then click start
+- Navigate to the new Zigbee2MQTT menu option on the left and enable 'permit join' to start adding devices
