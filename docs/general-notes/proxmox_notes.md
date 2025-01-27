@@ -93,9 +93,23 @@ A full list is at https://pve.proxmox.com/wiki/Storage:_Directory
 `sudo systemctl restart plexmediaserver`
 
 Unzip files from previous installation into:
+
 `/var/lib/plexmediaserver/Library/Application Support/Plex Media Server`
-Need to ensure that all are owned by `plex`
+
+Need to ensure that all are owned by `plex`:
+
 `sudo chown -R plex:plex /var/lib/plexmediaserver/`
 
 For shared folders need to ensure adequate permissions - normally 755 for directories and 644 for media files.
+
 `find /mainpool/media -type d -exec chmod 755 {} \;; find /mainpool/media -type f -exec chmod 644 {} \;`
+
+## NTFS read/write
+By default PVE only mounts NTFS drives as read-only, even if using `mount -o rw`.
+
+Example process to allow as read/write (change devices and directories as required):
+
+- Install read/write NTFS driver for FUSE: `apt install ntfs-3g`
+- Create target directory for mount: `mkdir /mnt/usb`
+- Mount drive: `mount -o rw /dev/sdc1 /mnt/usb/`
+- Unmount drive: `umount /mnt/usb`
