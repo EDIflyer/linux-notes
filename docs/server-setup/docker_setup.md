@@ -171,7 +171,18 @@ Install via docker-compose:
     ``` yaml linenums="1"
     --8<-- "docs/server-setup/docker-compose/bytestash.yml"
     ```
-    
+
+### IT-Tools
+A collection of handy dev tools with a very nice UX - https://github.com/CorentinTh/it-tools – most of them are things that could be found online but nice to have it in one easily searchable place that you know only runs locally and doesn’t give anything to a third-party.
+
+_Example tools:_ generate GUIDs; convert colours, date/time, case, Unicode, YAML/JSON/XML, Markdown to HTML; encode/decode URL strings;  parse JWT; quick HTML WYSIWYG editor; JSON and text diff; HTTP status code reference; QR code generator; crontab generator/validator; JSON prettify & minify; JSON to CSV; SQL prettify/format; Docker run to compose converter; Regex cheatsheet & tester; IPv4 subnet calculator; Lorem ipsum generator; emoji picker 😃; plus many more!
+
+Install via docker-compose:
+??? example "docker-compose/it-tools.yml" 
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/it-tools.yml"
+    ```
+
 ### Stirling PDF
 A Swiss army knife for interacting with PDFs - https://www.stirlingpdf.com/
 

@@ -1,0 +1,13 @@
+services:
+    it-tools:
+        image: 'corentinth/it-tools:latest'
+        expose:
+            - 80/tcp
+        restart: unless-stopped
+        container_name: it-tools
+        networks:
+            - nginx-proxy-manager_default        
+networks:
+  nginx-proxy-manager_default:
+    external: true
+    name: nginx-proxy-manager_default
