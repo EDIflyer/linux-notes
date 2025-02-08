@@ -197,17 +197,30 @@ To do this the following are required:
 
 #### btop 
 Terminal-based system resource overview app - https://github.com/aristocratos/btop (formerly `bpytop`)
-!!! quote "Install pre-requisites"
+
+The script below will pull the latest release from https://github.com/aristocratos/btop/releases/latest.  Adjust the filename if not looking for the x86/x64 version.
+
+!!! quote "Install pre-requisites, download latest version, untar, install and cleanup"
     ``` bash
-    sudo apt install bzip2 make
-    ```
-Go to https://github.com/aristocratos/btop/releases/latest to check the latest release, right-click and copy the URL then replace `[filename]` below.
-!!! quote "Download, untar and install"
-    ``` bash
-    wget [latest x64 version for Linode, armv7l for Pi]
-    tar -xjf [filename].tgz
+    sudo apt install -y bzip2 make
+    curl -s https://api.github.com/repos/aristocratos/btop/releases/latest \
+    | grep "btop-x86_64-linux-musl.tbz" \
+    | cut -d : -f 2,3 \
+    | tr -d \" \
+    | wget -qi -
+    tar -xjf btop-x86_64-linux-musl.tbz
     cd btop
     ./install.sh
+    cd ..
+    rm btop-x86_64-linux-musl.tbz
+    rm -rf btop
+    ```
+
+If any issues with a subsequent warning saying "ERROR: No UTF-8 locale detected!" then run this script:
+
+??? example "Locale script"
+    ``` bash linenums="1"
+    --8<-- "docs/server-setup/scripts/set_locale.sh"
     ```
 
 #### ctop 
