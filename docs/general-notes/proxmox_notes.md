@@ -16,9 +16,47 @@
 
 ## Bindmount to local folder
 Change ownership - 100000 + LXC UID https://www.itsembedded.com/sysadmin/proxmox_bind_unprivileged_lxc/
-`chown -R 10000:100000 /mainpool/media/`
+
+`chown -R 100000:100000 /mainpool/media/`
 
 `pct set 302 -mp0 /mainpool/media,mp=/media`
+
+## SAMBA share options
+### Turnkey
+Setup LXC using https://community-scripts.github.io/ProxmoxVE/scripts?id=turnkey then set bindmount as above and then create a share in the SAMBA admin.
+
+### Manual
+```bash
+apt install samba
+adduser --no-create-home --disabled-password --disabled-login <username>
+mkdir /opt/shares/<username>
+chown <username> /opt/shares/<username>
+smbpasswd -a <username>
+nano /etc/samba/smb.conf
+```
+add the following lines to the end of the file:
+```conf
+[<username>]
+comment = My Share
+path = /opt/shares/<username>
+force user = <username>
+force group = <username>
+writeable = yes
+valid users = <username>
+```
+Then `systemctl restart smbd.service`
+
+## Access fileshare from Windows
+Connecting from Windows without a driver letter (just a folder shortcut to a UNC location):
+
+1. Right click in This PC view of file explorer
+1. Select Add Network Location
+1. Internet or Network Address: \\<ip of LXC>\User1 Remote or \\<ip of LXC>\Shared Remote
+1. Enter credentials
+
+Connecting from Windows with a drive letter:
+
+1. Select Map Network Drive instead of Add Network Location and add addresses as above.
 
 ## Custom domain to have SSL certificate without warning
 1. Purchase domain
