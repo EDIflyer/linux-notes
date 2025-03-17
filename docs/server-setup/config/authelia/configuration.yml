@@ -9,11 +9,8 @@
 ## Server Configuration
 ##
 server:
-  ## The address to listen on.
-  host: 0.0.0.0
-
-  ## The port to listen on.
-  port: 9091
+  ## The address & port to listen on.
+  address: 0.0.0.0:9091
 
 ##
 ## Log Configuration
@@ -27,16 +24,7 @@ theme: dark
 
 ## The secret used to generate JWT tokens when validating user identity by email confirmation. JWT Secret can also be
 ## set using a secret: https://www.authelia.com/c/secrets
-jwt_secret: a_very_important_secret
-
-## Default redirection URL
-##
-## If user tries to authenticate without any referer, Authelia does not know where to redirect the user to at the end
-## of the authentication process. This parameter allows you to specify the default redirection URL Authelia will use
-## in such a case.
-##
-## Note: this parameter is optional. If not provided, user won't be redirected upon successful authentication.
-default_redirection_url: https://auth.local.example.com
+identity_validation.reset_password.jwt_secret: a_very_important_secret
 
 ## Define 2FA method, options are totp, webauthn, mobile_push - see documentation for alternative options.
 ## https://www.authelia.com/configuration/second-factor/time-based-one-time-password/
@@ -191,8 +179,10 @@ session:
   ## The domain to protect.
   ## Note: the authenticator must also be in that domain.
   ## If empty, the cookie is restricted to the subdomain of the issue
-  domain: example.com  # Should match whatever your root protected domain is
-
+  cookies:
+  - domain: domain.tld  # Should match whatever your root protected domain is
+    authelia_url: https://auth.domain.tld
+    default_redirection_url: https://www.domain.tld
   ##
   ## Redis Provider
   ##
@@ -259,8 +249,7 @@ notifier:
     username: test
     # This secret can also be set using the env variables AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
     password: password
-    host: mail.example.com
-    port: 587
+    address: mail.example.com:587
     sender: admin@example.com
     subject: "[Authelia] {title}"
   # filesystem:
