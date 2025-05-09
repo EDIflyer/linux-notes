@@ -59,13 +59,16 @@ Connecting from Windows with a drive letter:
 1. Select Map Network Drive instead of Add Network Location and add addresses as above.
 
 ## Custom domain to have SSL certificate without warning
+
+🚧 Check if anything to add from the helpful guide at https://www.jdbnet.co.uk/ssl-certificates-for-proxmox-backup-server-through-cloudflare/ 🚧
+
 1. Purchase domain
 1. Setup Cloudflare as DNS servers & wait for them to propagate
 1. Create an A record in Cloudflare DNS for the internal IP address
 1. In Proxmox go to Datacenter > ACME.
-    - Click add account and select LetsEncrypt
-    - Click add challenge plugin and select Cloudflare DNS
-1. In Cloudflare console go to Websites in the left-hand bar on the Cloudflare console & click on the website.
+    - Under Accounts click add, call it `LetsEncrypt`, enter email address and select LetsEncrypt
+    - Under Challenge Plugins click add, call it `Cloudflare` (no spaces allowed!), select `Cloudflare Managed DNS` for DNS API
+    - In the Cloudflare console go to Websites in the left-hand bar on the Cloudflare console & click on the website.
     - Down at the bottom right you'll find the Zone ID and Account ID - copy and paste these into CF_Zone_ID and CF_Account_ID
 1. In Cloudflare console go to Manage Account > Account API tokens > use Edit Zone DNS entry.
     - Select desired domain under Zone Resources
