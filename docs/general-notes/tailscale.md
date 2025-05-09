@@ -69,6 +69,31 @@ tailscale up --advertise-routes=
         sysctl -p /etc/sysctl.d/99-tailscale.conf
         ```
 
+If a subnet router is available on the network then the `ip route` command can also be used in Linux to direct traffic destined for another subnet via the local subnet router.  An example of this would be connecting to an offsite Proxmox Backup Server without having to install Tailscale on the Proxmox host itself...
+
+- Proxmox VE is running on `192.168.1.x` subnet
+- A Tailscale LXC is running locally on that Proxmox instance and has a fixed IP (as the `ip route` command only works on IPs) (e.g., `192.168.1.200`)
+- That LXC is accepting subnet routes (as noted above) which have also been approved on the Tailscale admin dashboard
+- The Proxmox Backup Server is offsite on subnet `192.168.2.x` (e.g., `192.168.2.300`)
+- If you try to ping the PBS from the Proxmox host it is unreachable as the it doesn't have a route to the host
+- If you try to ping the PBS from the Tailscale LXC it is able to reach it OK
+- Therefore on the Proxmox host console by running the `ip route` command we create a static route to tell it how to reach the PBS
+- The format is `ip route add **destination IP** via **local subnet router IP** e.g., `ip route add 192.168.2.300 via 192.168.1.200` (you can replace `add` with `del` to remove a static route and `ip route list` to list all current routes)
+
+
+!!! danger "🚧 WIP 🚧"
+    - This command will not survive a reboot, so to add it permanently edit the `/etc/network/interfaces` file and add a `post-up` command for the `vmbr0` interface (just after the address/netmask/gateway, etc) e.g., `post-up route add 192.168.2.300/32 via 192.168.1.200`
+        ```
+        auto vmbr0
+        iface vmbr0 inet static
+            address 192.168.1.100/24
+            gateway 192.168.1.1
+            bridge-ports enp4s0
+            bridge-stp off
+            bridge-fd 0
+            post-up route add 192.168.2.300/32 via 192.168.1.200
+        ```
+
 ## LAN access on Windows
 There's an issue with the interface metric being set to auto on Windows which causes LAN traffic to try and go via the Tailnet, either slowing it down or making it impossible to access local resources if there is no subnet router in place.
 
