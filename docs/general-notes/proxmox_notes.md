@@ -80,6 +80,20 @@ Connecting from Windows with a drive letter:
     - Click create
     - Click order certificates now
 
+## Proxmox Backup Server
+Configure PVE to all backups, then set retention in PBS via prune policy.
+
+Activate pruning and garbage collection schedule.
+
+Run `apt install powertop && powertop --auto-tune` to try and reduce power draw.
+
+??? warning "NVMe powerdown issue"
+    Some SSDs have issue with powerdown - https://wiki.archlinux.org/title/Solid_state_drive/NVMe#Controller_failure_due_to_broken_APST_support
+
+    Symptoms are system booting/running OK but then becoming inaccessible later with console error re "EXT4-fs error (device dm-1): ext4_journal_check_start:84: comm systemd-journal: Detected aborted journal" and "EXT4-fs (dm-1): Remounting filesystem read-only"
+
+    To resolve this edit `/etc/default/grub` and append `nvme_core.default_ps_max_latency_us=0` to `GRUB_CMDLINE_LINUX_DEFAULT` (usually it has `quiet` - just add a space after this and then instert the code).  After that run `update-grub` which will force a recreate of the grub bootloader, then `reboot`
+
 ## Tailscale
 See [notes](tailscale.md#setting-up-in-proxmox-within-a-linux-lxc) in Proxmox section.
 
