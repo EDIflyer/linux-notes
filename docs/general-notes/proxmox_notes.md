@@ -81,18 +81,32 @@ Connecting from Windows with a drive letter:
     - Click order certificates now
 
 ## Proxmox Backup Server
+Install
+
+Run post-install helper script to enable no-subscription repository: https://community-scripts.github.io/ProxmoxVE/scripts?id=post-pbs-install
+
+Run microcode update: https://community-scripts.github.io/ProxmoxVE/scripts?id=pbs-microcode
+
+Install sensors/fan control: `apt update && apt install -y lm-sensors fancontrol`
+
+Then run sensors detect `sensors-detect`, at the end it will offer to add detected modules - answer `y` then reboot.
+
+After rebooting, run `pwmconfig` to configure fan control, this will stop and start each fan to calibrate.  Run through the prompts, configure the fan(s) and save changes at the end.  Then restart the fan control service `systemctl restart fancontrol` and make it run as a background service at startup with `systemctl enable fancontrol`
+
+https://wiki.joeplaa.com/tutorials/how-to-install-and-configure-fancontrol-pc
+
 Configure PVE to all backups, then set retention in PBS via prune policy.
 
 Activate pruning and garbage collection schedule.
 
-Run `apt install powertop && powertop --auto-tune` to try and reduce power draw.
+### Recover previous ZFS array
+Run `zpool import` (or `zpool import -f <id>`) to import existing array.
 
-??? warning "NVMe powerdown issue"
-    Some SSDs have issue with powerdown - https://wiki.archlinux.org/title/Solid_state_drive/NVMe#Controller_failure_due_to_broken_APST_support
+Run `ls /mnt/datastore/` to see if your pool is mounted. If not run these:
 
-    Symptoms are system booting/running OK but then becoming inaccessible later with console error re "EXT4-fs error (device dm-1): ext4_journal_check_start:84: comm systemd-journal: Detected aborted journal" and "EXT4-fs (dm-1): Remounting filesystem read-only"
+`mkdir -p /mnt/datastore/<datastore_name>` and then `zfs set mountpoint=/mnt/datastore/<datastore_name> <zfs_pool>`
 
-    To resolve this edit `/etc/default/grub` and append `nvme_core.default_ps_max_latency_us=0` to `GRUB_CMDLINE_LINUX_DEFAULT` (usually it has `quiet` - just add a space after this and then instert the code).  After that run `update-grub` which will force a recreate of the grub bootloader, then `reboot`
+Then in the GUI go to Datastore > Add Datastore and enter the name, mountpoint and under Advanced tick "Reuse existing datastore".
 
 ## Tailscale
 See [notes](tailscale.md#setting-up-in-proxmox-within-a-linux-lxc) in Proxmox section.
