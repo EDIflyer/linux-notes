@@ -89,24 +89,22 @@ Run microcode update: https://community-scripts.github.io/ProxmoxVE/scripts?id=p
 
 Install sensors/fan control: `apt update && apt install -y lm-sensors fancontrol`
 
-Then run sensors detect `sensors-detect`, at the end it will offer to add detected modules - answer `y` then reboot.
+Then run sensors detect `sensors-detect` (answering yes to all but i2c bus) at the end it will offer to add detected modules - answer `y` then **reboot**.
 
 After rebooting, run `pwmconfig` to configure fan control, this will stop and start each fan to calibrate.  Run through the prompts, configure the fan(s) and save changes at the end.  Then restart the fan control service `systemctl restart fancontrol` and make it run as a background service at startup with `systemctl enable fancontrol`
 
 https://wiki.joeplaa.com/tutorials/how-to-install-and-configure-fancontrol-pc
 
-Configure PVE to all backups, then set retention in PBS via prune policy.
+Configure PVE to keep all backups as we will then set retention in PBS via prune policy.
 
-Activate pruning and garbage collection schedule.
+In addition to activating a pruning schedule, also activate garbage collection and verification schedules.
 
 ### Recover previous ZFS array
-Run `zpool import` (or `zpool import -f <id>`) to import existing array.
+Run `zpool import` to check for existing arrays then use `zpool import -f <id>` to import the existing array.
 
-Run `ls /mnt/datastore/` to see if your pool is mounted. If not run these:
+Run `ls /mnt/datastore/` to see if your pool is mounted. (If not run these: `mkdir -p /mnt/datastore/<datastore_name>` and then `zfs set mountpoint=/mnt/datastore/<datastore_name> <zfs_pool>`)
 
-`mkdir -p /mnt/datastore/<datastore_name>` and then `zfs set mountpoint=/mnt/datastore/<datastore_name> <zfs_pool>`
-
-Then in the GUI go to Datastore > Add Datastore and enter the name, mountpoint and under Advanced tick "Reuse existing datastore".
+Then in the GUI go to Datastore > Add Datastore and enter the name, full mountpoint (`/mnt/datastore/<datastore_name>`) and under Advanced tick "Reuse existing datastore".
 
 ## Tailscale
 See [notes](tailscale.md#setting-up-in-proxmox-within-a-linux-lxc) in Proxmox section.
