@@ -49,3 +49,16 @@ Need to remember to briefly press the pairing button on the back to be able to a
 'Min rep change' is in 0.1C increments, therefore 100 = 1 degree C, 50 = 0.5C
 
 (Double-click of pairing button changes between C/F, press and hold for 5s to enter pairing mode)
+
+## Mobile app notifications
+Ensure battery saving switched off for HA companion app
+
+When sending a notification in the `data` component be sure to include:
+
+``` yaml
+    data:
+        ttl: 0
+        priority: high
+```
+
+More at https://companion.home-assistant.io/docs/notifications/critical-notifications/#android
