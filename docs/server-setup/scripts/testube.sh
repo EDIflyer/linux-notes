@@ -71,6 +71,7 @@ docker run -d \
     --net "$NETWORK" \
     --restart unless-stopped \
     --name "$CONTAINER_NAME" \
+    --label "com.centurylinklabs.watchtower.enable=false" \
     "$IMAGE_NAME:latest"
 
 if [ "$NEEDS_REBUILD" = true ]; then
