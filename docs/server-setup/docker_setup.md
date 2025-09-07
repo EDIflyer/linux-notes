@@ -155,7 +155,8 @@ A nice GUI file browser - https://github.com/filebrowser/filebrowser
         "address": "",
         "log": "stdout",
         "database": "/database/filebrowser.db",
-        "root": "/srv"
+        "root": "/srv",
+        "branding": "/branding"
     }
     ```
 
