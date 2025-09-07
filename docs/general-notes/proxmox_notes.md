@@ -13,7 +13,6 @@
 `zpool list` to see ZFS pool information  
 `zfs list` to see ZFS mount information  
 
-
 ## Bindmount to local folder
 Change ownership - 100000 + LXC UID https://www.itsembedded.com/sysadmin/proxmox_bind_unprivileged_lxc/
 
@@ -60,7 +59,7 @@ Connecting from Windows with a drive letter:
 
 ## Custom domain to have SSL certificate without warning
 
-🚧 Check if anything to add from the helpful guide at https://www.jdbnet.co.uk/ssl-certificates-for-proxmox-backup-server-through-cloudflare/ 🚧
+_Based on the helpful guide at https://www.jdbnet.co.uk/ssl-certificates-for-proxmox-backup-server-through-cloudflare/_
 
 1. Purchase domain
 1. Setup Cloudflare as DNS servers & wait for them to propagate
@@ -81,7 +80,7 @@ Connecting from Windows with a drive letter:
     - Click order certificates now
 
 ## Proxmox Backup Server
-Install
+Install PBS from https://www.proxmox.com/en/downloads
 
 Run post-install helper script to enable no-subscription repository: https://community-scripts.github.io/ProxmoxVE/scripts?id=post-pbs-install
 
@@ -91,13 +90,15 @@ Install sensors/fan control: `apt update && apt install -y lm-sensors fancontrol
 
 Then run sensors detect `sensors-detect` (answering yes to all but i2c bus) at the end it will offer to add detected modules - answer `y` then **reboot**.
 
-After rebooting, run `pwmconfig` to configure fan control, this will stop and start each fan to calibrate.  Run through the prompts, configure the fan(s) and save changes at the end.  Then restart the fan control service `systemctl restart fancontrol` and make it run as a background service at startup with `systemctl enable fancontrol`
+After rebooting, run `pwmconfig` to configure fan control, this will stop and start each fan to calibrate.  Run through the prompts, configure the fan(s) and specify the config file name (default value supplied but seems to need to be re-typed in) then save changes at the end.  Then restart the fan control service `systemctl restart fancontrol` and make it run as a background service at startup with `systemctl enable fancontrol`
 
 https://wiki.joeplaa.com/tutorials/how-to-install-and-configure-fancontrol-pc
 
 Configure PVE to keep all backups as we will then set retention in PBS via prune policy.
 
 In addition to activating a pruning schedule, also activate garbage collection and verification schedules.
+
+Setup custom SSL certificate as noted above - once this is done you no longer need to use the fingerprint ID when specifying a PBS datastore in Proxmox VE as it relies on the publicly accessible SSL cert.
 
 ### Recover previous ZFS array
 Run `zpool import` to check for existing arrays then use `zpool import -f <id>` to import the existing array.
@@ -107,7 +108,7 @@ Run `ls /mnt/datastore/` to see if your pool is mounted. (If not run these: `mkd
 Then in the GUI go to Datastore > Add Datastore and enter the name, full mountpoint (`/mnt/datastore/<datastore_name>`) and under Advanced tick "Reuse existing datastore".
 
 ## Tailscale
-See [notes](tailscale.md#setting-up-in-proxmox-within-a-linux-lxc) in Proxmox section.
+See [notes](tailscale.md#setting-up-in-proxmox-within-a-linux-lxc) on the Tailscale page.
 
 ## Migrating VMs to Proxmox
 If migrating a running system then [CloneZilla](https://www.clonezilla.org) if a good option. Just be sure for Windows machines to install the VirtIO drivers [before](https://www.reddit.com/r/Proxmox/comments/tvy1vf/comment/i3di51v/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button) starting to clone.
