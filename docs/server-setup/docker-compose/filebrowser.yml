@@ -1,5 +1,4 @@
 ---
-version: '3'
 services:
   filebrowser:
     image: filebrowser/filebrowser
@@ -8,8 +7,8 @@ services:
     expose:
       - 80/tcp
     volumes:
-      - /home/alan/:/srv
-      - /home/alan/containers/filebrowser/filebrowser.db:/database.db:rw
+      - /home/alan/containers/filebrowser/filebrowser.db:/database/filebrowser.db
+      - /home/alan/containers/filebrowser/config:/config
       - /home/alan/containers/filebrowser/branding:/branding
     environment:
       - TZ=Europe/London
