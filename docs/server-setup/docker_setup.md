@@ -140,9 +140,23 @@ To view log files that are written to disk create an `alpine` container and `tai
 ## Filebrowser
 A nice GUI file browser - https://github.com/filebrowser/filebrowser
 
-!!! warning "Create the empty db first"
+!!! warning "Create the empty db and file structure first"
     ``` bash
-    mkdir -p $HOME/containers/filebrowser/branding && touch $HOME/containers/filebrowser/filebrowser.db
+    mkdir -p $HOME/containers/filebrowser/branding && \
+    mkdir $HOME/containers/filebrowser/config && \
+    touch $HOME/containers/filebrowser/filebrowser.db
+    ```
+
+!!! warning "Then create `/containers/filebrowser/settings.json`"
+    ``` json
+    {
+        "port": 80,
+        "baseURL": "",
+        "address": "",
+        "log": "stdout",
+        "database": "/database/filebrowser.db",
+        "root": "/srv"
+    }
     ```
 
 Then install via docker-compose:
@@ -154,7 +168,7 @@ Then install via docker-compose:
 Then setup NPM SSH reverse proxy (remember to include websocket support, with forward hostname `filebrowser` and port `80`) and then login:
 !!! info "Default credentials"
     Username: `admin`  
-    Password: `admin`
+    Password: (unique, created when DB first created - check logs)
 
 ![](../images/2022-07-15-22-05-39.png){ align=right } To customise the appearance change the instance name (e.g., `Deployment server`) and set the branding directory path (e.g., `/branding`) in Settings > Global Settings.  Then create `img` and `img/icons` directories in the previously created `containers/filebrowser/branding` directory and add the `logo.svg`  and `favicon.ico` and 16x16 and 32x32 PNGs (if you only do the `.ico`) then the browser will pick the internal higher resolution PNGs.
 ![](../images/2022-07-15-22-06-56.png){ align=right }  
