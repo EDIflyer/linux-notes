@@ -24,3 +24,4 @@ https://github.com/janeczku/calibre-web/wiki/Kobo-Integration
 
 ## Cloudflare
 Check current IP address from the command line - `curl ifconfig.me`
+(if you receive an IPv6 then use `curl -4 ifconfig.me`)
