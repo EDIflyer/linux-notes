@@ -105,11 +105,16 @@ To fix this, set the interface metric to manual and a high numbers
 
 or follow the instructions at https://github.com/tailscale/tailscale/issues/1227#issuecomment-1049136141 (see Tailscale windows metric settings.png)
 
-Then create a Scheduled Task in Windows (remembering to select 'Run with highest privileges') to run at login:
+Then create a Scheduled Task in Windows (remembering to select 'Run with highest privileges') to run at login.  There are two options for this, the 2nd one hides the console window:
 
-- **Action:** Start a program
-- **Program/script:** PowerShell
-- **Add arguments:** `-File "D:\Dropbox\Linux & Programming\tailscale_metric.ps1"` (alter as required)
+=== "Standard Powershell task"
+    - **Action:** Start a program
+    - **Program/script:** PowerShell
+    - **Add arguments:** `-File "D:\Dropbox\Linux & Programming\tailscale_metric.ps1"` (alter as required)
+=== "Hidden window"
+    - **Action:** Start a program
+    - **Program/script:** `C:\Windows\System32\conhost.exe`
+    - **Add arguments:** `--headless powershell.exe -WindowStyle Hidden -NoProfile -NonInteractive -File "D:\Dropbox\Linux & Programming\tailscale_metric.ps1"` (alter as required)
 
 ## Funnel & Serve
 `tailscale funnel --bg c:\Users\alanj\Desktop`
