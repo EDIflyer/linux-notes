@@ -178,6 +178,30 @@ Then setup NPM SSH reverse proxy (remember to include websocket support, with fo
     The [favicon generator](https://realfavicongenerator.net/) is a very useful website to generate all the required favicons for different platforms.
 
 ## Optional containers
+### HTTP Captive Portal
+Self-hosted website to trigger login splash page for captive portals.
+
+Displays IP address & approx location user is connecting from as well as local and server date/time.
+
+Originally just as http however mobile browsers would refuse to load so instead have an https option that uses a self-generated certificate.  The other option is to use a certificate from CloudFlare (SSL/TLS -> Origin Server -> Create Certificate), just run the script to generate self-signed certificates and then replace them with the CRT/PEM files from CloudFlare.  
+
+When proxying via CloudFlare the origin IP address will be hidden, however it is passed in the header - the nginx.conf will automatically adjust for this and replace the IP with this one for traffic originating from CloudFlare IPs.
+
+Install via docker-compose:
+??? example "docker-compose/http-captive-portal.yml" 
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/http-captive-portal.yml"
+    ```
+
+In the container folder add the following files:
+
+- [nginx.conf](./config/http-captive-portal/nginx.conf)
+- [html/favicon.ico](./config/http-captive-portal/html/favicon.ico)
+- [html/index.html](./config/http-captive-portal/html/index.html)
+- [generate-cert.sh](./config/http-captive-portal/generate-cert.sh)
+
+Run `generate-cert.sh` (after `chmod +x`) to generate the self-signed certs.
+
 ### Bytestash
 A handy site for storing code snippets - https://github.com/jordan-dalby/ByteStash
 
