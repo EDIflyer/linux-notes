@@ -14,28 +14,56 @@ title: "2 - Docker setup"
     ```
     (need to logout and back in for this to become active)
 
-## Portainer
-[Portainer](https://www.portainer.io/) is a powerful GUI for managing Docker containers.
+## Dockhand
 
-Create Portainer volume and then start Docker container, but for security bind port only to localhost, so that it cannot be accessed remotely except via an SSH tunnel.
-!!! quote "Create portainer container"
-    ``` bash
-    docker run -d -p 127.0.0.1:8000:8000 -p 127.0.0.1:9000:9000 \
-    --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock \
-    -v /home/alan/containers/portainer:/data portainer/portainer-ce:latest
+A modern and powerful UI for interacting with both local and remote Docker instances - https://dockhand.pro/
+
+Install on the main server you wish to use - below it is bound to `localhost` for security purposes (remove `127.0.0.1:` at the start of the `ports` section if you don't want to do this).
+
+???+ example "docker-compose.yml" 
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/dockhand.yml"
     ```
-<!-- Possible route to use Wireguard https://www.portainer.io/blog/how-to-run-portainer-behind-a-wireguard-vpn -->
 
-Setup SSH tunnel - example SSH connection string
-!!! quote "SSH tunnel"
-    ``` bash
-    ssh -L 9000:127.0.0.1:9000 <user>@<server.FQDN> -i <PATH-TO-PRIVATE-KEY>
+To manage remote agents then [install](https://login.tailscale.com/admin/machines/new-linux) Tailscale on each server, and tag them with `server` (if doing multiple at once then set a reusable authentication key with a 1 day expiry for ease).
+
+Then set the [Tailscale ACL](https://login.tailscale.com/admin/acls/file) to limit connections to devices with that tag to only see each other and not interfere with the rest of the Tailnet.
+
+??? example "Tailscale ACL"
+    ``` json
+    {
+        "tagOwners": {
+            "tag:server": [], // or your user/email/group
+        },
+
+        "acls": [
+            // 1) Non‑server user devices can talk to any other user device, but not tagged servers.
+            {
+                "action": "accept",
+                "src":    ["autogroup:members"],
+                "dst":    ["autogroup:members:*"],
+            },
+
+            // 2) Tagged servers can only talk to other tagged servers.
+            {
+                "action": "accept",
+                "src":    ["tag:server"],
+                "dst":    ["tag:server:*"],
+            },
+        ],
+    }
     ```
-    Then connect using http://localhost:9000
 
-Go to Environments > local and add public IP to allow all the ports links to be clickable
+Then install the Hawser agent - setting a random token in the `docker-compose.yml` to enhance security.
 
-Aim to put volumes in `~/containers/[containername]` for consistency.
+???+ example "docker-compose.yml" 
+    ``` yaml linenums="1"
+    --8<-- "docs/server-setup/docker-compose/hawser.yml"
+    ```
+
+In Dockhand then click to Add Environment, name it, pick "Hawser agent (standard)", enter the Tailscale `100.x` IP in "Agent host" and enter this token in "Agent token (optional)".  Other fields can be left as default.  Click "Test connection" and if OK then click "Add".
+
+![Hawser setup](../images/hawser.png)
 
 ## Watchtower
 [Watchtower](https://containrrr.dev/watchtower/) is a container-based solution for automating Docker container base image updates.  
@@ -178,6 +206,33 @@ Then setup NPM SSH reverse proxy (remember to include websocket support, with fo
     The [favicon generator](https://realfavicongenerator.net/) is a very useful website to generate all the required favicons for different platforms.
 
 ## Optional containers
+### Portainer
+??? abstract "Portainer (deprecated)"
+
+    **I would now recommend using Dockhand rather than Portainer**
+
+    [Portainer](https://www.portainer.io/) is a powerful GUI for managing Docker containers.
+
+    Create Portainer volume and then start Docker container, but for security bind port only to localhost, so that it cannot be accessed remotely except via an SSH tunnel.
+    !!! quote "Create portainer container"
+        ``` bash
+        docker run -d -p 127.0.0.1:8000:8000 -p 127.0.0.1:9000:9000 \
+        --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock \
+        -v /home/alan/containers/portainer:/data portainer/portainer-ce:latest
+        ```
+    <!-- Possible route to use Wireguard https://www.portainer.io/blog/how-to-run-portainer-behind-a-wireguard-vpn -->
+
+    Setup SSH tunnel - example SSH connection string
+    !!! quote "SSH tunnel"
+        ``` bash
+        ssh -L 9000:127.0.0.1:9000 <user>@<server.FQDN> -i <PATH-TO-PRIVATE-KEY>
+        ```
+        Then connect using http://localhost:9000
+
+    Go to Environments > local and add public IP to allow all the ports links to be clickable
+
+    Aim to put volumes in `~/containers/[containername]` for consistency.
+
 ### HTTP Captive Portal
 This is a self-hosted website available via plain HTTP (as well as HTTPS) to help trigger the login splash page for captive login portals when travelling (e.g., hotel, airplane, etc.).
 

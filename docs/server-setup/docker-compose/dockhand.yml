@@ -1,0 +1,14 @@
+services:
+  dockhand:
+    image: fnsys/dockhand:latest
+    container_name: dockhand
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:3000:3000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - dockhand_data:/app/data
+      - /home/alan/containers:/apt/data/stacks # Optional: Mount your stacks directory to manage them through Dockhand
+
+volumes:
+  dockhand_data:
