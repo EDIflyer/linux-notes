@@ -33,18 +33,29 @@ Then set the [Tailscale ACL](https://login.tailscale.com/admin/acls/file) to lim
     ``` json
     {
         "tagOwners": {
-            "tag:server": [], // or your user/email/group
+            "tag:server": [],
         },
 
         "acls": [
-            // 1) Non‑server user devices can talk to any other user device, but not tagged servers.
+            // Non‑servers: member devices + internet + own devices
             {
                 "action": "accept",
                 "src":    ["autogroup:members"],
-                "dst":    ["autogroup:members:*"],
+                "dst": [
+                    "autogroup:members:*",
+                    "autogroup:internet:*",
+                    "autogroup:self:*",
+                ],
             },
 
-            // 2) Tagged servers can only talk to other tagged servers.
+            // Non‑servers: your subnet CIDRs
+            {
+                "action": "accept",
+                "src":    ["autogroup:members"],
+                "dst":    ["192.168.0.0/16:*"],
+            },
+
+            // Servers only talk to servers
             {
                 "action": "accept",
                 "src":    ["tag:server"],
