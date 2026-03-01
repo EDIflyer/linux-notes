@@ -76,7 +76,7 @@ In Dockhand then click to Add Environment, name it, pick "Hawser agent (standard
 
 ![Hawser setup](../images/hawser.png)
 
-When managing compose stacks remotely note the useful information at https://dockhand.pro/manual/#stacks-architecture.  The main point is to be sure to use absolute rather than relative paths for any bind mounts.
+When managing compose stacks remotely note the useful information at https://dockhand.pro/manual/#stacks-architecture - these have to either be centrally hosted on the server running Dockhand if they are to be fully managed.  It is also important to use absolute rather than relative paths for any bind mounts.
 
 ## Watchtower
 [Watchtower](https://containrrr.dev/watchtower/) is a container-based solution for automating Docker container base image updates.  
