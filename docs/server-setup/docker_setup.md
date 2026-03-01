@@ -65,7 +65,7 @@ Then set the [Tailscale ACL](https://login.tailscale.com/admin/acls/file) to lim
     }
     ```
 
-Then install the Hawser agent - setting a random token in the `docker-compose.yml` to enhance security.
+Then install the Hawser agent - setting a random token in the `docker-compose.yml` to enhance security.  For added security it is also bound to the Tailscale IP address so it is not accessible externally.
 
 ???+ example "docker-compose.yml" 
     ``` yaml linenums="1"

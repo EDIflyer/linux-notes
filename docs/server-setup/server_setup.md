@@ -56,6 +56,7 @@ Set base configuration for the server:
     ``` bash
     ssh-copy-id -i ~/.ssh/id_rsa.pub <username>@<linodeIP>
     ```
+    (or manually copy the public key to `~/.ssh/authorized_keys`)
 !!! quote "Disable password login"
     ``` bash
     sudo nano /etc/ssh/sshd_config
