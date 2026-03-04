@@ -51,7 +51,7 @@ Then set the [Tailscale ACL](https://login.tailscale.com/admin/acls/file) to lim
             // Non‑servers: your subnet CIDRs
             {
                 "action": "accept",
-                "src":    ["autogroup:members"],
+                "src":    ["*"],
                 "dst":    ["192.168.0.0/16:*"],
             },
 
