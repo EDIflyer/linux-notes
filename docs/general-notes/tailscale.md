@@ -22,6 +22,8 @@ Any devices logged into the same Tailnet are accessible form each other.
         bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/misc/add-tailscale-lxc.sh)"
         ```
 
+This script will ensure that `tun` access is properly granted for the unprivileged LXC container.
+
 1. Then run a `tailscale up` command
 
 !!! warning "SSH"
@@ -54,19 +56,21 @@ tailscale up --advertise-routes=
 ```
 
 !!! danger "Extra subnet routing commands required in Linux"
-    As explained at https://tailscale.com/kb/1019/subnets?tab=linux#connect-to-tailscale-as-a-subnet-router some additional commands are required on Linux to enable subnet routing:
+    As explained at https://tailscale.com/docs/features/subnet-routers#enable-ip-forwarding some additional commands are required on Linux to enable subnet routing:
 
-    === "sudo"
-        ``` bash
-        echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
-        echo 'net.ipv6.conf.all.forwarding = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
-        sudo sysctl -p /etc/sysctl.d/99-tailscale.conf
-        ```
-    === "root"
+    === "If your Linux system has a `/etc/sysctl.d` directory, use"
+        As root (or use `sudo`)
         ``` bash
         echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
         echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
         sysctl -p /etc/sysctl.d/99-tailscale.conf
+        ```
+    === "Otherwise, use:"
+        As root (or use `sudo`)
+        ``` bash
+        echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.conf
+        echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.conf
+        sysctl -p /etc/sysctl.conf
         ```
 
 If a subnet router is available on the network then the `ip route` command can also be used in Linux to direct traffic destined for another subnet via the local subnet router.  An example of this would be connecting to an offsite Proxmox Backup Server without having to install Tailscale on the Proxmox host itself...
@@ -92,6 +96,31 @@ If a subnet router is available on the network then the `ip route` command can a
             bridge-fd 0
             up ip route add 192.168.2.150/32 via 192.168.1.200
         ```
+
+If using a fixed IP address for the LXC there can be issues with the Tailscale service not working properly after reboot of the container.  This doesn't seem to be such an issue with DHCP.
+
+Running `touch /etc/.pve-ignore.resolv.conf` within the LXC filesystem will tell Proxmox not to overwrite `/etc/resolv.conf`.
+
+If running into issues with it still failing after container restart then create a systemd service to call a restart script on boot:
+
+??? example "tailscale-restart.service"
+    ``` bash
+    --8<-- "docs/general-notes/scripts/tailscale-restart.service"
+    ```
+
+??? example "tailscale-restart.sh"
+    ``` bash
+    --8<-- "docs/general-notes/scripts/tailscale-restart.sh"
+    ```    
+
+Then run the following to install and enable the service:
+
+??? example "Install/enable service"
+    ``` bash
+    cp tailscale-restart.service /etc/systemd/system/
+    systemctl daemon-reload
+    systemctl enable tailscale-restart.service
+    ```
 
 ## LAN access on Windows
 There's an issue with the interface metric being set to auto on Windows which causes LAN traffic to try and go via the Tailnet, either slowing it down or making it impossible to access local resources if there is no subnet router in place.
