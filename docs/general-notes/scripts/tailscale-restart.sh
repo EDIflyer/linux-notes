@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LOGFILE="/root/tailscale-restart.log"
-echo "$(date): Tailscale restart script started" >> "$LOGFILE"
+echo "$(date): === Tailscale restart script started ===" >> "$LOGFILE"
 
 # Wait for tailscaled socket
 while [ ! -S /run/tailscale/tailscaled.sock ]; do
@@ -13,7 +13,7 @@ echo "$(date): tailscaled socket ready" >> "$LOGFILE"
 tailscale down 2>&1 | tee -a "$LOGFILE"
 
 # Run tailscale up with logging
-tailscale up --ssh --accept-routes=true --advertise-routes=192.168.1.0/24 --accept-dns=false 2>&1 | tee -a "$LOGFILE"
+tailscale up --ssh --accept-routes=true --advertise-routes=192.168.1.0/24 --accept-dns=true 2>&1 | tee -a "$LOGFILE"
 RET=$?
 
 if [ $RET -eq 0 ]; then
@@ -22,5 +22,5 @@ else
   echo "$(date): tailscale up failed (code $RET)" >> "$LOGFILE"
 fi
 
-echo "$(date): Tailscale restart script completed" >> "$LOGFILE"
+echo "$(date): === Tailscale restart script completed ===" >> "$LOGFILE"
 exit $RET
