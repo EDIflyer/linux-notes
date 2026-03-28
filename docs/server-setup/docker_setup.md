@@ -137,7 +137,7 @@ Apply this docker-compose (based on https://nginxproxymanager.com/setup/#running
 
 Login to the admin console at `<serverIP>:81` with email `admin@example.com` and password `changeme`. Then change user email/password combo.
 
-Setup new proxy host for NPM itself with scheme `http`, forward hostname of `localhost` and forward port of `81`.
+Setup new proxy host for NPM itself with scheme `http`, forward hostname of the container name - normally `nginx-proxy-manager-app-1` (previously `localhost` worked but that doesn't seem to be the case in recent Docker versions) and forward port of `81`.
 !!! info "Force SSL access to admin interface"
     Once initial setup is completed, change & reload the NPM stack in Portainer to comment out port 81 so that access to admin interface is only via SSL.
 
