@@ -19,5 +19,5 @@ fi
 if [ -d "/home/alan/containers/hawser" ]; then
     echo "Updating Hawser"
     cd /home/alan/containers/hawser
-    docker compose pull  && docker compose up -d
+    docker compose pull  && docker compose up -d --force-recreate
 fi
