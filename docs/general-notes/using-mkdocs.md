@@ -1,4 +1,5 @@
 ---
+title: mkdocs notes
 description: Notes on implementation of markdown in mkdocs-material
 ---
 ## General introduction

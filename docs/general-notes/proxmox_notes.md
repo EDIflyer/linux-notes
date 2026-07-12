@@ -1,3 +1,4 @@
+# Proxmox notes
 ## New setup
 1. Install Proxmox VE from ISO - https://www.proxmox.com/en/downloads/proxmox-virtual-environment
 1. Run Proxmox VE Post Install helper script - https://community-scripts.github.io/ProxmoxVE/scripts?id=post-pve-install

@@ -33,6 +33,17 @@ Split commands over multiple lines using ++backslash++ at the end of the line, j
 
 Handy command list - https://gist.github.com/tuxfight3r/60051ac67c5f0445efee
 
+## Activating RDP
+```bash
+sudo apt update
+sudo apt install xrdp xorgxrdp
+sudo systemctl enable --now xrdp
+sudo systemctl enable --now xrdp-sesman
+sudo groupadd rdp
+sudo usermod -aG rdp youruser
+sudo systemctl restart xrdp
+```
+
 ## Terminal colours
 If terminal reverts to non-coloured then try copying skeleton files back again
 !!! quote "Restore skeleton files"

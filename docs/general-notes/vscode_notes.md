@@ -2,6 +2,18 @@
 title: "VS Code notes"
 date: 2022-07-09T18:32:03+01:00
 ---
+## WSL I/O error
+If seeing this error then from within the WSL terminal, run
+```bash
+rm -r ~/.vscode-server 
+```
+to delete the VS Code WSL server.
+Exit the terminal and from your PowerShell/Cmd, run
+```msdos
+wsl --shutdown
+```
+Then you can go back to WSL and run `code .` and it should work normally.
+
 ## Paste Image plugin
 === "Install extension"
     ```

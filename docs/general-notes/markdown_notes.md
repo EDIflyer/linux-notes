@@ -1,7 +1,6 @@
 ---
 title: Markdown notes
 description: Notes on implementation of markdown in mkdocs-material
-
 ---
 
 Link to [server notes](../server-setup/server_setup.md)

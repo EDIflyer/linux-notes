@@ -1,3 +1,5 @@
+# vim notes
+
 ## Install `neovim`
 ``` bash
 wget --quiet https://github.com/neovim/neovim/releases/latest/download/nvim.appimage --output-document nvim

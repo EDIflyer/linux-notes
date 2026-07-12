@@ -1,4 +1,4 @@
-# Tailscale
+# Tailscale notes
 
 Tailscale is a Mesh VPN service based on the WireGuard protocol - https://www.tailscale.com.
 
