@@ -1,82 +1,139 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
+
 echo "AJR btop installer"
 echo "------------------"
-if [ "$1" = "x64" ]; then
-    echo ">>> Command line x64 option selected"
-    echo
-    arch_pattern="x86_64"
-elif [ "$1" = "aarch64" ]; then
-    echo ">>> Command line aarch64 option selected"
-    echo
-    arch_pattern="aarch64"
-else
-    echo "No architecture selected when running script, please select either x64 or aarch64."
-    echo "  1. x64"
-    echo "  2. aarch64"
-    echo
-    read -p "Enter the number of the architecture you want to install: " architecture_number
-    if [ "$architecture_number" = "1" ]; then
-        echo ">>> x64 option selected"
-        echo
-        arch_pattern="x86_64"
-    elif [ "$architecture_number" = "2" ]; then
-        echo ">>> aarch64 option selected"
-        echo
-        arch_pattern="aarch64"
-    else
-        echo
-        echo ">>> Invalid option selected - exiting."
-        exit 1
-    fi
-fi
+
+select_arch() {
+  case "${1:-}" in
+    x64)
+      echo ">>> Command line x64 option selected"
+      echo
+      arch_pattern="x86_64"
+      ;;
+    aarch64)
+      echo ">>> Command line aarch64 option selected"
+      echo
+      arch_pattern="aarch64"
+      ;;
+    "")
+      local detected_arch
+      detected_arch="$(uname -m)"
+      case "$detected_arch" in
+        x86_64|amd64)
+          echo ">>> Detected architecture: $detected_arch"
+          read -r -p "Use detected x64 architecture? [Y/n]: " reply
+          case "${reply:-Y}" in
+            [Nn]*) ;;
+            *)
+              arch_pattern="x86_64"
+              return 0
+              ;;
+          esac
+          ;;
+        aarch64|arm64)
+          echo ">>> Detected architecture: $detected_arch"
+          read -r -p "Use detected aarch64 architecture? [Y/n]: " reply
+          case "${reply:-Y}" in
+            [Nn]*) ;;
+            *)
+              arch_pattern="aarch64"
+              return 0
+              ;;
+          esac
+          ;;
+      esac
+
+      echo "No architecture selected when running script, please select either x64 or aarch64."
+      echo " 1. x64"
+      echo " 2. aarch64"
+      echo
+      read -r -p "Enter the number of the architecture you want to install: " architecture_number
+      case "$architecture_number" in
+        1)
+          echo ">>> x64 option selected"
+          echo
+          arch_pattern="x86_64"
+          ;;
+        2)
+          echo ">>> aarch64 option selected"
+          echo
+          arch_pattern="aarch64"
+          ;;
+        *)
+          echo
+          echo ">>> Invalid option selected - exiting."
+          exit 1
+          ;;
+      esac
+      ;;
+    *)
+      echo ">>> Invalid argument: $1"
+      echo ">>> Use: $0 [x64|aarch64]"
+      exit 1
+      ;;
+  esac
+}
+
+select_arch "${1:-}"
+
 echo
 echo ">>> Installing dependencies..."
-sudo apt install -y bzip2 make
-echo ">>> Fetching latest release of btop..."
+sudo apt update
+sudo apt install -y curl wget jq bzip2 tar make
 
-# Extract the download URL directly from the GitHub API response
-# Use jq to parse JSON properly, fall back to grep if jq not available
+echo ">>> Fetching latest release of btop..."
+api_json="$(curl -fsSL https://api.github.com/repos/aristocratos/btop/releases/latest)"
+
 download_url=""
 filename=""
 
-if command -v jq &> /dev/null; then
-    # Get both the filename and download URL using jq
-    jq_output=$(curl -s https://api.github.com/repos/aristocratos/btop/releases/latest \
-        | jq -r ".assets[] | select(.name | contains(\"$arch_pattern\")) | \"\(.name)|\(.browser_download_url)\"" | head -1)
-    filename=$(echo "$jq_output" | cut -d'|' -f1)
-    download_url=$(echo "$jq_output" | cut -d'|' -f2)
+if command -v jq >/dev/null 2>&1; then
+  asset="$(printf '%s\n' "$api_json" | jq -r ".assets[] | select(.name | contains(\"$arch_pattern\")) | .name + \"|\" + .browser_download_url" | head -n 1)"
+  if [ -n "$asset" ]; then
+    filename="${asset%%|*}"
+    download_url="${asset#*|}"
+  fi
 else
-    # Fallback: grep-based parsing for systems without jq
-    api_response=$(curl -s https://api.github.com/repos/aristocratos/btop/releases/latest)
-    filename=$(echo "$api_response" | grep '"name"' | grep "$arch_pattern" | head -1 | sed 's/.*"\([^"]*\)".*/\1/')
-    download_url=$(echo "$api_response" | grep "browser_download_url" | grep "$arch_pattern" | head -1 | sed 's/.*"\(https[^"]*\)".*/\1/')
+  filename="$(printf '%s\n' "$api_json" | grep '"name"' | grep "$arch_pattern" | head -n 1 | sed 's/.*"\([^"]*\)".*/\1/')"
+  download_url="$(printf '%s\n' "$api_json" | grep '"browser_download_url"' | grep "$arch_pattern" | head -n 1 | sed 's/.*"\(https[^"]*\)".*/\1/')"
 fi
 
 if [ -z "$download_url" ] || [ -z "$filename" ]; then
-    echo ">>> Error: Could not find download URL for architecture: $arch_pattern"
-    echo ">>> Debugging: Checking available assets..."
-    if command -v jq &> /dev/null; then
-        curl -s https://api.github.com/repos/aristocratos/btop/releases/latest | jq -r '.assets[].name'
-    else
-        curl -s https://api.github.com/repos/aristocratos/btop/releases/latest | grep '"name"'
-    fi
-    exit 1
+  echo ">>> Error: Could not find download URL for architecture: $arch_pattern"
+  echo ">>> Debugging: Checking available assets..."
+  if command -v jq >/dev/null 2>&1; then
+    printf '%s\n' "$api_json" | jq -r '.assets[].name'
+  else
+    printf '%s\n' "$api_json" | grep '"name"'
+  fi
+  exit 1
 fi
 
-echo ">>> Downloading: $filename"
-wget "$download_url"
+workdir="$(mktemp -d)"
+archive_path="$workdir/$filename"
+trap 'rm -rf "$workdir"' EXIT
 
-if [ ! -f "$filename" ]; then
-    echo ">>> Error: Download failed - file not found."
-    exit 1
+echo ">>> Downloading: $filename"
+wget -O "$archive_path" "$download_url"
+
+if [ ! -f "$archive_path" ]; then
+  echo ">>> Error: Download failed - file not found."
+  exit 1
 fi
 
 echo ">>> Extracting and installing btop..."
-tar -xjf "$filename"
-cd btop
-./install.sh
+tar -xf "$archive_path" -C "$workdir"
+
+install_dir="$(find "$workdir" -type f -name install.sh -exec dirname {} \; | head -n 1)"
+
+if [ -z "$install_dir" ]; then
+  echo ">>> Error: install.sh not found in extracted archive."
+  exit 1
+fi
+
+cd "$install_dir"
+sudo ./install.sh
+
 echo ">>> Cleaning up..."
-cd ..
-rm "$filename"
-rm -rf btop
 echo ">>> Installation complete."
