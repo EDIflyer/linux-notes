@@ -97,6 +97,23 @@ If a subnet router is available on the network then the `ip route` command can a
             up ip route add 192.168.2.150/32 via 192.168.1.200
         ```
 
+    NB **If using a distro that uses NetworkManager** (confirm with seeing an output for `nmcli connection show`) then instead add the persistent route via that, e.g. if connection is called "Wired Connection 1" then:
+        ``` bash
+        sudo nmcli connection modify "Wired connection 1" +ipv4.routes "192.168.2.150/32 192.168.1.200"
+        ```
+    Then apply/restart the connection:
+        ``` bash
+        sudo nmcli connection reload
+        sudo nmcli connection up "Wired connection 1"
+        ```
+
+    To list the routes configured on the connection:
+        ``` bash
+        nmcli connection show "Wired connection 1" | grep routes
+        ```
+
+    To remove the route later either change `+ipv4.routes` to `-ipv4.routes` or us `sudo nmtui` to adjust via the text UI (under Edit connection -> show IPv4 config -> Edit routing)
+
 If using a fixed IP address for the LXC there can be issues with the Tailscale service not working properly after reboot of the container.  This doesn't seem to be such an issue with DHCP.
 
 Running `touch /etc/.pve-ignore.resolv.conf` within the LXC filesystem will tell Proxmox not to overwrite `/etc/resolv.conf`.
