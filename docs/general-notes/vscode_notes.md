@@ -14,6 +14,14 @@ wsl --shutdown
 ```
 Then you can go back to WSL and run `code .` and it should work normally.
 
+## Git hooks
+Create a `.githooks` directory in the repo and then instruct git to use it to run the hooks:
+
+``` bash
+mkdir -p .githooks
+git config core.hooksPath .githooks
+```
+
 ## Paste Image plugin
 === "Install extension"
     ```
