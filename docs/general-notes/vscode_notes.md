@@ -21,6 +21,7 @@ Create a `.githooks` directory in the repo and then instruct git to use it to ru
 mkdir -p .githooks
 git config core.hooksPath .githooks
 ```
+Ensure any Git hooks that are then created have a `chmod +x` run on them otherwise they will not be marked as executable and will not run on Linux systems (it doesn't seem to be an issue on Windows).
 
 ## Paste Image plugin
 === "Install extension"
