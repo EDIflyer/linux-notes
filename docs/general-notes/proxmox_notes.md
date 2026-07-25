@@ -157,9 +157,9 @@ A full list is at https://pve.proxmox.com/wiki/Storage:_Directory
 `pct enter 100`
 
 ## Checking VM IP addresses
-Script to iterate through VMs and check IPs:
+The following script iterates through VMs and LXCs and provides a list of current IP addresses:
 
-!!! quote "[qmip.sh](../scripts/qmip.sh)"
+??? quote "[qmip.sh](../scripts/qmip.sh)"
     ``` bash
         --8<-- "docs/general-notes/scripts/qmip.sh"
     ```
