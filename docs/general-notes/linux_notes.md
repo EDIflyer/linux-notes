@@ -34,6 +34,7 @@ Split commands over multiple lines using ++backslash++ at the end of the line, j
 Handy command list - https://gist.github.com/tuxfight3r/60051ac67c5f0445efee
 
 ## Activating RDP
+To enable RDP use the following commands:
 ```bash
 sudo apt update
 sudo apt install xrdp xorgxrdp
@@ -43,6 +44,35 @@ sudo groupadd rdp
 sudo usermod -aG rdp youruser
 sudo systemctl restart xrdp
 ```
+
+If wanting to connect via RDP _from_ Linux then [Remmina](https://remmina.org/) is an excellent client.
+
+### Enabling sound on RDP
+To enable RDP sound run the following commands:
+``` bash
+sudo apt update
+sudo apt install pipewire-module-xrdp
+sudo usermod -a -G audio,pipewire $USER
+```
+(then reboot - if using Remmina as a client then ensure sound is enabled by editing the connection profile - under Advanced change the Audio output mode to Local)
+
+
+## Running Citrix
+Download the client from https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html
+
+Download PEM certificate for "DigiCert Global G2 TLS RSA SHA256 2020 CA1" from https://knowledge.digicert.com/general-information/digicert-trusted-root-authority-certificates (direct link https://cacerts.digicert.com/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crt.pem)
+
+Copy it to the Citrix certificate store:
+```bash
+sudo cp ~/Downloads/DigiCertGlobalG2TLSRSASHA2562020CA1-1.crt.pem opt/Citrix/ICAClient/keystore/cacerts
+```
+
+Re-hash the certificate:
+```bash
+sudo /opt/Citrix/ICAClient/util/ctx_rehash
+```
+
+Should then be able to connect OK.
 
 ## Terminal colours
 If terminal reverts to non-coloured then try copying skeleton files back again
