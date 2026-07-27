@@ -78,54 +78,6 @@ In Dockhand then click to Add Environment, name it, pick "Hawser agent (standard
 
 When managing compose stacks remotely note the useful information at https://dockhand.pro/manual/#stacks-architecture - these have to either be centrally hosted on the server running Dockhand if they are to be fully managed.  It is also important to use absolute rather than relative paths for any bind mounts.
 
-## Watchtower
-[Watchtower](https://containrrr.dev/watchtower/) is a container-based solution for automating Docker container base image updates.  
-!!! tip "Initial docker config setup"
-    Watchtower can pull from public repositories but to link to a private Docker Hub you need to supply login credentials.  This is best achieved by running a `docker login` command in the terminal, which will create a file in `$HOME/.docker/config.json` that we can then link as a volume to the Watchtower container.  If this is not done prior to running the container then Docker will instead create the `config.json` file as a directory!
-
-    If 2FA enabled on Docker account then go to https://hub.docker.com/settings/security?generateToken=true to setup the access token
-
-    The configuration below links to this config file and also links to the local time and tells Watchtower to include stopped containers and verbose logging.
-
-!!! warning
-    Remember to change the email settings below
-
-=== "docker run"
-    ???+ quote "bash"
-        ``` bash
-        docker run --detach \
-            --name watchtower \
-            --volume /var/run/docker.sock:/var/run/docker.sock \
-            --volume $HOME/.docker/config.json:/config.json \
-            -v /etc/localtime:/etc/localtime:ro \
-            -e WATCHTOWER_NOTIFICATIONS=email
-            -e WATCHTOWER_NOTIFICATIONS_HOSTNAME=<hostname>
-            -e WATCHTOWER_NOTIFICATION_EMAIL_TO=<target email>
-            -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=<password>
-            -e WATCHTOWER_NOTIFICATION_EMAIL_DELAY=2
-            -e WATCHTOWER_NOTIFICATION_EMAIL_FROM=<sending email>
-            -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER=<mailserver>
-            -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=587
-            -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=<maillogin>
-            containrrr/watchtower --include-stopped --debug
-        ```
-=== "docker-compose (Portainer stack)"
-    ???+ example "docker-compose/watchtower.yml" 
-        ``` yaml linenums="1"
-        --8<-- "docs/server-setup/docker-compose/watchtower.yml"
-        ```
-!!! tip "Run frequency"
-    By default Watchtower runs once per day, with the first run 24h after container activation.  This can be adjusted by passing the `--interval` [command](https://containrrr.dev/watchtower/arguments/#poll_interval) and specifying the number of seconds. There is also the option of using the `--run-once` flag to immediately check all containers and then stop Watchtower running.
-!!! info "Private Docker Hub images"
-    Ensure any private docker images have been started as `index.docker.io/<user>/main:tag` rather than `<user>/main:tag`
-!!! tip "Exclude containers"
-    To exclude a container from being checked it needs to be built with a label set in the docker-compose to tell Watchtower to ignore it
-    ``` yaml
-    labels:
-      - "com.centurylinklabs.watchtower.enable=false"
-    ```
-To compare images with those on Docker Hub use `docker images --digests` to show the sha2566 hash.
-
 ## Nginx Proxy Manager
 [Nginx Proxy Manager](https://nginxproxymanager.com) lets private containerised applications run via secure HTTPS proxies (including free Let's Encrypt SSL certificates).
 
@@ -349,6 +301,17 @@ Install via docker-compose:
     ```
 Then setup NPM SSH reverse proxy to port 3000 and navigate to the new site.
 
+If getting an error with "Failed ot execute default Web Browser. I/O error" whilst the rest of the Linux desktop is working OK this is normally due to a corrupt Chromium profile.
+
+??? info "To reset the Chromium profile"
+    ``` bash
+    pkill chromium || true
+    rm -f ~/.config/chromium/Singleton*
+    rm -f ~/.config/chromium/SingletonLock
+    rm -f ~/.config/chromium/SingletonSocket
+    rm -f ~/.config/chromium/SingletonCookie
+    ```
+
 ### MeshCentral
 Self-hosted remote access client - https://github.com/Ylianst/MeshCentral & https://meshcentral.com/info/
 
@@ -568,6 +531,53 @@ Once this is done access Matomo via the new proxy address and follow the click-t
         policy: bypass
     ```
 
+## Watchtower
+[Watchtower](https://containrrr.dev/watchtower/) is a container-based solution for automating Docker container base image updates.  
+!!! tip "Initial docker config setup"
+    Watchtower can pull from public repositories but to link to a private Docker Hub you need to supply login credentials.  This is best achieved by running a `docker login` command in the terminal, which will create a file in `$HOME/.docker/config.json` that we can then link as a volume to the Watchtower container.  If this is not done prior to running the container then Docker will instead create the `config.json` file as a directory!
+
+    If 2FA enabled on Docker account then go to https://hub.docker.com/settings/security?generateToken=true to setup the access token
+
+    The configuration below links to this config file and also links to the local time and tells Watchtower to include stopped containers and verbose logging.
+
+!!! warning
+    Remember to change the email settings below
+
+=== "docker run"
+    ???+ quote "bash"
+        ``` bash
+        docker run --detach \
+            --name watchtower \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
+            --volume $HOME/.docker/config.json:/config.json \
+            -v /etc/localtime:/etc/localtime:ro \
+            -e WATCHTOWER_NOTIFICATIONS=email
+            -e WATCHTOWER_NOTIFICATIONS_HOSTNAME=<hostname>
+            -e WATCHTOWER_NOTIFICATION_EMAIL_TO=<target email>
+            -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=<password>
+            -e WATCHTOWER_NOTIFICATION_EMAIL_DELAY=2
+            -e WATCHTOWER_NOTIFICATION_EMAIL_FROM=<sending email>
+            -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER=<mailserver>
+            -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=587
+            -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=<maillogin>
+            containrrr/watchtower --include-stopped --debug
+        ```
+=== "docker-compose (Portainer stack)"
+    ???+ example "docker-compose/watchtower.yml" 
+        ``` yaml linenums="1"
+        --8<-- "docs/server-setup/docker-compose/watchtower.yml"
+        ```
+!!! tip "Run frequency"
+    By default Watchtower runs once per day, with the first run 24h after container activation.  This can be adjusted by passing the `--interval` [command](https://containrrr.dev/watchtower/arguments/#poll_interval) and specifying the number of seconds. There is also the option of using the `--run-once` flag to immediately check all containers and then stop Watchtower running.
+!!! info "Private Docker Hub images"
+    Ensure any private docker images have been started as `index.docker.io/<user>/main:tag` rather than `<user>/main:tag`
+!!! tip "Exclude containers"
+    To exclude a container from being checked it needs to be built with a label set in the docker-compose to tell Watchtower to ignore it
+    ``` yaml
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+    ```
+To compare images with those on Docker Hub use `docker images --digests` to show the sha2566 hash.
 
 ### PrivateBin
 A minimalist, open source online pastebin where the server has zero knowledge of pasted data - https://privatebin.info/
