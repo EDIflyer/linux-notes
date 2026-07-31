@@ -38,11 +38,15 @@ C:\Program Files\Adobe\Acrobat DC\PDFMaker\Mail\Outlook\x64\
 ```
 -> Rename to _disabled
 
-### Clear recent RDP entries
+### Remote Desktop Protocol (RDP)
+#### Clear recent RDP entries
 Edit the list in this Registry key:
 ```
 Computer\HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Default
 ```
+#### If RDP clipboard stops working
+1. Search Task Manager for `rdpclip` and kill it if running
+1. Start > Run > `rdpclip`
 
 ### Registry command to remove excess Start menu items
 ```batch
