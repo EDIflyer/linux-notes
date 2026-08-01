@@ -34,28 +34,29 @@ Split commands over multiple lines using ++backslash++ at the end of the line, j
 Handy command list - https://gist.github.com/tuxfight3r/60051ac67c5f0445efee
 
 ## Activating RDP
-To enable RDP use the following commands:
-```bash
-sudo apt update
-sudo apt install xrdp xorgxrdp
-sudo systemctl enable --now xrdp
-sudo systemctl enable --now xrdp-sesman
-sudo groupadd rdp
-sudo usermod -aG rdp youruser
-sudo systemctl restart xrdp
-```
+If using a distro that doesn't have screen sharing installed by default (on Debian this can simply be enabled via Settings > System > Desktop sharing) then RDP can be enabled using the following commands:
+
+??? quote "Install xrdp"
+    ```bash
+    sudo apt update
+    sudo apt install xrdp xorgxrdp
+    sudo systemctl enable --now xrdp
+    sudo systemctl enable --now xrdp-sesman
+    sudo groupadd rdp
+    sudo usermod -aG rdp youruser
+    sudo systemctl restart xrdp
+    ```
+
+    ??? info "Enabling sound on xrdp"
+        To enable RDP sound run the following commands:
+        ``` bash
+        sudo apt update
+        sudo apt install pipewire-module-xrdp
+        sudo usermod -a -G audio,pipewire $USER
+        ```
+        (then reboot - if using Remmina as a client then ensure sound is enabled by editing the connection profile - under Advanced change the Audio output mode to Local)
 
 If wanting to connect via RDP _from_ Linux then [Remmina](https://remmina.org/) is an excellent client.
-
-### Enabling sound on RDP
-To enable RDP sound run the following commands:
-``` bash
-sudo apt update
-sudo apt install pipewire-module-xrdp
-sudo usermod -a -G audio,pipewire $USER
-```
-(then reboot - if using Remmina as a client then ensure sound is enabled by editing the connection profile - under Advanced change the Audio output mode to Local)
-
 
 ## Running Citrix
 Download the client from https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html
