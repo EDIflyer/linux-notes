@@ -34,7 +34,14 @@ Split commands over multiple lines using ++backslash++ at the end of the line, j
 Handy command list - https://gist.github.com/tuxfight3r/60051ac67c5f0445efee
 
 ## Activating RDP
-If using a distro that doesn't have screen sharing installed by default (on Debian this can simply be enabled via Settings > System > Desktop sharing) then RDP can be enabled using the following commands:
+If using a distro that doesn't have screen sharing installed by default (on Debian this can simply be enabled via Settings > System > Desktop sharing) then RDP can be enabled using the below commands.
+
+!!! tip "Connecting to locked session"
+    By default GNOME screen sharing blocks remote access when the screen is locked.
+
+    This can be addressed by using the **Allow Locked Remote Desktop** extension below.
+
+    Note this isn't an issue with xrdp however it doesn't allow simultaneous sessions and also blocks access to elevated UI elements (e.g., to change settings).
 
 ??? quote "Install xrdp"
     ```bash
@@ -57,6 +64,24 @@ If using a distro that doesn't have screen sharing installed by default (on Debi
         (then reboot - if using Remmina as a client then ensure sound is enabled by editing the connection profile - under Advanced change the Audio output mode to Local)
 
 If wanting to connect via RDP _from_ Linux then [Remmina](https://remmina.org/) is an excellent client.
+
+## GNOME extensions
+Here are some of the particularly useful extensions I've found.
+
+### Allow Locked Remote Desktop
+This is to allow remote desktop connections when the screen is locked.
+
+(GNOME Extensions)[https://extensions.gnome.org/extension/4338/allow-locked-remote-desktop/] | (GitHub)[https://github.com/jikamens/allow-locked-remote-desktop/]
+
+### Clipboard indicator
+A reliable and feature-rich clipboard manager.
+
+(GNOME Extensions)[https://extensions.gnome.org/extension/779/clipboard-indicator/?c=174523] | (GitHub)[https://github.com/Tudmotu/gnome-shell-extension-clipboard-indicator]
+
+### Places Status indicator
+Adds a link to the top-left bar that allows you to quickly jump to folders and network shares.  Officially supported by GNOME.
+
+(GNOME Extensions)[https://extensions.gnome.org/extension/8/places-status-indicator/] | (GitLab)[https://gitlab.gnome.org/GNOME/gnome-shell-extensions]
 
 ## Running Citrix
 Download the client from https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html
