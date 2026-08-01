@@ -130,45 +130,57 @@ To view log files that are written to disk create an `alpine` container and `tai
     --8<-- "docs/server-setup/scripts/diskmonitor_stream.yml"
     ```
 
-## Filebrowser
-A nice GUI file browser - https://github.com/filebrowser/filebrowser
+## Filebrowser Quantum
+A nice GUI file browser - https://filebrowserquantum.com/en/ (an evolution of the original [Filebrowser](https://github.com/filebrowser/filebrowser) which has now ceased development), which also provides easy file sharing and text file editing.
 
-!!! warning "Create the empty db and file structure first"
+!!! warning "Create the empty config and file structure first"
     ``` bash
-    mkdir -p $HOME/containers/filebrowser/branding && \
-    mkdir $HOME/containers/filebrowser/config && \
-    touch $HOME/containers/filebrowser/filebrowser.db
+    mkdir $HOME/filebrowser-store &&  # This is the folder that will be used for sharing files \
+    mkdir -p $HOME/containers/filebrowser/data && \
+    touch $HOME/containers/filebrowser/data/config.yaml
     ```
 
-!!! warning "Then create `/containers/filebrowser/settings.json`"
-    ``` json
-    {
-        "port": 80,
-        "baseURL": "",
-        "address": "",
-        "log": "stdout",
-        "database": "/database/filebrowser.db",
-        "root": "/srv",
-        "branding": "/branding"
-    }
+!!! warning "Then edit `$HOME/containers/filebrowser/data/config.yaml` and add:"
+    ``` yaml
+    server:
+      cacheDir: /home/filebrowser/data/tmp
+      sources:
+        - path: /folder
+          config:
+            defaultEnabled: true
     ```
+    Note these are all **standard entries** and refer to the locations *within* the container, therefore should be left unchanged - the desired location should be edited in the Docker Compose file below.
 
 Then install via docker-compose:
 ??? example "docker-compose/filebrowser.yml" 
-    ``` yaml linenums="1"
+    ``` yaml linenums="1" hl_lines="5 6"
     --8<-- "docs/server-setup/docker-compose/filebrowser.yml"
     ```
 
 Then setup NPM SSH reverse proxy (remember to include websocket support, with forward hostname `filebrowser` and port `80`) and then login:
 !!! info "Default credentials"
     Username: `admin`  
-    Password: (unique, created when DB first created - check logs)
+    Password: `admin`
 
-![](../images/2022-07-15-22-05-39.png){ align=right } To customise the appearance change the instance name (e.g., `Deployment server`) and set the branding directory path (e.g., `/branding`) in Settings > Global Settings.  Then create `img` and `img/icons` directories in the previously created `containers/filebrowser/branding` directory and add the `logo.svg`  and `favicon.ico` and 16x16 and 32x32 PNGs (if you only do the `.ico`) then the browser will pick the internal higher resolution PNGs.
-![](../images/2022-07-15-22-06-56.png){ align=right }  
+    !!! danger "Change immediately!"
+        Be sure to change these default credentials immediately and enable 2FA in user management.
+
+        It is also recommended to create a new admin user and (once created) remove the default one called `admin`.
+
+To customise the appearance then add the following sections to the yaml config above and copy the two icons to `$HOME/containers/filebrowser/data`, either with the filenames listed below (or change the filenames in the yaml to match):
+
+!!! info "Add branding name/icon details to `$HOME/containers/filebrowser/data/config.yaml`"
+    ```yaml linenums="1" hl_lines="2-3 8-10"
+    frontend:
+      name: "Company Files"
+      description: "Secure file storage"
+      favicon: "/home/filebrowser/data/favicon.png"
+      loginIcon: "/home/filebrowser/data/login-icon.png"
+      loginButtonText: "Sign in"
+    ```
 
 !!! tip "Generating favicons"
-    The [favicon generator](https://realfavicongenerator.net/) is a very useful website to generate all the required favicons for different platforms.
+    The [favicon generator](https://realfavicongenerator.net/) is a useful website to generate favicons for different platforms.
 
 ## Optional containers
 ### Portainer

@@ -1,22 +1,17 @@
----
 services:
   filebrowser:
-    image: filebrowser/filebrowser
-    container_name: filebrowser
-    user: 1000:1000
-    expose:
-      - 80/tcp
+    image: gtstef/filebrowser:stable
     volumes:
-      - /home/alan/containers/filebrowser/filebrowser.db:/database/filebrowser.db
-      - /home/alan/containers/filebrowser/config:/config
-      - /home/alan/containers/filebrowser/branding:/branding
+      - /home/USER/filebrowser-store:/folder # Do not use a root "/" directory or include the "/var" folder | Change USER to the username when using this docker-compose file is being installed
+      - /home/USER/containers/filebrowser/data:/home/filebrowser/data # Change USER to the username when using this docker-compose file is being installed
+    expose:
+      - 80
     environment:
       - TZ=Europe/London
     restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
     networks:
       - nginx-proxy-manager_default
+
 networks:
   nginx-proxy-manager_default:
     external: true
