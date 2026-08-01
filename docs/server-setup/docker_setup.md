@@ -182,6 +182,18 @@ To customise the appearance then add the following sections to the yaml config a
 !!! tip "Generating favicons"
     The [favicon generator](https://realfavicongenerator.net/) is a useful website to generate favicons for different platforms.
 
+**WebDAV**
+
+FBQ also supports [WebDAV](https://filebrowserquantum.com/en/docs/features/webdav/), allowing easy access to the file storage from an OS file browser rather than having to use the web interface.
+
+1. Login to FBQ
+1. Copy the URL for the main filepage - e.g., `https://filebrowser.ediflyer.net/files/folder/`
+1. Go to your WebDAV client/explorer, paste this in but then change `https` to `davs` and `/files/` to `/dav/` and enter `davs://filebrowser.ediflyer.net/dav/folder` (you may need to remove the trailing `/` depending on the client, but be sure to leave the `folder` bit)
+1. Go to Settings > API token > New (button at the bottom right) > set name/expiry and click Create
+1. Click the clipboard icon to copy the key
+1. Enter this as the password the WebDAV client/explorer (username can be blank or set to any value)
+1. Connect!
+
 ## Optional containers
 ### Portainer
 ??? abstract "Portainer (deprecated)"
