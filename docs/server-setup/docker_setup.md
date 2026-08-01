@@ -186,16 +186,16 @@ To customise the appearance then add the following sections to the yaml config a
 
 FBQ also supports [WebDAV](https://filebrowserquantum.com/en/docs/features/webdav/), allowing easy access to the file storage from an OS file browser rather than having to use the web interface.
 
-1. Login to FBQ
+1. Login
 1. Copy the URL for the main filepage - e.g., `https://filebrowser.ediflyer.net/files/folder/`
-1. Go to WebDAV client/explorer, paste in this address, but with some key changes:
+1. Go to the WebDAV client/explorer, paste in this address, but with some key changes:
     - `https` to `davs`
     - `/files/` to `/dav/`
-    - therefore something like `davs://filebrowser.ediflyer.net/dav/folder`
-    - NB you may need to remove the trailing `/` depending on the client, but be sure to leave the `folder` bit
+    - in this example it would become: `davs://filebrowser.ediflyer.net/dav/folder`
+    - NB the trailing `/` may need to be removed depending on the client, but ensure the `folder` at the end remains
 1. Go to Settings > API token > New (button at the bottom right) > set name/expiry and click Create
 1. Click the clipboard icon to copy the key
-1. Enter this as the password the WebDAV client/explorer (username can be blank or set to any value)
+1. Enter this as the password the WebDAV client/explorer (username can be blank or set to any value if the client requires one)
 1. Connect!
 
 ## Optional containers
